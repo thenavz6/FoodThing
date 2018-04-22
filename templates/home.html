@@ -23,13 +23,21 @@
 </nav>
 
 <div class="container-fluid">
-    <div class="row">
-        <img id = "logo" src="/static/logo.png" width = "550px" height="500px" class="img-responsive center-block">
-    </div>
+  <div class="row-fluid" id="main">
+      {% for label in labelList %}
+      {% if loop.index0 % 3 == 0 %}
+      <div class="row">
+      {% endif %}
+          <div class="col-xs-4">
+              <img src = {{imageList[loop.index - 1]}} width="400" height="400">
+              <figcaption>{{label}}</figcaption>
+          </div>
+      {% if loop.index0 % 3 == 2 or loop.last %}
+      </div>
+      {% endif %}
+      {% endfor %}
+  </div>
 </div>
-
-<br>
-
 
 
 </body>
