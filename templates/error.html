@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='../static/navbar.css'>
-    <title>Recipe</title>
+    <title>404</title>
 
 </head>
 
@@ -18,24 +18,30 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand nav-list" href="#">RecipeThing</a>
-		<form method="POST">
-  			Search Recipe: <input type="text" name="searchtext"><br>
-  			<input type="submit" value="Search" name="bt">
-		</form>
     </div>
   </div>
 </nav>
 
 <div class="container-fluid">
-  <div class="row-fluid" id="main">
+    <div class="row">
+        <img id = "logo" src="/static/logo.png" width = "550px" height="500px" class="img-responsive center-block">
+    </div>
+</div>
 
-      <p3><b> {{ recipeLabel }} </p3></b><br><br>
-      <img src = {{ recipeImage }} width="400" height="400"><br><br>
-      Ingredient List: <br>
-      {% for ingredient in recipeIngredients %}
-            {{ ingredient }} <br>
-      {% endfor %}
+<br>
 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 text-center">
+      <form method="post" action="/">
+           <b> 404. Most likely edamam is not responding! </b><br>
+           <b> ;( </b><br>
+          <button type="submit" name="facebook" value="1" class="btn btn-info">Facebook</button>
+          <button type="submit" name="google" value="1" class="btn btn-success">Google</button>
+      </form>
+    </div>
+    <div class="col-md-4 text-right"></div>
   </div>
 </div>
 
