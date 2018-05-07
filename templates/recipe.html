@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='../static/navbar.css'>
-    <title>Dashboard</title>
+    <title>Recipe</title>
 
 </head>
 
@@ -20,7 +20,7 @@
       <a class="navbar-brand nav-list" href="#">RecipeThing</a>
 		<form method="POST">
   			Search Recipe: <input type="text" name="searchtext"><br>
-  			<input type="submit" value="Search" name="bt">
+  			<input type="submit" value="Submit">
 		</form>
     </div>
   </div>
@@ -28,20 +28,14 @@
 
 <div class="container-fluid">
   <div class="row-fluid" id="main">
-      {% for label in labelList %}
-      {% if loop.index0 % 3 == 0 %}
-      <div class="row">
-      {% endif %}
-          <div class="col-xs-4">
-              <form method="POST">
-              <input type="image" src={{imageList[loop.index - 1]}} width="400" height="400" value="recipe_{{loop.index - 1}}" name="bt">
-              </form>
-              <figcaption>{{label}}</figcaption>
-          </div>
-      {% if loop.index0 % 3 == 2 or loop.last %}
-      </div>
-      {% endif %}
+
+      <p3><b> {{ recipeLabel }} </p3></b><br><br>
+      <img src = {{ recipeImage }} width="400" height="400"><br><br>
+      Ingredient List: <br>
+      {% for ingredient in recipeIngredients %}
+            {{ ingredient }} <br>
       {% endfor %}
+
   </div>
 </div>
 
