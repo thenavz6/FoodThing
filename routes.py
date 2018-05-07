@@ -12,6 +12,11 @@ def main():
     return render_template("login.html")
 
 
+@app.route("/error",methods=["GET", "POST"])
+def error():
+    return render_template("error.html")
+
+
 # Had to make this ugly global variable to retain the same recipeId list in between the GET and POST
 # Otherwise when the user clicked on a recipe, we were making the API requests again and this took the user to the wrong recipe.
 recipeId = []
@@ -32,6 +37,8 @@ def searchRecipe(query):
     if request.method == "GET":
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
+        if (response.status_code != 200):
+            return redirect(url_for("error"))
         jsonData = response.json()["hits"]
 
         recipeId = []
@@ -64,6 +71,10 @@ b90e6fb2878260b8f991bd4f9a8663ca")
     recipeIngredients = []
     for ingredient in recipe.get('ingredients'):
         recipeIngredients.append(ingredient.get('text'))
+
+    if request.method == "POST":
+        if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
+            return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
 
     return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients)
 
