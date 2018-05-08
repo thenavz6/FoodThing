@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='../static/navbar.css'>
+    <title>Dashboard</title>
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand nav-list" href="#">RecipeThing</a>
+		<form method="POST">
+  			Search Recipe: <input type="text" name="searchtext"><br>
+  			<input type="submit" value="Search" name="bt">
+		</form>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row-fluid" id="main">
+      {% for label in labelList %}
+      {% if loop.index0 % 3 == 0 %}
+      <div class="row">
+      {% endif %}
+          <div class="col-xs-4">
+              <form method="POST">
+              <input type="image" src={{imageList[loop.index - 1]}} width="400" height="400" value="recipe_{{loop.index - 1}}" name="bt">
+              </form>
+              <figcaption>{{label}}</figcaption>
+          </div>
+      {% if loop.index0 % 3 == 2 or loop.last %}
+      </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+</div>
+
+
+</body>
+</html>
