@@ -1,24 +1,59 @@
 .App {
-  text-align: center;
+    padding-top: 70px;
+    padding-bottom: 20px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.main_container {
+    background: white;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-radius: 20px;
+    padding-bottom: 20px;
+}
+.logo_container {
+    display: flex;
+    justify-content: center;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.logo {
+    width: 600px;
+    height: 600px;
 }
 
-.App-intro {
-  font-size: large;
+.centered {
+    text-align: center;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.button_block {
+    display: flex;
+    justify-content: center;
+}
+
+.auth_button {
+    position: relative;
+    background-color: lime;
+    color: white;
+    border-radius: 10px;
+    font-size: 30px;
+    padding: 30px;
+    display: inline-block;
+    height: 100%;
+    margin-left: 2%;
+    font-weight: bold;
+}
+.auth_img_button {
+    position: relative;
+    background-color: lime;
+    color: white;
+    border-radius: 10px;
+    font-size: 30px;
+    padding:19px;
+    display: inline-block;
+    height: 100%;
+    margin-left: 2%;
+}
+
+.auth_logo {
+    width: 50px;
+    height: 50px;
 }
