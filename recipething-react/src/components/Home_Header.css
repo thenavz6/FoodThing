@@ -1,0 +1,24 @@
+.navbar {
+    overflow: hidden;
+    background-color: pink;
+    padding: 5px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.recipething {
+    border: 2px;
+    background: lime;
+    color: white;
+    border-radius: 10px;
+    height: 45px;
+    display: block;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 12.5px;
+}
