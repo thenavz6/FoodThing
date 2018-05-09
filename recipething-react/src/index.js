@@ -1,9 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom';
+import Home from './components/Home';
+import Dashboard from './components/Dashboard';
 import './index.css';
 
 ReactDOM.render(
-  <App />,
+  <Router>
+    <div className="index">
+      <Route exact path="/" component={Home} />
+      <Route path="/dashboard" component={Dashboard} />
+    </div>
+  </Router>,
   document.getElementById('root')
 );
