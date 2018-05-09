@@ -1,6 +1,11 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Pangolin', sans-serif;
-    background: #DEFFDE;
+  margin: 0;
+  padding: 0;
+  font-family: 'Pangolin', sans-serif;
+  background: #DEFFDE;
+}
+
+.index {
+  padding-top: 70px;
+  padding-bottom: 20px;
 }

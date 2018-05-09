@@ -1,14 +1,12 @@
 import React from "react";
-import './Home_Header.css'
+import './Header.css'
 
-export default class HomeHeader extends React.Component {
-    render() {
-        return (
-            <nav className="navbar navbar-default navbar-fixed-top">
-                <div className="navbar-container">
-                    <div className="recipething">RECIPETHING</div>
-                </div>
-            </nav>
-        );
-    }
-}
+const HomeHeader = () => (
+    <nav className="navbar navbar-default navbar-fixed-top">
+        <div className="navbar-container">
+            <div className="recipething">RECIPETHING</div>
+        </div>
+    </nav>
+)
+
+export default HomeHeader;
