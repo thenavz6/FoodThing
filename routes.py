@@ -3,12 +3,19 @@ import requests
 import json
 import random
 
-app = Flask(__name__)
+import server
+from server import app
+
 
 @app.route("/",methods=["GET", "POST"])
 def main():
+    print(request.form)
+    print(request.args)
+    if "email" in request.form:
+        if server.check_user_db(request.form["email"]):
+            return redirect(url_for("dashboard"))
     if request.method == "POST":
-        return redirect(url_for("dashboard"))
+        pass
     return render_template("login.html")
 
 
@@ -17,12 +24,13 @@ def error():
     return render_template("error.html")
 
 
-@app.route("/tokensignin",methods=["GET", "POST"])
-def tokensignin():
-    token = request.values
-    print("Token is: ")
-    print(token)
-    return render_template("login.html")
+# We need to verify this token with Google for security. So TODO that later.
+# After verification, we create a database account for the user and update their token.
+@app.route("/token", methods=["GET", "POST"])
+def token():
+    server.update_user_db(request.form['email'], request.form['fullname'], request.form['imageurl'], request.form['token'])
+    return redirect(url_for("error"))
+
 
 # Had to make this ugly global variable to retain the same recipeId list in between the GET and POST
 # Otherwise when the user clicked on a recipe, we were making the API requests again and this took the user to the wrong recipe.
