@@ -17,6 +17,13 @@ def error():
     return render_template("error.html")
 
 
+@app.route("/tokensignin",methods=["GET", "POST"])
+def tokensignin():
+    token = request.values
+    print("Token is: ")
+    print(token)
+    return render_template("login.html")
+
 # Had to make this ugly global variable to retain the same recipeId list in between the GET and POST
 # Otherwise when the user clicked on a recipe, we were making the API requests again and this took the user to the wrong recipe.
 recipeId = []
