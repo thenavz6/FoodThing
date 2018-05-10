@@ -9,13 +9,6 @@ from server import app
 
 @app.route("/",methods=["GET", "POST"])
 def main():
-    print(request.form)
-    print(request.args)
-    if "email" in request.form:
-        if server.check_user_db(request.form["email"]):
-            return redirect(url_for("dashboard"))
-    if request.method == "POST":
-        pass
     return render_template("login.html")
 
 
