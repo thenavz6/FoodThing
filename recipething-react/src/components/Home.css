@@ -12,8 +12,10 @@
     margin-left: 20%;
     margin-right: 20%;
     border-radius: 20px;
+    padding-top: 20px;
     padding-bottom: 20px;
 }
+
 .logo_container {
     display: flex;
     justify-content: center;
@@ -45,6 +47,7 @@
     margin-left: 2%;
     font-weight: bold;
 }
+
 .auth_img_button {
     position: relative;
     background-color: lime;
