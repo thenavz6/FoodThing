@@ -16,25 +16,36 @@ def init_db():
 
 
 # Updates a user in the database or creates a new user if not existent
-# TODO parse out bad input
+# TODO parse out bad input TODO check the token with Google
 def update_user_db(email, name, imageurl, token):
     if (check_user_db(email) == 0):
         db = sqlite3.connect(DATABASE)
         db.execute('INSERT INTO users VALUES ("'+email+'","'+name+'","'+imageurl+'","'+token+'");')
-        db.commit()
-        db.close() 
     else:
-        # Update the token later
-        pass
+        db = sqlite3.connect(DATABASE)
+        db.execute('UPDATE users SET token = "'+token+'" WHERE email="'+email+'";')
+    db.commit()
+    db.close()
 
 
 # Returns 1 if this user already exists in the database otherwise returns 0
 def check_user_db(email):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('SELECT * from users where email="'+email+'";');
+    c.execute('SELECT * from users where email="'+email+'";')
     a = c.fetchall()
     return len(a)
+
+
+# Returns 1 if the current token associated to this email matches the argument token
+def compare_token_db(email, token):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from users where email="'+email+'";')
+    a = c.fetchone()
+    if a == None or a[3] != token:
+        return 0
+    return 1
 
 
 def filter_bad_input(data):
