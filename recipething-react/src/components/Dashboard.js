@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import MainHeader from './Main_Header';
 import './Dashboard.css';
 import GoogleLogo from '../images/Google.png';
+import OpenStar from '../images/open_star.png';
 
 class Dashboard extends Component {
   render() {
@@ -13,13 +14,33 @@ class Dashboard extends Component {
           <div className="recipe_container">
             <div className="recipe">
             <img src={GoogleLogo} alt="GoogleLogo" className="recipeimage"/>
-              <div className="recipetitle">
-                TWO DESSERTS, ONE CUP
-              </div>
-              <img src={GoogleLogo} alt="GoogleLogo" className="recipestar"/>
-              <div className="recipetime">
-                15 MIN
-              </div>
+              <div className="overallrecipeinfo">
+			      <div className="recipeinfo1">
+			        <div className="recipetitle">
+			          TWO DESSERTS, ONE CUP
+			        </div>
+			        <div className="recipefavourite">
+			          <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+			        </div>
+			      </div><br/>
+			      <div className="recipeinfo2">
+			        <div className="recipetime">
+			          15 MIN
+			        </div>
+			      </div>
+			      <div className="recipeinfo">
+			        <div className="reciperating">
+			          <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+			          <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+			          <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+			          <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+			          <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+		            </div>
+		            <div className="recipeprice">
+			          $12.00
+			        </div>
+			      </div>
+	          </div>
             </div>
           </div>
           <div className="recipe_container">
@@ -29,7 +50,7 @@ class Dashboard extends Component {
                 <div className="recipetitle">
                   O SUBWAY
                 </div>
-                <img src={GoogleLogo} alt="GoogleLogo" className="recipestar"/>
+                <img src={OpenStar} alt="OpenStar" className="recipestar"/>
               </div>
             </div>
           </div>
@@ -40,7 +61,7 @@ class Dashboard extends Component {
                 <div className="recipetitle">
                   HEART ATTACK IN A BOWL
                 </div>
-                <img src={GoogleLogo} alt="GoogleLogo" className="recipestar"/>
+                <img src={OpenStar} alt="OpenStar" className="recipestar"/>
               </div>
               <div className="recipetime">
                 15 MIN
@@ -54,7 +75,7 @@ class Dashboard extends Component {
                 <div className="recipetitle">
                   RECIPE 4
                 </div>
-                <img src={GoogleLogo} alt="GoogleLogo" className="recipestar"/>
+                <img src={OpenStar} alt="OpenStar" className="recipestar"/>
               </div>
               <div className="recipetime">
                 15 MIN
@@ -68,7 +89,7 @@ class Dashboard extends Component {
                 <div className="recipetitle">
                   RECIPE 5
                 </div>
-                <img src={GoogleLogo} alt="GoogleLogo" className="recipestar"/>
+                <img src={OpenStar} alt="OpenStar" className="recipestar"/>
               </div>
               <div className="recipetime">
                 15 MIN
