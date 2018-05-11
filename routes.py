@@ -60,8 +60,16 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
             return redirect(url_for("error"))
         jsonData = response.json()["hits"]
 
+        # Search the recipe_overview Database Table for matching labels and append hits from here too
+        for word in query.split(" "):
+            server.find_recipes_keyword(word)
+
         recipeId = []
         for item in jsonData:
+            # Add the recipe_overview to the database so we can search this too
+            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], item.get('recipe').get('label'), item.get('recipe').get('image'))
+            for word in item.get('recipe').get('label').split(" "):
+                print(word)
             recipeId.append(item.get('recipe').get('uri'))
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
