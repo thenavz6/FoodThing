@@ -39,7 +39,8 @@ def dashboard():
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    return searchRecipe("lol")
+    # If the 'random' search term is in the recipe name it is ideal since then dashboard items can be stored and picked from our database.
+    return searchRecipe("food")
 
 
 # Does essentially the same as the above. Except based on search query text - so the above should populate with random recipes.
@@ -113,7 +114,7 @@ b90e6fb2878260b8f991bd4f9a8663ca")
         recipeIngredients.append(ingredient.get('text'))
     recipeComments = []
     for entry in server.get_recipe_comments(recipeId):
-        recipeComments.append(entry[1])
+        recipeComments.append(entry)
 
     if request.method == "POST":
         if request.form["bt"] == 'logout':
@@ -122,7 +123,7 @@ b90e6fb2878260b8f991bd4f9a8663ca")
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
         if request.form["bt"] == "comment":
-            server.add_recipe_comment(recipeId, request.form["commentText"])
+            server.add_recipe_comment(recipeId, request.form["commentText"], authentication.username, authentication.imageurl)
             return redirect(url_for("recipe", recipeId = recipeId))
 
     return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, imageurl = authentication.imageurl,

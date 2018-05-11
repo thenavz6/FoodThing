@@ -42,7 +42,7 @@
       <br>
       <p3><b> Comments </p3></b><br>
       {% for comment in recipeComments %}
-            {{ comment }} <br>
+            <b> {{ comment[2] }} says </b> {{ comment[1] }} <img align="left" src={{ comment[3] }} alt="You" style="width:20px;height:20px;"> <br>
       {% endfor %}
       <br>
       <form method="POST">
