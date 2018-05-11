@@ -13,6 +13,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS users (email TEXT PRIMARY KEY NOT NULL, fullname TEXT, imageurl TEXT, token TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, recipeLabel TEXT, recipeImageLink Text)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.commit()
     db.close()
 
@@ -24,7 +25,7 @@ def update_user_db(email, name, imageurl, token):
         db = sqlite3.connect(DATABASE)
         db.execute('INSERT INTO users VALUES ("'+email+'","'+name+'","'+imageurl+'","'+token+'");')
     except sqlite3.IntegrityError as e:
-        print("User already in database")
+        # print("User already in database")
         db = sqlite3.connect(DATABASE)
         db.execute('UPDATE users SET token = "'+token+'" WHERE email="'+email+'";')
     db.commit()
@@ -59,38 +60,84 @@ def add_recipe_overview_db(recipeId, label, urllink):
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES ("'+recipeId+'","'+label+'","'+urllink+'");')
+        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'","'+filter_bad_input(label.lower())+'","'+filter_bad_input(urllink)+'");')
         for word in label.split(" "):
             add_recipe_keyword(c, recipeId, word)
     except sqlite3.IntegrityError as e:
-        print("Recipe already in database")
+        pass
+        # print("Recipe already in database")
+    except sqlite3.OperationalError as e:
+        pass
+        # illegal character
     
     db.commit()
     db.close()
 
 
+# Should NOT be called directly but rather only when new recipes are added through add_recipe_overview_db
 def add_recipe_keyword(cursor, recipeId, word):
-    cursor.execute('INSERT INTO recipe_keywords VALUES ("'+recipeId+'","'+word+'");')
+    cursor.execute('INSERT INTO recipe_keywords VALUES ("'+recipeId+'","'+word.lower()+'");')
 
 
-# Return recipes that have a matching keyword in the recipe_keywords table
+# Return entres from recipe_keywords TABLE that have a matching keyword in the recipe_keywords table
 def find_recipes_keyword(word):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('SELECT * from recipe_keywords where keyword="'+word+'";')
+    c.execute('SELECT * from recipe_keywords where keyword="'+word.lower()+'";')
     hits = c.fetchall()
+    recipes = []
     for hit in hits:
-        print(hit[0])
+        for recipe in find_recipe_id(c, hit[0]):
+            recipes.append(recipe)
     
+    db.close()
+    return recipes
+
+
+# Return entries from recipe_overview TABLE that have a matching recipeId 
+def find_recipe_id(cursor, recipeId):
+    cursor.execute('SELECT * from recipe_overview where recipeID="'+recipeId+'";')
+    hits = cursor.fetchall()
+    return hits
+
+
+
+# Returns upto 'num' amount of random entries from the recipe_overview TABLE
+def get_random_recipes(num):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor
+    c.execute('SELECT * FROM table ORDER BY RANDOM() LIMIT '+num+';')
+    db.close()
+    return c.fetchall()
+
+
+# Adds a new entry to the recipe_comment TABLE
+def add_recipe_comment(recipeId, comment):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'","'+comment+'");')
+    db.commit()
     db.close()
 
 
-def find_recipe_id(cursor, recipeId):
-    cursor.execute('SELECT * from recipe_overview where recipeID="'+recipeId+'";')
+# Gets all of the comments for a particular recipeID from the recipe_comment TABLE
+def get_recipe_comments(recipeID):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from recipe_comments where recipeID="'+recipeID+'";')
+    hits = c.fetchall()
+    db.close()
+    print(hits)
+    return hits
 
 
 def filter_bad_input(data):
-    return data.translate(None, '();')
+    filtered = ''
+    for c in data:
+        if c not in [",",";","(",")"]:
+            filtered += c
+    return filtered
 
 
 init_db()
+
