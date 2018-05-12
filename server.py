@@ -11,7 +11,7 @@ DATABASE = 'database.db'
 def init_db():
     db = sqlite3.connect(DATABASE)
     db.execute('CREATE TABLE IF NOT EXISTS users (email TEXT PRIMARY KEY NOT NULL, fullname TEXT, imageurl TEXT, token TEXT)')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID TEXT, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, comment TEXT, username TEXT, userimage TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.commit()
@@ -55,12 +55,12 @@ def compare_token_db(email, token):
 
 
 # Adds a new recipe overview entry and also recipe_keyword entries
-def add_recipe_overview_db(recipeId, label, urllink):
+def add_recipe_overview_db(recipeId, userId, label, urllink):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'","'+filter_bad_input(label.lower())+'","'+filter_bad_input(urllink)+'","2.5");')
+        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'","'+userId+'","'+filter_bad_input(label.lower())+'","'+filter_bad_input(urllink)+'","2.5");')
         for word in label.split(" "):
             add_recipe_keyword(c, recipeId, word)
     except sqlite3.IntegrityError as e:
