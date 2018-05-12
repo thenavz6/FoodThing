@@ -19,7 +19,7 @@ const MainHeader = () => (
           </div>
           <div className="buttondivider">|</div>
           <div className="rightbuttons">
-            <NavLink className="navlink" to="/">PROFILE</NavLink>
+            <NavLink className="navlink" to="/profile">PROFILE</NavLink>
           </div>
           <div className="buttondivider">|</div>
           <div className="rightbuttons">
