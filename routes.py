@@ -95,7 +95,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
         if request.form["bt"][:6] == "recipe":
             return redirect(url_for("recipe", recipeId = recipeId[int(request.form["bt"][7:])]))
 
-    return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, imageurl = authentication.imageurl)
+    return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, userid = authentication.userid, imageurl = authentication.imageurl)
 
 
 # The 'specific' recipe page that details instructions and ingredients.
@@ -139,8 +139,7 @@ b90e6fb2878260b8f991bd4f9a8663ca")
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, imageurl = authentication.imageurl,
-                            recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
@@ -157,7 +156,7 @@ def userprofile(userId):
 
     # Default name and image passed if user not found
     profilename = "No one lives here :("
-    profileimage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuH_5UuKg8ytBDp11sf1VYEI6nAEQK_7bwPkVKvdnHMBlHyRqlew"
+    profileimage = "https://cdna.artstation.com/p/assets/images/images/004/001/542/large/michael-myers-scarecrowartstation.jpg?1479333624"
 
     if userHit != None:
         profilename = userHit[2]
@@ -181,26 +180,5 @@ def uploadRecipe():
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    # Find the given user in the database or error for non-integer input
-    try:
-        userHit = server.find_user_by_id_db(int(userId))
-    except ValueError as e:
-        return redirect(url_for("error"))
-
-    # Default name and image passed if user not found
-    profilename = "No one lives here :("
-    profileimage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuH_5UuKg8ytBDp11sf1VYEI6nAEQK_7bwPkVKvdnHMBlHyRqlew"
-
-    if userHit != None:
-        profilename = userHit[2]
-        profileimage = userHit[3]
-
-    if request.method == "POST":
-        if request.form["bt"] == "Upload Recipe":
-            return redirect(url_for("uploadRecipe"))  
-        if request.form["bt"] == 'logout':
-            authentication.is_authenticated = False;
-            return redirect(url_for("main"))
-
-    return render_template("userprofile.html", profileid = int(userId), profilename = profilename, profileimage = profileimage, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("uploadrecipe.html")
 
