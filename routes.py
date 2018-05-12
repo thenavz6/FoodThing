@@ -23,7 +23,13 @@ def error():
 @app.route("/updateToken", methods=["GET", "POST"])
 def updateToken():
     server.update_user_db(request.form['email'], request.form['fullname'], request.form['imageurl'], request.form['token'])
+    user = server.find_user_by_email_db(request.form['email'])
+
+    if (user == None):
+        return redirect(url_for("error"))
+
     authentication.is_authenticated = True
+    authentication.userid = int(user[0])
     authentication.email = request.form['email']
     authentication.username = request.form['fullname']
     authentication.imageurl = request.form['imageurl']
@@ -36,6 +42,7 @@ def updateToken():
 recipeId = []
 @app.route("/dashboard",methods=["GET", "POST"])
 def dashboard():
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -46,6 +53,7 @@ def dashboard():
 # Does essentially the same as the above. Except based on search query text - so the above should populate with random recipes.
 @app.route("/searchRecipe/<query>", methods=["GET", "POST"])
 def searchRecipe(query):
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -65,7 +73,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
 
         for item in jsonData:
             # Add the recipe_overview to the database so we can search this too
-            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], item.get('recipe').get('label'), item.get('recipe').get('image'))
+            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'))
             recipeId.append(item.get('recipe').get('uri').split("_",1)[1])
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
@@ -78,7 +86,6 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
             recipeId.append(item[0])
             recipeLabels.append(item[1])
             recipeImageLinks.append(item[2])
-            
 
     if request.method == "POST":
         if request.form["bt"] == 'logout':
@@ -89,13 +96,14 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
         if request.form["bt"][:6] == "recipe":
             return redirect(url_for("recipe", recipeId = recipeId[int(request.form["bt"][7:])]))
 
-    return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, imageurl = authentication.imageurl)
+    return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, userid = authentication.userid, imageurl = authentication.imageurl)
 
 
 # The 'specific' recipe page that details instructions and ingredients.
 # Later this should lead to the substitution pop-up box and so and so.
 @app.route("/recipe/<recipeId>", methods=["GET", "POST"])
 def recipe(recipeId):
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -112,20 +120,80 @@ b90e6fb2878260b8f991bd4f9a8663ca")
     recipeIngredients = []
     for ingredient in recipe.get('ingredients'):
         recipeIngredients.append(ingredient.get('text'))
+
+    isFavourited = False
+    userFavourites = server.find_user_favourites_db(authentication.userid)
+    for favourite in userFavourites:
+        if recipeId == favourite[1]:
+            isFavourited = True
+
+    usersWhoCommented = []
     recipeComments = []
     for entry in server.get_recipe_comments(recipeId):
-        recipeComments.append(entry)
+        recipeComments.append(entry[2])
+        usersWhoCommented.append(server.find_user_by_id_db(int(entry[1])))
 
     if request.method == "POST":
+        if "bt" in request.form:
+            if request.form["bt"] == 'logout':
+                authentication.is_authenticated = False;
+                return redirect(url_for("main"))
+            if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
+                return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
+            if request.form["bt"] == "comment":
+                server.add_recipe_comment(recipeId, authentication.userid, request.form["commentText"])
+                return redirect(url_for("recipe", recipeId = recipeId))
+            if request.form["bt"] == "Favourite":
+                server.add_user_favourite_db(authentication.userid, recipeId)
+                return redirect(url_for("recipe", recipeId = recipeId))
+            if request.form["bt"] == "Unfavourite":
+                server.delete_user_favourite_db(authentication.userid, recipeId)
+                return redirect(url_for("recipe", recipeId = recipeId))
+        if "user" in request.form:
+            return redirect(url_for("userprofile", userId = int(request.form["user"])))
+
+    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+
+
+# The page for viewing any user's profile
+@app.route("/user/<userId>", methods=["GET", "POST"])
+def userprofile(userId):
+    # Ensure the user is logged in
+    if authentication.is_authenticated == False:
+        return redirect(url_for("main"))
+
+    # Find the given user in the database or error for non-integer input
+    try:
+        userHit = server.find_user_by_id_db(int(userId))
+    except ValueError as e:
+        return redirect(url_for("error"))
+
+    # Default name and image passed if user not found
+    profilename = "No one lives here :("
+    profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
+
+    if userHit != None:
+        profilename = userHit[2]
+        profileimage = userHit[3]
+
+    if request.method == "POST":
+        if request.form["bt"] == "Upload Recipe":
+            return redirect(url_for("uploadRecipe"))  
         if request.form["bt"] == 'logout':
             authentication.is_authenticated = False;
             return redirect(url_for("main"))
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
-        if request.form["bt"] == "comment":
-            server.add_recipe_comment(recipeId, request.form["commentText"], authentication.username, authentication.imageurl)
-            return redirect(url_for("recipe", recipeId = recipeId))
 
-    return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, imageurl = authentication.imageurl,
-                            recipeComments = recipeComments)
+    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, myuserid = authentication.userid, userimage = authentication.imageurl)
+
+
+# The page for uploading user recipes
+@app.route("/uploadRecipe", methods=["GET", "POST"])
+def uploadRecipe():
+    # Ensure the user is logged in
+    if authentication.is_authenticated == False:
+        return redirect(url_for("main"))
+
+    return render_template("uploadrecipe.html")
 

@@ -17,18 +17,21 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand nav-list" href="#">RecipeThing</a>
+      <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard">RecipeThing</a>
 		<form method="POST">
   			Search Recipe: <input type="text" name="searchtext"><br>
   			<input type="submit" value="Search" name="bt">
 		</form>
     </div>
+    <a href="https://localhost:5000/user/{{userid}}">
     <img align="right" src={{imageurl}} alt="You">
+    </a>
     <form method="POST">
   		<input align="right" type="submit" value="logout" name="bt">
 	</form>   
   </div>
 </nav>
+
 
 <div class="container-fluid">
   <div class="row-fluid" id="main">
