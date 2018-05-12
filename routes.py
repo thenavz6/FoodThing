@@ -157,7 +157,7 @@ def userprofile(userId):
 
     # Default name and image passed if user not found
     profilename = "No one lives here :("
-    profileimage = "https://az616578.vo.msecnd.net/files/2016/03/21/6359414964966384591487651667_tangled3.jpg"
+    profileimage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuH_5UuKg8ytBDp11sf1VYEI6nAEQK_7bwPkVKvdnHMBlHyRqlew"
 
     if userHit != None:
         profilename = userHit[2]
@@ -189,7 +189,7 @@ def uploadRecipe():
 
     # Default name and image passed if user not found
     profilename = "No one lives here :("
-    profileimage = "https://az616578.vo.msecnd.net/files/2016/03/21/6359414964966384591487651667_tangled3.jpg"
+    profileimage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuH_5UuKg8ytBDp11sf1VYEI6nAEQK_7bwPkVKvdnHMBlHyRqlew"
 
     if userHit != None:
         profilename = userHit[2]
