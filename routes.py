@@ -28,7 +28,6 @@ def updateToken():
     if (user == None):
         return redirect(url_for("error"))
 
-    print(user)
     authentication.is_authenticated = True
     authentication.userid = int(user[0])
     authentication.email = request.form['email']
@@ -43,6 +42,7 @@ def updateToken():
 recipeId = []
 @app.route("/dashboard",methods=["GET", "POST"])
 def dashboard():
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -53,6 +53,7 @@ def dashboard():
 # Does essentially the same as the above. Except based on search query text - so the above should populate with random recipes.
 @app.route("/searchRecipe/<query>", methods=["GET", "POST"])
 def searchRecipe(query):
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -102,6 +103,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
 # Later this should lead to the substitution pop-up box and so and so.
 @app.route("/recipe/<recipeId>", methods=["GET", "POST"])
 def recipe(recipeId):
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -124,7 +126,6 @@ b90e6fb2878260b8f991bd4f9a8663ca")
     for entry in server.get_recipe_comments(recipeId):
         recipeComments.append(entry[2])
         usersWhoCommented.append(server.find_user_by_id_db(int(entry[1])))
-    print(usersWhoCommented)
 
     if request.method == "POST":
         if "bt" in request.form:
@@ -145,6 +146,7 @@ b90e6fb2878260b8f991bd4f9a8663ca")
 # The page for viewing any user's profile
 @app.route("/user/<userId>", methods=["GET", "POST"])
 def userprofile(userId):
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
@@ -177,6 +179,7 @@ def userprofile(userId):
 # The page for uploading user recipes
 @app.route("/uploadRecipe", methods=["GET", "POST"])
 def uploadRecipe():
+    # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
