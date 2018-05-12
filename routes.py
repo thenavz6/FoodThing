@@ -156,7 +156,7 @@ def userprofile(userId):
 
     # Default name and image passed if user not found
     profilename = "No one lives here :("
-    profileimage = "https://cdna.artstation.com/p/assets/images/images/004/001/542/large/michael-myers-scarecrowartstation.jpg?1479333624"
+    profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
 
     if userHit != None:
         profilename = userHit[2]
