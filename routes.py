@@ -65,7 +65,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
 
         for item in jsonData:
             # Add the recipe_overview to the database so we can search this too
-            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], item.get('recipe').get('label'), item.get('recipe').get('image'))
+            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], "null", item.get('recipe').get('label'), item.get('recipe').get('image'))
             recipeId.append(item.get('recipe').get('uri').split("_",1)[1])
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
@@ -78,7 +78,6 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
             recipeId.append(item[0])
             recipeLabels.append(item[1])
             recipeImageLinks.append(item[2])
-            
 
     if request.method == "POST":
         if request.form["bt"] == 'logout':
