@@ -10,10 +10,10 @@ DATABASE = 'database.db'
 
 def init_db():
     db = sqlite3.connect(DATABASE)
-    db.execute('CREATE TABLE IF NOT EXISTS users (email TEXT PRIMARY KEY NOT NULL, fullname TEXT, imageurl TEXT, token TEXT)')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID TEXT, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
+    db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, comment TEXT, username TEXT, userimage TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
     db.commit()
     db.close()
 
@@ -21,10 +21,10 @@ def init_db():
 # Updates a user in the database or creates a new user if not existent
 # TODO parse out bad input TODO check the token with Google
 def update_user_db(email, name, imageurl, token):
-    try:
+    if check_user_db(email) == 0:
         db = sqlite3.connect(DATABASE)
-        db.execute('INSERT INTO users VALUES ("'+email+'","'+name+'","'+imageurl+'","'+token+'");')
-    except sqlite3.IntegrityError as e:
+        db.execute('INSERT INTO users (email, fullname, imageurl, token) VALUES ("'+email+'","'+name+'","'+imageurl+'","'+token+'");')
+    else:
         # print("User already in database")
         db = sqlite3.connect(DATABASE)
         db.execute('UPDATE users SET token = "'+token+'" WHERE email="'+email+'";')
@@ -32,7 +32,7 @@ def update_user_db(email, name, imageurl, token):
     db.close()
 
 
-# Returns 1 if this user already exists in the database otherwise returns 0
+# Returns 1 if this a user with the given email already exists in the users TABLE
 def check_user_db(email):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
@@ -40,6 +40,26 @@ def check_user_db(email):
     a = c.fetchall()
     db.close()
     return len(a)
+
+
+# Return the entry row for a user with given userID from the user TABLE
+def find_user_by_id_db(userId):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from users where userID='+str(userId)+';')
+    hit = c.fetchone()
+    db.close()
+    return hit    
+
+
+# Return the entry row for a user with given email from the user TABLE
+def find_user_by_email_db(email):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from users where email="'+email+'";')
+    hit = c.fetchone()
+    db.close()
+    return hit  
 
 
 # Returns 1 if the current token associated to this email matches the argument token
@@ -60,7 +80,7 @@ def add_recipe_overview_db(recipeId, userId, label, urllink):
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'","'+userId+'","'+filter_bad_input(label.lower())+'","'+filter_bad_input(urllink)+'","2.5");')
+        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'",'+str(userId)+',"'+filter_bad_input(label.lower())+'","'+filter_bad_input(urllink)+'","2.5");')
         for word in label.split(" "):
             add_recipe_keyword(c, recipeId, word)
     except sqlite3.IntegrityError as e:
@@ -112,10 +132,10 @@ def get_random_recipes(num):
 
 
 # Adds a new entry to the recipe_comment TABLE
-def add_recipe_comment(recipeId, comment, username, userimage):
+def add_recipe_comment(recipeId, userId, comment):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'","'+comment+'","'+username+'","'+userimage+'");')
+    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'",'+str(userId)+',"'+comment+'");')
     db.commit()
     db.close()
 

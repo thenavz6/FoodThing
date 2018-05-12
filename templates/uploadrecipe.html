@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='../static/navbar.css'>
-    <title>Recipe</title>
+    <title>User Profile</title>
 
 </head>
 
@@ -32,27 +32,13 @@
 
 <div class="container-fluid">
   <div class="row-fluid" id="main">
-
-      <p3><b> {{ recipeLabel }} </p3></b><br><br>
-      <img src = {{ recipeImage }} width="400" height="400"><br><br>
-      Ingredient List: <br>
-      {% for ingredient in recipeIngredients %}
-            {{ ingredient }} <br>
-      {% endfor %}
-      <br>
-      <p3><b> Comments </p3></b><br>
-      {% for comment in recipeComments %}
-            <form method="POST">
-                <input align="left" type="image" src={{usersWhoCommented[loop.index - 1][3]}} width="20" height="20" value={{usersWhoCommented[loop.index - 1][0]}} name="user">
-            </form>
-            <b> {{ usersWhoCommented[loop.index - 1][2] }} says </b> {{ comment }}               
-      {% endfor %}
-      <br>
+      {{ username }} <br>
+      <img src={{ userimage }} alt="You"><br><br>
       <form method="POST">
-          <textarea name="commentText" cols="40" rows="5"></textarea>
-          <input type="submit" value="comment" name="bt">
+          <input type="submit" value="Upload Recipe" name="bt">
       </form>
-
+      <br><br>
+      Put User Recipes Here
   </div>
 </div>
 
