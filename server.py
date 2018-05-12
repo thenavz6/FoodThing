@@ -79,7 +79,7 @@ def compare_token_db(email, token):
 def add_user_favourite_db(userId, recipeId):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('INSERT INTO user_favourites VALUES ('+str(userId)+',"'+recipeId+'";')
+    c.execute('INSERT INTO user_favourites VALUES ('+str(userId)+',"'+recipeId+'");')
     db.commit()
     db.close()
 
@@ -148,7 +148,6 @@ def find_recipe_id(cursor, recipeId):
     cursor.execute('SELECT * from recipe_overview WHERE recipeID="'+recipeId+'";')
     hits = cursor.fetchall()
     return hits
-
 
 
 # Returns upto 'num' amount of random entries from the recipe_overview TABLE

@@ -121,6 +121,12 @@ b90e6fb2878260b8f991bd4f9a8663ca")
     for ingredient in recipe.get('ingredients'):
         recipeIngredients.append(ingredient.get('text'))
 
+    isFavourited = False
+    userFavourites = server.find_user_favourites_db(authentication.userid)
+    for favourite in userFavourites:
+        if recipeId == favourite[1]:
+            isFavourited = True
+
     usersWhoCommented = []
     recipeComments = []
     for entry in server.get_recipe_comments(recipeId):
@@ -137,10 +143,16 @@ b90e6fb2878260b8f991bd4f9a8663ca")
             if request.form["bt"] == "comment":
                 server.add_recipe_comment(recipeId, authentication.userid, request.form["commentText"])
                 return redirect(url_for("recipe", recipeId = recipeId))
+            if request.form["bt"] == "Favourite":
+                server.add_user_favourite_db(authentication.userid, recipeId)
+                return redirect(url_for("recipe", recipeId = recipeId))
+            if request.form["bt"] == "Unfavourite":
+                server.delete_user_favourite_db(authentication.userid, recipeId)
+                return redirect(url_for("recipe", recipeId = recipeId))
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
