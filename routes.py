@@ -39,7 +39,8 @@ def dashboard():
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    return searchRecipe("lol")
+    # If the 'random' search term is in the recipe name it is ideal since then dashboard items can be stored and picked from our database.
+    return searchRecipe("food")
 
 
 # Does essentially the same as the above. Except based on search query text - so the above should populate with random recipes.
@@ -54,17 +55,30 @@ def searchRecipe(query):
     rand = random.randint(1,50)
 
     if request.method == "GET":
+        recipeId = []
+
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
         if (response.status_code != 200):
             return redirect(url_for("error"))
         jsonData = response.json()["hits"]
 
-        recipeId = []
         for item in jsonData:
-            recipeId.append(item.get('recipe').get('uri'))
+            # Add the recipe_overview to the database so we can search this too
+            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], item.get('recipe').get('label'), item.get('recipe').get('image'))
+            recipeId.append(item.get('recipe').get('uri').split("_",1)[1])
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
+
+        # Search the recipe_overview Database Table for matching labels and append hits from here too if we don't get 9 from Edamam.
+        # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
+        for item in server.find_recipes_keyword(query):
+            if len(recipeId) >= 9:
+                break
+            recipeId.append(item[0])
+            recipeLabels.append(item[1])
+            recipeImageLinks.append(item[2])
+            
 
     if request.method == "POST":
         if request.form["bt"] == 'logout':
@@ -73,7 +87,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
         if request.form["bt"][:6] == "recipe":
-            return redirect(url_for("recipe", recipeId = recipeId[int(request.form["bt"][7:])].split("_",1)[1]))
+            return redirect(url_for("recipe", recipeId = recipeId[int(request.form["bt"][7:])]))
 
     return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, imageurl = authentication.imageurl)
 
@@ -89,12 +103,18 @@ def recipe(recipeId):
 http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_"+str(recipeId)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca")
 
+    if (response.status_code != 200):
+        return redirect(url_for("error"))
+
     recipe = response.json()[0]
     recipeLabel = recipe.get('label')
     recipeImage = recipe.get('image')
     recipeIngredients = []
     for ingredient in recipe.get('ingredients'):
         recipeIngredients.append(ingredient.get('text'))
+    recipeComments = []
+    for entry in server.get_recipe_comments(recipeId):
+        recipeComments.append(entry)
 
     if request.method == "POST":
         if request.form["bt"] == 'logout':
@@ -102,6 +122,10 @@ b90e6fb2878260b8f991bd4f9a8663ca")
             return redirect(url_for("main"))
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
+        if request.form["bt"] == "comment":
+            server.add_recipe_comment(recipeId, request.form["commentText"], authentication.username, authentication.imageurl)
+            return redirect(url_for("recipe", recipeId = recipeId))
 
-    return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, imageurl = authentication.imageurl)
+    return render_template("recipe.html", recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, imageurl = authentication.imageurl,
+                            recipeComments = recipeComments)
 

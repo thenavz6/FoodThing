@@ -39,6 +39,16 @@
       {% for ingredient in recipeIngredients %}
             {{ ingredient }} <br>
       {% endfor %}
+      <br>
+      <p3><b> Comments </p3></b><br>
+      {% for comment in recipeComments %}
+            <b> {{ comment[2] }} says </b> {{ comment[1] }} <img align="left" src={{ comment[3] }} alt="You" style="width:20px;height:20px;"> <br>
+      {% endfor %}
+      <br>
+      <form method="POST">
+          <textarea name="commentText" cols="40" rows="5"></textarea>
+          <input type="submit" value="comment" name="bt">
+      </form>
 
   </div>
 </div>
