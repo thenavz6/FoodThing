@@ -37,7 +37,16 @@
   <div class="row-fluid" id="main">
 
       <p3><b> {{ recipeLabel }} </p3></b><br><br>
-      <img src = {{ recipeImage }} width="400" height="400"><br><br>
+      <img src = {{ recipeImage }} width="400" height="400"><br>
+      <form method="POST">
+      {% if isFavourited == true %}
+          <input type="submit" name="bt" value="Unfavourite"> 
+      {% else %}
+          <input type="submit" name="bt" value="Favourite">
+      {% endif %}
+      </form>
+
+      <br>
       Ingredient List: <br>
       {% for ingredient in recipeIngredients %}
             {{ ingredient }} <br>
@@ -52,7 +61,7 @@
       {% endfor %}
       <br>
       <form method="POST">
-          <textarea name="commentText" cols="40" rows="5"></textarea>
+          <textarea name="commentText" cols="40" rows="5"></textarea><br>
           <input type="submit" value="comment" name="bt">
       </form>
 
