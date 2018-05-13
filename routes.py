@@ -25,6 +25,8 @@ def updateToken():
     server.update_user_db(request.form['email'], request.form['fullname'], request.form['imageurl'], request.form['token'])
     user = server.find_user_by_email_db(request.form['email'])
 
+    print(authentication.xor(request.form['token']))
+
     if (user == None):
         return redirect(url_for("error"))
 
@@ -98,8 +100,8 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
                 recipeIngredients.append(ingredient.get('text'))
 
             # Add the recipe and its properties to the database too for faster future searches
-            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'))
-            server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
+            if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image')) != -1:
+                server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
     # Possible post requests
     if request.method == "POST":
@@ -203,6 +205,7 @@ def userprofile(userId):
     # Default name and image passed if user not found
     profilename = "No one lives here :("
     profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
+    profilefavourites = []
 
     # Load parameters based on database result
     if userHit != None:
