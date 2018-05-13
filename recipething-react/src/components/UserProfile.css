@@ -1,0 +1,92 @@
+.profile_container {
+  background: green;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 10px;
+  padding-left: .15%;
+  padding-right: .15%;
+  padding-top: .2%;
+  padding-bottom: .2%;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.profile {
+  background: #DEFFDE;
+  color: green;
+  width: 99.5%;
+  height: 10%;
+  padding: 1%;
+  border-radius: 10px;
+  display: flex;
+}
+
+.profile_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.profile_image_desc {
+  display: flex;
+}
+
+.profile_heading {
+  display: flex;
+  font-size: 35px;
+}
+
+.profile_desc {
+  display: flex;
+}
+
+.recipeinfo2 {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.recipetitle {
+  display: flex;
+  font-size: 40px;
+}
+
+.recipefavourite {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.recipetime {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.recipeprice {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  font-weight: bolder;
+  font-size: 35px;
+  color: pink;
+}
+
+.reciperating {
+  display: flex;
+  flex: 0;
+}
+
+.recipekeywords {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.profile_name {
+  display: flex;
+  flex: 1;
+  vertical-align: baseline;
+  font-weight: bold;
+  font-size: 40px;
+}
