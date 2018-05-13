@@ -66,8 +66,24 @@ def searchRecipe(query):
 
     if request.method == "GET":
         recipeId = []
+        # With a recipe search, we get at most half (5) of the items from our database if possible
+        # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
+        # This is to reduce API calls
+        databaseRecipes = server.find_recipes_keyword(query)
+        randomPicks = [x for x in range(len(databaseRecipes))]
+        random.shuffle(randomPicks)
+        for num in randomPicks:
+            if len(recipeId) >= 5:
+                break
+            recipeId.append(databaseRecipes[num][0])
+            recipeLabels.append(databaseRecipes[num][2])
+            recipeImageLinks.append(databaseRecipes[num][3])
+
+        # Fill in the remaining slots with API Calls
+        remainder = 9 - len(recipeId)
+        print("ONLY MADE "+str(remainder)+" API CALLS")
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
-b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
+b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
         if (response.status_code != 200):
             return redirect(url_for("error"))
         jsonData = response.json()["hits"]
@@ -84,15 +100,6 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
             # Add the recipe and its properties to the database too for faster future searches
             server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'))
             server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
-
-        # Search the recipe_overview Database Table for matching labels and append hits from here too if we don't get 9 from Edamam.
-        # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
-        for item in server.find_recipes_keyword(query):
-            if len(recipeId) >= 9:
-                break
-            recipeId.append(item[0])
-            recipeLabels.append(item[1])
-            recipeImageLinks.append(item[2])
 
     # Possible post requests
     if request.method == "POST":

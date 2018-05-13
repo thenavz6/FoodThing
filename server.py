@@ -137,9 +137,8 @@ def find_recipes_keyword(word):
     hits = c.fetchall()
     recipes = []
     for hit in hits:
-        for recipe in find_recipe_id_db(hit[0]):
-            recipes.append(recipe)
-    
+        recipe = find_recipe_id_db(hit[0])
+        recipes.append(recipe)
     db.close()
     return recipes
 
