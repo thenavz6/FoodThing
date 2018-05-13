@@ -110,18 +110,19 @@ def add_recipe_overview_db(recipeId, userId, label, urllink):
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'",'+str(userId)+',"'+filter_bad_input(label.lower())+'","'+filter_bad_input(urllink)+'","2.5");')
+        c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'",'+str(userId)+',"'+filter_bad_input(label)+'","'+filter_bad_input(urllink)+'","2.5");')
         for word in label.split(" "):
             add_recipe_keyword(c, recipeId, word)
     except sqlite3.IntegrityError as e:
-        pass
         # print("Recipe already in database")
+        return -1
     except sqlite3.OperationalError as e:
         pass
         # illegal character
     
     db.commit()
     db.close()
+    return 1
 
 
 # Should NOT be called directly but rather only when new recipes are added through add_recipe_overview_db
