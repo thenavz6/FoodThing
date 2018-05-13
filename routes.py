@@ -71,7 +71,7 @@ def searchRecipe(query):
         # With a recipe search, we get at most half (5) of the items from our database if possible
         # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
         # This is to reduce API calls
-        databaseRecipes = server.find_recipes_keyword(query)
+        databaseRecipes = server.find_recipes_keyword_db(query)
         randomPicks = [x for x in range(len(databaseRecipes))]
         random.shuffle(randomPicks)
         for num in randomPicks:
@@ -162,7 +162,7 @@ def recipe(recipeId):
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
     recipeComments = []
-    for entry in server.get_recipe_comments(recipeId):
+    for entry in server.get_recipe_comments_db(recipeId):
         recipeComments.append(entry[2])
         usersWhoCommented.append(server.find_user_by_id_db(int(entry[1])))
 
@@ -175,7 +175,7 @@ def recipe(recipeId):
             if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
                 return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
             if request.form["bt"] == "comment":
-                server.add_recipe_comment(recipeId, authentication.userid, request.form["commentText"])
+                server.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
                 return redirect(url_for("recipe", recipeId = recipeId))
             if request.form["bt"] == "Favourite":
                 server.add_user_favourite_db(authentication.userid, recipeId)
