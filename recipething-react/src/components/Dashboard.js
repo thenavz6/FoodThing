@@ -10,14 +10,14 @@ class Dashboard extends Component {
       <div>
         <MainHeader />
         <div className="main_container">
-          <Recipe />
-          <Recipe />
-          <Recipe />
-          <Recipe />
-          <Recipe />
           <div className="favourites_button">
-            <NavLink className="navlink" to="/">My Favourites</NavLink>
+            <NavLink className="navlink" to="/favourites">My Favourites</NavLink>
           </div>
+          <Recipe />
+          <Recipe />
+          <Recipe />
+          <Recipe />
+          <Recipe />
         </div>
       </div>
     );
