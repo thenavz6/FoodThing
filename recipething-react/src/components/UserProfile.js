@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MainHeader from './Main_Header';
-import ProfileDesc from './Profile_Desc';
 import Recipe from './Recipe';
+import './Dashboard.css';
 
 class UserProfile extends Component {
   render() {
@@ -9,18 +9,13 @@ class UserProfile extends Component {
       <div>
         <MainHeader />
         <div className="main_container">
-          <ProfileDesc/>
-          <div className="profile_heading">
-            {/*Need to be either "Favourites" or "Your Favourites" depending on user*/}
-            YOUR FAVOURITES
+          <div className="recipe_container">
+            <div className="recipe">
+              <h1>TOM BOB</h1>
+              <h1>YOUR RECIPES</h1>
+              <h1>YOUR FAVOURITES</h1>
+            </div>
           </div>
-          {/*Need to check if user has favourited any recipes, otherwise blank?*/}
-          <Recipe/>
-          <div className="profile_heading">
-            {/*Need to be either "Recipes" or "Your Recipes" depending on user*/}
-            YOUR RECIPES
-          </div>
-          <Recipe/>
         </div>
       </div>
     );
