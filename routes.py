@@ -57,26 +57,33 @@ def searchRecipe(query):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
+    # Initialise required values
     global recipeId
     recipeLabels = []
     recipeImageLinks = []
+    recipeIngredients = []
     rand = random.randint(1,50)
 
     if request.method == "GET":
         recipeId = []
-
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
         if (response.status_code != 200):
             return redirect(url_for("error"))
         jsonData = response.json()["hits"]
 
+        # For each item/recipe we get back we will append them onto our lists
         for item in jsonData:
-            # Add the recipe_overview to the database so we can search this too
-            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'))
             recipeId.append(item.get('recipe').get('uri').split("_",1)[1])
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
+            recipeIngredients = []
+            for ingredient in item.get('recipe').get('ingredients'):
+                recipeIngredients.append(ingredient.get('text'))
+
+            # Add the recipe and its properties to the database too for faster future searches
+            server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'))
+            server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
         # Search the recipe_overview Database Table for matching labels and append hits from here too if we don't get 9 from Edamam.
         # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
@@ -87,6 +94,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+9))
             recipeLabels.append(item[1])
             recipeImageLinks.append(item[2])
 
+    # Possible post requests
     if request.method == "POST":
         if request.form["bt"] == 'logout':
             authentication.is_authenticated = False;
@@ -107,32 +115,49 @@ def recipe(recipeId):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    response = requests.get("https://api.edamam.com/search?r=\
-http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_"+str(recipeId)+"&app_id=c565299e&app_key=\
-b90e6fb2878260b8f991bd4f9a8663ca")
-
-    if (response.status_code != 200):
-        return redirect(url_for("error"))
-
-    recipe = response.json()[0]
-    recipeLabel = recipe.get('label')
-    recipeImage = recipe.get('image')
+    # Initialise these values
+    recipeLabel = ""
+    recipeImage = ""
     recipeIngredients = []
-    for ingredient in recipe.get('ingredients'):
-        recipeIngredients.append(ingredient.get('text'))
 
+    # First check if we have this recipe in our database already which will be true if it appeared in a search query
+    # Makes future requests (like favouriting and commenting MUCH FASTER)
+    recipeHit = server.find_recipe_id_db(recipeId)
+    if recipeHit != None:
+        recipeLabel = recipeHit[2]
+        recipeImage = recipeHit[3]
+        for ingredient in server.find_recipe_ingredients_db(recipeId):
+            recipeIngredients.append(ingredient[1])
+
+    # Only if we do not then we ask edamam
+    else:
+        response = requests.get("https://api.edamam.com/search?r=\
+    http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_"+str(recipeId)+"&app_id=c565299e&app_key=\
+    b90e6fb2878260b8f991bd4f9a8663ca")
+
+        if (response.status_code != 200):
+            return redirect(url_for("error"))
+        recipe = response.json()[0]
+        recipeLabel = recipe.get('label')
+        recipeImage = recipe.get('image')
+        for ingredient in recipe.get('ingredients'):
+            recipeIngredients.append(ingredient.get('text'))
+
+    # Check if the user has favourited this recipe
     isFavourited = False
     userFavourites = server.find_user_favourites_db(authentication.userid)
     for favourite in userFavourites:
         if recipeId == favourite[1]:
             isFavourited = True
 
+    # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
     recipeComments = []
     for entry in server.get_recipe_comments(recipeId):
         recipeComments.append(entry[2])
         usersWhoCommented.append(server.find_user_by_id_db(int(entry[1])))
 
+    # Possible post requests
     if request.method == "POST":
         if "bt" in request.form:
             if request.form["bt"] == 'logout':
@@ -172,10 +197,16 @@ def userprofile(userId):
     profilename = "No one lives here :("
     profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
 
+    # Load parameters based on database result
     if userHit != None:
         profilename = userHit[2]
         profileimage = userHit[3]
+        profilefavourites = []
+        findfavourites = server.find_user_favourites_db(userId)
+        for favourite in findfavourites:
+            profilefavourites.append(favourite[1])
 
+    # Possible post requests
     if request.method == "POST":
         if request.form["bt"] == "Upload Recipe":
             return redirect(url_for("uploadRecipe"))  
@@ -185,7 +216,7 @@ def userprofile(userId):
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
 
-    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
 # The page for uploading user recipes

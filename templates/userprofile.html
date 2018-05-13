@@ -43,7 +43,11 @@
       </form>
       <br><br>
       {% endif %}
-      Put User Recipes Here
+      Put User Recipes Here<br><br>
+      Put Favourites Here (Currently recipeIDs)<br>
+      {% for favourite in profilefavourites %}
+          {{ favourite }}<br>
+      {% endfor %}
   </div>
 </div>
 

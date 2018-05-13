@@ -14,6 +14,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredient TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
     db.commit()
     db.close()
@@ -136,7 +137,7 @@ def find_recipes_keyword(word):
     hits = c.fetchall()
     recipes = []
     for hit in hits:
-        for recipe in find_recipe_id(c, hit[0]):
+        for recipe in find_recipe_id_db(hit[0]):
             recipes.append(recipe)
     
     db.close()
@@ -144,9 +145,33 @@ def find_recipes_keyword(word):
 
 
 # Return entries from recipe_overview TABLE that have a matching recipeId 
-def find_recipe_id(cursor, recipeId):
+def find_recipe_id_db(recipeId):
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
     cursor.execute('SELECT * from recipe_overview WHERE recipeID="'+recipeId+'";')
-    hits = cursor.fetchall()
+    hits = cursor.fetchone()
+    db.close()
+    return hits
+
+
+
+# Creates entries in the recipe_ingredients TABLE for each ingredient associated with this recipe
+def add_recipe_ingredients_db(recipeId, ingredientList):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    for ingredient in ingredientList:
+        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+ingredient.lower()+'");')
+    db.commit()
+    db.close()
+
+
+# Returns all entries of ingredients for the given recipeId from recipe_ingredients TABLE
+def find_recipe_ingredients_db(recipeId):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from recipe_ingredients WHERE recipeID="'+recipeId+'";')
+    hits = c.fetchall()
+    db.close()
     return hits
 
 
