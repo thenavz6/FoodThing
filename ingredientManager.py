@@ -34,35 +34,45 @@ def convertIngredient(ingredientString):
     ingredientString = filterInput(ingredientString)
     parameters = []
 
+
     # First we look for a measure substring. The reason for this is that the number/quantity is usually to the left of this
     # And it's easier than looking for a number when an ingredient specifies more than one way to measure
-    measure = "unit"
+    measure = 'unit'
+    givenMeasure = ''
     for word in ingredientString.split(" "):
         if findKeyFromMeasureDict(word) != -1:
             measure = findKeyFromMeasureDict(word)
+            givenMeasure = word
             break
+
 
     # To find the amount we assume that it is the first value in the ingredientString
     # Collect numbers until we run unto an alphabetic character
     amount = ''
-    indexOfMeasure = ingredientString.find(measure)
-    if indexOfMeasure != -1:
-        wordsBeforeMeasure = ingredientString[:indexOfMeasure].split(" ")
+    if measure != 'unit':
+        indexOfMeasure = (ingredientString.split(" ")).index(givenMeasure)
+        wordsBeforeMeasure = (ingredientString.split(" "))[:indexOfMeasure]
         for word in reversed(wordsBeforeMeasure):
-            if not word.isalpha():
+            if not word.isalpha() and len(amount) != 0:
                 amount = word + " " + amount
+            elif not word.isalpha():
+                amount = word
             else:
                 break
     else:
-        amount = '1'
         for word in ingredientString.split(" "):
             if not word.isalpha():
                 amount = word
                 break     
+    if amount == '':
+        amount = '1'
 
+
+    # Try and determine the actual product name or product keywords from the ingredientString
     item = ''
-    if indexOfMeasure != -1:
-        wordsAfterMeasure = ingredientString[indexOfMeasure:].split(" ")
+    if measure != 'unit':
+        indexOfMeasure = (ingredientString.split(" ")).index(givenMeasure)
+        wordsAfterMeasure = (ingredientString.split(" "))[indexOfMeasure:]
         for word in wordsAfterMeasure[1:]:
             if word.isalpha():
                 item += word
@@ -70,6 +80,7 @@ def convertIngredient(ingredientString):
         for word in ingredientString.split(" "):
             if word.isalpha():
                 item += word
+
 
     print("Work in Progress! Amount: " + amount + ". Measure: " + measure + ". Item: " + item)
     # For the text we filter out common words such as "of", "a", "dash", "store", "bought" etc.
@@ -81,8 +92,6 @@ def filterInput(string):
     for c in string:
         if c not in ["'", ",", '"', "(", ")", "-", "."]:
             filtered += c
-        elif c == ",":
-            filtered += "."
         else:
             filtered += " "
     return filtered
