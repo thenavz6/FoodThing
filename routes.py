@@ -138,7 +138,7 @@ def recipe(recipeId):
         recipeImage = recipeHit[3]
         for ingredient in server.find_recipe_ingredients_db(recipeId):
             recipeIngredients.append(ingredient[1])
-            ingredientManager.convertIngredient(ingredient[1])   
+            ingredientManager.convertIngredient(ingredient[1])
 
     # Only if we do not then we ask edamam
     else:
@@ -153,7 +153,7 @@ def recipe(recipeId):
         recipeImage = recipe.get('image')
         for ingredient in recipe.get('ingredients'):
             recipeIngredients.append(ingredient.get('text'))
-            ingredientManager.convertIngredient(ingredient.get('text'))          
+            ingredientManager.convertIngredient(ingredient.get('text'))
 
     # Check if the user has favourited this recipe
     isFavourited = False
@@ -222,7 +222,7 @@ def userprofile(userId):
     # Possible post requests
     if request.method == "POST":
         if request.form["bt"] == "Upload Recipe":
-            return redirect(url_for("uploadRecipe"))  
+            return redirect(url_for("uploadRecipe"))
         if request.form["bt"] == 'logout':
             authentication.is_authenticated = False;
             return redirect(url_for("main"))
@@ -240,4 +240,3 @@ def uploadRecipe():
         return redirect(url_for("main"))
 
     return render_template("uploadrecipe.html")
-

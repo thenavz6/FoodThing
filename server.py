@@ -51,7 +51,7 @@ def find_user_by_id_db(userId):
     c.execute('SELECT * from users WHERE userID='+str(userId)+';')
     hit = c.fetchone()
     db.close()
-    return hit    
+    return hit
 
 
 # Return the entry row for a user with given email from the user TABLE
@@ -61,7 +61,7 @@ def find_user_by_email_db(email):
     c.execute('SELECT * from users WHERE email="'+email+'";')
     hit = c.fetchone()
     db.close()
-    return hit  
+    return hit
 
 
 # Returns 1 if the current token associated to this email matches the argument token
@@ -119,7 +119,7 @@ def add_recipe_overview_db(recipeId, userId, label, urllink):
     except sqlite3.OperationalError as e:
         pass
         # illegal character
-    
+
     db.commit()
     db.close()
     return 1
@@ -144,7 +144,7 @@ def find_recipes_keyword_db(word):
     return recipes
 
 
-# Return entries from recipe_overview TABLE that have a matching recipeId 
+# Return entries from recipe_overview TABLE that have a matching recipeId
 def find_recipe_id_db(recipeId):
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -211,4 +211,3 @@ def filter_bad_input(data):
 
 
 init_db()
-
