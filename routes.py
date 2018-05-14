@@ -6,6 +6,7 @@ import random
 import authentication
 import server
 from server import app
+import ingredientManager
 
 
 @app.route("/",methods=["GET", "POST"])
@@ -25,7 +26,7 @@ def updateToken():
     server.update_user_db(request.form['email'], request.form['fullname'], request.form['imageurl'], request.form['token'])
     user = server.find_user_by_email_db(request.form['email'])
 
-    print(authentication.xor(request.form['token']))
+    # print(authentication.xor(request.form['token']))
 
     if (user == None):
         return redirect(url_for("error"))
@@ -83,7 +84,7 @@ def searchRecipe(query):
 
         # Fill in the remaining slots with API Calls
         remainder = 9 - len(recipeId)
-        print("ONLY MADE "+str(remainder)+" API CALLS")
+        # print("ONLY MADE "+str(remainder)+" API CALLS")
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
         if (response.status_code != 200):
@@ -137,6 +138,7 @@ def recipe(recipeId):
         recipeImage = recipeHit[3]
         for ingredient in server.find_recipe_ingredients_db(recipeId):
             recipeIngredients.append(ingredient[1])
+            ingredientManager.convertIngredient(ingredient[1])   
 
     # Only if we do not then we ask edamam
     else:
@@ -151,6 +153,7 @@ def recipe(recipeId):
         recipeImage = recipe.get('image')
         for ingredient in recipe.get('ingredients'):
             recipeIngredients.append(ingredient.get('text'))
+            ingredientManager.convertIngredient(ingredient.get('text'))          
 
     # Check if the user has favourited this recipe
     isFavourited = False

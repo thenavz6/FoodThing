@@ -21,7 +21,7 @@ def init_db():
 
 
 # Updates a user in the database or creates a new user if not existent
-# TODO parse out bad input TODO check the token with Google
+# TODO check the token with Google
 def update_user_db(email, name, imageurl, token):
     if check_user_db(email) == 0:
         db = sqlite3.connect(DATABASE)
@@ -127,7 +127,7 @@ def add_recipe_overview_db(recipeId, userId, label, urllink):
 
 # Should NOT be called directly but rather only when new recipes are added through add_recipe_overview_db
 def add_recipe_keyword_db(cursor, recipeId, word):
-    cursor.execute('INSERT INTO recipe_keywords VALUES ("'+recipeId+'","'+word.lower()+'");')
+    cursor.execute('INSERT INTO recipe_keywords VALUES ("'+recipeId+'","'+filter_bad_input(word.lower())+'");')
 
 
 # Return entres from recipe_keywords TABLE that have a matching keyword in the recipe_keywords table
@@ -154,13 +154,12 @@ def find_recipe_id_db(recipeId):
     return hits
 
 
-
 # Creates entries in the recipe_ingredients TABLE for each ingredient associated with this recipe
 def add_recipe_ingredients_db(recipeId, ingredientList):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     for ingredient in ingredientList:
-        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+ingredient.lower()+'");')
+        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+filter_bad_input(ingredient.lower())+'");')
     db.commit()
     db.close()
 
@@ -188,7 +187,7 @@ def get_random_recipes(num):
 def add_recipe_comment_db(recipeId, userId, comment):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'",'+str(userId)+',"'+comment+'");')
+    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'",'+str(userId)+',"'+filter_bad_input(comment)+'");')
     db.commit()
     db.close()
 
@@ -206,9 +205,10 @@ def get_recipe_comments_db(recipeID):
 def filter_bad_input(data):
     filtered = ''
     for c in data:
-        if c not in [",",";","(",")"]:
+        if c not in ["'",";","=",'"']:
             filtered += c
     return filtered
+
 
 init_db()
 
