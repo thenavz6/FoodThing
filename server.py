@@ -21,7 +21,7 @@ def init_db():
 
 
 # Updates a user in the database or creates a new user if not existent
-# TODO parse out bad input TODO check the token with Google
+# TODO check the token with Google
 def update_user_db(email, name, imageurl, token):
     if check_user_db(email) == 0:
         db = sqlite3.connect(DATABASE)
@@ -112,7 +112,7 @@ def add_recipe_overview_db(recipeId, userId, label, urllink):
     try:
         c.execute('INSERT INTO recipe_overview VALUES ("'+filter_bad_input(recipeId)+'",'+str(userId)+',"'+filter_bad_input(label)+'","'+filter_bad_input(urllink)+'","2.5");')
         for word in label.split(" "):
-            add_recipe_keyword(c, recipeId, word)
+            add_recipe_keyword_db(c, recipeId, word)
     except sqlite3.IntegrityError as e:
         # print("Recipe already in database")
         return -1
@@ -126,12 +126,12 @@ def add_recipe_overview_db(recipeId, userId, label, urllink):
 
 
 # Should NOT be called directly but rather only when new recipes are added through add_recipe_overview_db
-def add_recipe_keyword(cursor, recipeId, word):
-    cursor.execute('INSERT INTO recipe_keywords VALUES ("'+recipeId+'","'+word.lower()+'");')
+def add_recipe_keyword_db(cursor, recipeId, word):
+    cursor.execute('INSERT INTO recipe_keywords VALUES ("'+recipeId+'","'+filter_bad_input(word.lower())+'");')
 
 
 # Return entres from recipe_keywords TABLE that have a matching keyword in the recipe_keywords table
-def find_recipes_keyword(word):
+def find_recipes_keyword_db(word):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     c.execute('SELECT * from recipe_keywords WHERE keyword="'+word.lower()+'";')
@@ -154,13 +154,12 @@ def find_recipe_id_db(recipeId):
     return hits
 
 
-
 # Creates entries in the recipe_ingredients TABLE for each ingredient associated with this recipe
 def add_recipe_ingredients_db(recipeId, ingredientList):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     for ingredient in ingredientList:
-        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+ingredient.lower()+'");')
+        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+filter_bad_input(ingredient.lower())+'");')
     db.commit()
     db.close()
 
@@ -185,16 +184,16 @@ def get_random_recipes(num):
 
 
 # Adds a new entry to the recipe_comment TABLE
-def add_recipe_comment(recipeId, userId, comment):
+def add_recipe_comment_db(recipeId, userId, comment):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'",'+str(userId)+',"'+comment+'");')
+    c.execute('INSERT INTO recipe_comments VALUES ("'+recipeId+'",'+str(userId)+',"'+filter_bad_input(comment)+'");')
     db.commit()
     db.close()
 
 
 # Gets all of the comments for a particular recipeID from the recipe_comment TABLE
-def get_recipe_comments(recipeID):
+def get_recipe_comments_db(recipeID):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     c.execute('SELECT * from recipe_comments WHERE recipeID="'+recipeID+'";')
@@ -206,7 +205,7 @@ def get_recipe_comments(recipeID):
 def filter_bad_input(data):
     filtered = ''
     for c in data:
-        if c not in [",",";","(",")"]:
+        if c not in ["'",";","=",'"']:
             filtered += c
     return filtered
 
