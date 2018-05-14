@@ -1,5 +1,5 @@
 .navlink {
-  color: white;
+  color: inherit;
   text-decoration: none;
 }
 .navlink:focus {
