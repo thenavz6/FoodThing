@@ -44,10 +44,12 @@
   text-align: justify;
 }
 
-.editbt {
+.rightbt {
+  display: flex;
   justify-content: flex-end;
-  flex: 1;
-  right: 0;
+}
+
+.editbt {
   background-color: green;
   color: white;
   border-radius: 10px;

@@ -23,13 +23,15 @@ class Profile_Desc extends Component {
                 <div className="profile_desc">
                   I love absorbing nutrients by inserting edible items into my face.
                 </div>
+                {/*This button should only be available to the relevant user*/}
+                <div className="rightbt">
+                  <div className="editbt">
+                    {/*Need to add ability to edit profile description*/}
+                    EDIT
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          {/*This button should only be available to the relevant user*/}
-          <div className="editbt">
-            {/*Need to add ability to edit profile description*/}
-            EDIT
           </div>
         </div>
       </div>
