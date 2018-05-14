@@ -40,7 +40,8 @@ def findKeyFromMeasureDict(measure):
 # measure, amount and item
 def convertIngredient(ingredientString):
     ingredientString = filterInput(ingredientString)   
-    ingredientString = removeBracketedText(ingredientString)      
+    ingredientString = removeBracketedText(ingredientString)
+    ingredientString = removeCommonWords(ingredientString)      
     parameters = []
 
 
@@ -103,9 +104,12 @@ def convertIngredient(ingredientString):
 ################### General Text Parser #########################
 #################################################################
 
-# Words that are alphabetic but don't describe the actual recipe
+# Words that are alphabetic but don't describe the actual ingredients' product
+# Also best to remove adjectives that are being used to describe cooking steps
 commonWords = [
-    "of", "the", "and", "or", "into", "&", "like"
+    "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", 
+    "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
+    "then", "at", "thinly", "sliced", "diced", "medium"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
@@ -131,6 +135,17 @@ def removeBracketedText(string):
         return string.split(result)[0] + string.split(result)[1]
     except ValueError:
         return string
+
+
+# Removes any common words as contained in the commonWords list from this string
+def removeCommonWords(string):
+    result = ''
+    for word in string.split():
+        if word in commonWords:
+            pass
+        else:
+            result += word + " "
+    return result
 
 
 #################################################################
