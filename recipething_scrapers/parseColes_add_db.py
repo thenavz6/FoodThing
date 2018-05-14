@@ -1,9 +1,12 @@
-# Amount is usually given in grams of millileters
+import product_db
+
+#############################################
+### COLES specific scraped data parsing ####
+#############################################
 
 # List of unit of measures that coles uses
 # It is important to put shorter terms like "g" after "kg" since first hit is taken
 colesUnits = ["mg", "kg", "g", "ml", "l"]
-
 
 with open("coles_products.txt") as f:
     content = f.readlines()
@@ -31,36 +34,31 @@ for entry in content:
     except IndexError:
         pass 
 
-    # Find the quantity of the amount
+    # Find the quantity of the amount. Coles always writes this first.
     quantity = ''
     for char in measure:
         if not char.isalpha():
             quantity += char
         else:
             break
-    
     if quantity.strip() == '':
         quantity = "1"
 
-
     # Find the unit of measure of the amount
+    # Use the colesUnits list to find a unit Coles uses
     unit = "Unit"
     for value in colesUnits:
         if value in measure:
             unit = value
             break
 
-    print("NAME: " + name, ". MEASURE: " + measure + ". COST: " + cost + ". LINK: " + link)
-    print("QUANTITY: " + quantity + ". UNIT: " + unit)
     keywords = []
     for word in name.split():
         keywords.append(word)
-    print("KEYWORDS: ")
-    for word in keywords:
-        print(word)
 
-    # Write this into a database with two tables
-    
-    
-    
-    
+    # Write this into a database with two tables    
+    product_db.add_product_overview(name, link, quantity, unit, cost, "coles")
+    productId = product_db.find_product_id(name)
+    for word in keywords:
+        product_db.add_product_keyword(productId, word)
+
