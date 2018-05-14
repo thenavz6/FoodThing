@@ -3,8 +3,8 @@
 
 ####################################################
 # Takes in a String for one ingredient such as
-# "10 g of honey" And places into parameters
-# Amount: 10, Measure: g, Item: honey
+# "10 to 15 g of honey" And places into parameters
+# Amount: 15, Measure: g, Item: honey
 ###################################################
 
 unitDictionary = {
@@ -27,6 +27,7 @@ unitDictionary = {
 }
 
 
+# Return the matching key if that's key's list has the given measure
 def findKeyFromMeasureDict(measure):
     for key, value in unitDictionary.items():
         for term in value:
@@ -35,8 +36,11 @@ def findKeyFromMeasureDict(measure):
     return -1
 
 
+# ingredientString is the user provided ingredient string which is then converted to necessary parameters such as 
+# measure, amount and item
 def convertIngredient(ingredientString):
-    ingredientString = filterInput(ingredientString)           
+    ingredientString = filterInput(ingredientString)   
+    ingredientString = removeBracketedText(ingredientString)      
     parameters = []
 
 
@@ -54,7 +58,7 @@ def convertIngredient(ingredientString):
 
     # To find the amount we assume that it is somewhere to the left of where the units were written
     # Collect numbers to the left of the units given until we run unto an alphabetic character
-    # This can still give us problems for instance if a range of numbers or strange text is given such as "1/2". Need to parse.
+    # This can still give us problems for instance if a range of numbers or strange text is given such as "1/2". Need to parse, so we do
     amount = ''
     if measure != 'unit':
         indexOfMeasure = (ingredientString.split(" ")).index(givenMeasure)
@@ -89,7 +93,7 @@ def convertIngredient(ingredientString):
                 item += word + " "
 
 
-    print("Work in Progress! Amount: " + determineFinalAmount(amount) + ". Measure: " + measure + ". Item: " + item)
+    print("Work in Progress! Amount: " + str(determineFinalAmount(amount)) + ". Measure: " + measure + ". Item: " + item)
     # print("Final amount is: " + determineFinalAmount(fractionStringToFloat(parseUnicodeFraction(amount))))
     # For the text we filter out common words such as "of", "a", "dash", "store", "bought" etc.
     return parameters
@@ -99,16 +103,34 @@ def convertIngredient(ingredientString):
 ################### General Text Parser #########################
 #################################################################
 
+# Words that are alphabetic but don't describe the actual recipe
+commonWords = [
+    "of", "the", "and", "or", "into", "&", "like"
+]
+
 # General input string filtering to remove unwanted characters and replace them with a space
 def filterInput(string):
     filtered = ''
     for c in string:
-        # Get rid of these characteres and replace them with something else
-        if c not in ["'", ",", '"', "(", ")", "-", "."]:
-            filtered += c
-        else:
+        if c == u"⁄":
+            filtered += "/"
+        elif c in ["'", ",", '"', "-", "."]:
             filtered += " "
+        else:
+            filtered += c
     return filtered
+
+
+# If there is any bracketed text (like this) in a string, it will be removed
+def removeBracketedText(string):
+    try:
+        start, end = string.index("("), string.index(")")
+        if (start > end):
+            return string
+        result = string[start:end+1]
+        return string.split(result)[0] + string.split(result)[1]
+    except ValueError:
+        return string
 
 
 #################################################################
@@ -161,7 +183,8 @@ def fractionStringToFloat(word):
     return word
 
 
-# We have to consider multipe things when try to determine the actual quantity needed
+# We have to consider multipe things when try to determine the actual quantity needed such as certain characters used to describe
+# fractions, given a range of quantities etc.
 def determineFinalAmount(string):
     # Get rid of all unicode and replace them with floats
     string = parseUnicodeFraction(string)
@@ -174,7 +197,7 @@ def determineFinalAmount(string):
         try:
             value.insert(0, (float(fractionStringToFloat(word))))
         except ValueError:
-            value.append(0, 0)
+            value.insert(0, 0)
 
     # Go backwards through all values and pick the highest integer and any < 1 fractions to the right of it
     for num in value:
@@ -186,5 +209,9 @@ def determineFinalAmount(string):
         else:
             break     
 
-    return str(finalAmount)
+    # If we tried our best and still can't get anything, assume quantity is 1
+    if finalAmount == 0.0:
+        finalAmount = 1.0
+
+    return finalAmount
 
