@@ -19,62 +19,55 @@
   height: 10%;
   padding: 1%;
   border-radius: 10px;
+}
+
+.recipe_top {
   display: flex;
 }
 
-.recipeimage {
-  width: 125px;
-  height: 125px;
+.recipe_name {
+  font-weight: bold;
+  font-size: 40px;
 }
 
-.overallrecipeinfo {
-  display: flex;
+.recipe_author {
+  font-size: 30px;
+}
+
+.recipe_info {
   flex-direction: column;
   width: 100%;
 }
 
-.recipeinfo1 {
+.recipe_image_desc {
   display: flex;
 }
 
-.recipeinfo2 {
-  display: flex;
-  flex-direction: column;
-  text-align: right;
+.recipe_subheading {
+  font-size: 35px;
 }
 
-.recipetitle {
-  display: flex;
-  font-size: 40px;
-}
-
-.recipefavourite {
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.recipetime {
-  font-weight: bold;
+.recipe_desc {
   font-size: 20px;
+  text-align: justify;
 }
 
-.recipeprice {
+.recipe_time {
   display: flex;
   flex: 1;
   justify-content: flex-end;
-  font-weight: bolder;
+  font-weight: bold;
   font-size: 40px;
-  color: violet;
 }
 
-.reciperating {
+.recipe_calories {
   display: flex;
-  flex: 0;
+  align-self: flex-end;
+  font-size: 25px;
 }
 
-.recipekeywords {
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
+.recipe_heading {
+  font-weight: bold;
+  font-size: 40px;
+  margin-left: 11%;
 }

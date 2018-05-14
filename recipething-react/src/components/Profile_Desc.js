@@ -18,7 +18,7 @@ class Profile_Desc extends Component {
               </div>
               <div className="right_desc">
                 <div className="profile_subheading">
-                  DESCRIPTION:
+                  DESCRIPTION
                 </div>
                 <div className="profile_desc">
                   I love absorbing nutrients by inserting edible items into my face.

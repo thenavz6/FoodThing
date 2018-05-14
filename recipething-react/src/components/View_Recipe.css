@@ -1,0 +1,64 @@
+.list {
+  margin-left: 15%;
+  margin-right: 15%;
+  font-size: 30px;
+}
+
+ol {
+  margin-top: 0;
+}
+
+.ingredient_price {
+  display: inline-flex;
+}
+
+.ingredient_store {
+  text-align: right;
+}
+
+.swapbt {
+  display: inline;
+  justify-content: center;
+  background-color: green;
+  color: white;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 5px;
+  height: 100%;
+  font-weight: bold;
+}
+
+table {
+  table-layout: fixed;
+  width: 110%;
+  margin-bottom: 30px;
+}
+
+td:nth-child(1) {
+  width: 50%;
+}
+td:nth-child(even) {
+    margin-left: 100px;
+    text-align: right;
+    width: 15%;
+}
+td:nth-child(3) {
+    margin-left: 100px;
+    text-align: right;
+    width: 15%;
+}
+
+.commentbox {
+  background: white;
+  color: gray;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 12.5px;
+  outline: none;
+}
+
+.commentbox:focus {
+  border-radius: 10px;
+  border-color: gray;
+  background: silver;
+}

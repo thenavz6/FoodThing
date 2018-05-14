@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom'
 import GoogleLogo from '../images/Google.png';
 import OpenStar from '../images/open_star.png';
+import ClosedStar from '../images/closed_star.png';
 import './Recipe.css'
 
 class Recipe extends Component {
@@ -28,11 +29,11 @@ class Recipe extends Component {
             </div>
             <div className="recipeinfo1">
               <div className="reciperating">
-                <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
-                <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
-                <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
-                <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
-                <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
+                <img src={ClosedStar} alt="ClosedStar" height="40" width="40"/>
+                <img src={ClosedStar} alt="ClosedStar" height="40" width="40"/>
+                <img src={ClosedStar} alt="ClosedStar" height="40" width="40"/>
+                <img src={ClosedStar} alt="ClosedStar" height="40" width="40"/>
+                <img src={ClosedStar} alt="ClosedStar" height="40" width="40"/>
               </div>
               <div className="recipeprice">
                 $12.00

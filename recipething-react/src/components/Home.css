@@ -3,7 +3,7 @@
   text-decoration: none;
 }
 .navlink:focus {
-  color: red;
+  color: green;
   font-weight: bold;
 }
 
