@@ -12,14 +12,18 @@ const MainHeader = () => (
           	<input type="text" name="searchtext" placeholder="Search here..." className="searchbox"/>
           	<input type="submit" value="Search" name="search_bt" className="searchbt"/>
           </form>
-          <div className="recipething">RECIPETHING</div>
+          <div className="recipething">
+            <NavLink className="navlink" to="/dashboard">
+              RECIPETHING
+            </NavLink>
+          </div>
           <NavLink to="/"><img src={NotificationsImage} alt="notifyimage" className="notifyimage"/></NavLink>
           <div className="rightbuttons">
             <NavLink className="navlink" to="/">ADD RECIPE</NavLink>
           </div>
           <div className="buttondivider">|</div>
           <div className="rightbuttons">
-            <NavLink className="navlink" to="/">PROFILE</NavLink>
+            <NavLink className="navlink" to="/profile">PROFILE</NavLink>
           </div>
           <div className="buttondivider">|</div>
           <div className="rightbuttons">
