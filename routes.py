@@ -6,7 +6,6 @@ import random
 import authentication
 import server
 from server import app
-import ingredientManager
 
 
 @app.route("/",methods=["GET", "POST"])
@@ -82,7 +81,7 @@ def searchRecipe(query):
             recipeLabels.append(databaseRecipes[num][2])
             recipeImageLinks.append(databaseRecipes[num][3])
 
-        # Fill in the remaining slots with API Calls
+        # Fill in the remaining slots with API Calls (new recipes not in our database)
         remainder = 9 - len(recipeId)
         # print("ONLY MADE "+str(remainder)+" API CALLS")
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
@@ -97,10 +96,12 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
             recipeIngredients = []
+            print(item.get('recipe').get('label'))
             for ingredient in item.get('recipe').get('ingredients'):
-                recipeIngredients.append(ingredient.get('text'))
+                recipeIngredients.append(ingredient.get('text'))                
 
-            # Add the recipe and its properties to the database too for faster future searches
+            # Add the recipe and its properties to the database too for faster future searches if we don't have a record of it already
+            # TODO also save to database from specific recipe page if its not in our db 
             if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image')) != -1:
                 server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
@@ -138,9 +139,8 @@ def recipe(recipeId):
         recipeImage = recipeHit[3]
         for ingredient in server.find_recipe_ingredients_db(recipeId):
             recipeIngredients.append(ingredient[1])
-            ingredientManager.convertIngredient(ingredient[1])
 
-    # Only if we do not then we ask edamam
+    # Only if we do not have it in the db then we ask edamam
     else:
         response = requests.get("https://api.edamam.com/search?r=\
     http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_"+str(recipeId)+"&app_id=c565299e&app_key=\
@@ -153,7 +153,9 @@ def recipe(recipeId):
         recipeImage = recipe.get('image')
         for ingredient in recipe.get('ingredients'):
             recipeIngredients.append(ingredient.get('text'))
-            ingredientManager.convertIngredient(ingredient.get('text'))
+        # Also add the recipe to the db since we didn't have it
+        server.add_recipe_overview_db(recipeId, -1, recipeLabel, recipeImage)
+        server.add_recipe_ingredients_db(recipeId, recipeIngredients)
 
     # Check if the user has favourited this recipe
     isFavourited = False

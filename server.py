@@ -2,6 +2,7 @@
 
 import sqlite3
 from flask import *
+import ingredientManager
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredient TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
     db.commit()
     db.close()
@@ -155,11 +156,14 @@ def find_recipe_id_db(recipeId):
 
 
 # Creates entries in the recipe_ingredients TABLE for each ingredient associated with this recipe
+# Uses the IngredientManager to extract important information from user supplied ingredient String
+# Components of an ingredient are: amount, unitofmeasure, text
 def add_recipe_ingredients_db(recipeId, ingredientList):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     for ingredient in ingredientList:
-        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+filter_bad_input(ingredient.lower())+'");')
+        components = ingredientManager.convertIngredient(ingredient)
+        c.execute('INSERT INTO recipe_ingredients VALUES ("'+recipeId+'","'+filter_bad_input(ingredient.lower())+'","'+components[0]+'","'+components[1]+'","'+components[2]+'");')
     db.commit()
     db.close()
 

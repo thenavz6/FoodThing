@@ -46,7 +46,7 @@ for entry in content:
 
     # Find the unit of measure of the amount
     # Use the colesUnits list to find a unit Coles uses
-    unit = "Unit"
+    unit = "unit"
     for value in colesUnits:
         if value in measure:
             unit = value

@@ -1,5 +1,5 @@
 import sqlite3
-DATABASE = 'products.db'
+DATABASE = '../database.db'
 
 #############################################
 ### General Product database Functions #####
@@ -9,14 +9,14 @@ DATABASE = 'products.db'
 def add_product_overview(name, imagelink, quantity, unit, cost, store):
     db = sqlite3.connect(DATABASE) 
     cursor = db.cursor()
-    cursor.execute('INSERT INTO product_overview (label, imagelink, quantity, unit, cost, store) VALUES ("'+name+'","'+imagelink+'","'+quantity+'","'+unit+'","'+cost+'","'+store+'");')
+    cursor.execute('INSERT INTO product_overview (label, imagelink, quantity, unit, cost, store) VALUES ("'+name.lower()+'","'+imagelink+'","'+quantity+'","'+unit.lower()+'","'+cost+'","'+store.lower()+'");')
     db.commit()
     db.close()
      
 
 def add_product_keyword(productId, keyword):
     db = sqlite3.connect(DATABASE)
-    db.execute('INSERT INTO product_keywords VALUES ('+str(productId)+',"'+keyword+'");')
+    db.execute('INSERT INTO product_keywords VALUES ('+(str(productId)).lower()+',"'+keyword.lower()+'");')
     db.commit()
     db.close()
 
@@ -24,7 +24,7 @@ def add_product_keyword(productId, keyword):
 def find_product_id(name):
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM product_overview WHERE label="'+name+'";')
+    cursor.execute('SELECT * FROM product_overview WHERE label="'+name.lower()+'";')
     productId = cursor.fetchone()[0]
     db.close()
     return productId
