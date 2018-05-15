@@ -170,8 +170,14 @@ def recipe(recipeId):
     # Calculate the total and effective price of the default chosen items
     totalcost, effectivecost = 0, 0
     for ingredientProduct in ingredientProducts:
-        totalcost += float(ingredientProduct[0]["cost"])
-        effectivecost += float(ingredientProduct[0]["portionCost"])
+        try:
+            totalcost += float(ingredientProduct[0]["cost"])
+        except IndexError:
+            pass
+        try:
+            effectivecost += float(ingredientProduct[0]["portionCost"])
+        except IndexError:
+            pass
 
     # Possible post requests
     if request.method == "POST":
