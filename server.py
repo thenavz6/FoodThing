@@ -51,6 +51,7 @@ def check_user_db(email):
 def find_user_by_id_db(userId):
     entry = [userId]
     db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from users WHERE userID=?', entry)
     hit = c.fetchone()
@@ -62,6 +63,7 @@ def find_user_by_id_db(userId):
 def find_user_by_email_db(email):
     entry = [email]
     db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from users WHERE email=?', entry)
     hit = c.fetchone()
@@ -106,6 +108,7 @@ def delete_user_favourite_db(userId, recipeId):
 def find_user_favourites_db(userId):
     entry = [userId]
     db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from user_favourites WHERE userID=?', entry)
     hits = c.fetchall()
@@ -186,6 +189,7 @@ def add_recipe_ingredients_db(recipeId, ingredientList):
 def find_recipe_ingredients_db(recipeId):
     entry = [recipeId]
     db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from recipe_ingredients WHERE recipeID=?', entry)
     hits = c.fetchall()
@@ -207,6 +211,7 @@ def add_recipe_comment_db(recipeId, userId, comment):
 def get_recipe_comments_db(recipeId):
     entry = [recipeId]
     db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from recipe_comments WHERE recipeID=?', entry)
     hits = c.fetchall()
