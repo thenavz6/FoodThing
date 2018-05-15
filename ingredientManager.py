@@ -47,7 +47,7 @@ def convertIngredient(ingredientString):
     ingredientString = filterInput(ingredientString)   
     ingredientString = removeBracketedText(ingredientString)
     ingredientString = removeCommonWords(ingredientString)      
-    parameters = []
+    parameters = ["", "", ""]
 
 
     # First we look for a measure substring. The reason for this is that the number/quantity is usually to the left of this
@@ -97,11 +97,15 @@ def convertIngredient(ingredientString):
         for word in ingredientString.split(" "):
             if word.isalpha():
                 item += word + " "
-
+    item = item.lower()
+    item = item.strip()
 
     print("Work in Progress! Amount: " + str(determineFinalAmount(amount)) + ". Measure: " + measure + ". Item: " + item)
     # print("Final amount is: " + determineFinalAmount(fractionStringToFloat(parseUnicodeFraction(amount))))
     # For the text we filter out common words such as "of", "a", "dash", "store", "bought" etc.
+    parameters[0] = str(determineFinalAmount(amount))
+    parameters[1] = measure
+    parameters[2] = item
     return parameters
 
 

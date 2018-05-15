@@ -10,7 +10,7 @@
 commonWords = [
     "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", 
     "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
-    "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as"
+    "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as", "before", "after", "pkt", "coarsely"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
