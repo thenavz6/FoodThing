@@ -47,9 +47,15 @@
       </form>
 
       <br>
-      Ingredient List: <br>
+      <b> Ingredient List: </b><br>
       {% for ingredient in recipeIngredients %}
+            {% set outer_loop = loop %}
             {{ ingredient }} <br>
+            {% for product in ingredientProducts[outer_loop.index - 1] %}
+                <span style="margin-left:5em">
+                <i> {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} {{product["cost"]}} </i><br>
+                </span>
+            {% endfor %}
       {% endfor %}
       <br>
       <p3><b> Comments </p3></b><br>
