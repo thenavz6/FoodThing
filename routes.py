@@ -5,7 +5,9 @@ import json
 import authentication
 import server
 from server import app
+import productFinder
 from helperFunctions import *
+
 
 
 @app.route("/",methods=["GET", "POST"])
@@ -119,7 +121,7 @@ def recipe(recipeId):
         return redirect(url_for("main"))
 
     # Initialise these values
-    recipeLabel, recipeImage, recipeIngredients = "", "", []
+    recipeLabel, recipeImage, recipeIngredients, ingredientProducts = "", "", [], []
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
@@ -161,6 +163,11 @@ def recipe(recipeId):
         recipeComments.append(entry["comment"])
         usersWhoCommented.append(server.find_user_by_id_db(int(entry["userID"])))
 
+    # Find all relevent product hits for each ingredient
+    for ingredient in server.find_recipe_ingredients_db(recipeId):
+        sortedProducts = productFinder.findBestProducts(ingredient["item"])
+        ingredientProducts.append(productFinder.convertToDetailList(sortedProducts))
+
     # Possible post requests
     if request.method == "POST":
         if "bt" in request.form:
@@ -181,7 +188,7 @@ def recipe(recipeId):
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, ingredientProducts = ingredientProducts, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
