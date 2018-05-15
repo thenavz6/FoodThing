@@ -66,8 +66,10 @@ def convertToDetailList(sortedProducts, ingredient):
         gramMeasure2 = convertAmountToGram(ingredient["quantity"], ingredient["measure"])
     
         portionCost = 0
-        if productOverview["unit"] == "unit" or ingredient["measure"] == "unit":
+        if productOverview["unit"] == "unit" and ingredient["measure"] == "unit":
             portionCost = float(productOverview["cost"]) * float(ingredient["quantity"])
+        elif productOverview["unit"] == "unit" or ingredient["measure"] == "unit":
+            portionCost = float(productOverview["cost"])
         else:
             portionCost = (gramMeasure2 / gramMeasure1) * float(productOverview["cost"])
 

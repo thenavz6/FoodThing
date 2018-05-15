@@ -51,17 +51,15 @@
       <ul>
       {% for ingredient in recipeIngredients %}
             {% set outer_loop = loop %}
-            <li><b> {{ ingredient }} </b></li>
-            <form method="POST">
-            <select id="product_{{loop.index - 1}}" name="product_{{loop.index - 1}}">
+            <b> {{ ingredient }} </b>
+            <select class="form-control" id={{loop.index-1}} name={{loop.index-1}} onChange="myNewFunction(this);">
             {% for product in ingredientProducts[outer_loop.index - 1] %}
-                    <option id="test" value={{ loop.index - 1 }}>{{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}}
-                    Effective price: ${{product["portionCost"]}}</option>
+                    <option id="test" value={{ loop.index - 1 }}>{{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["portionCost"]}}</option>
             {% endfor %}
             <select>
-            </form>
       {% endfor %} 
-      </ul>
+      <br>
+
       <br>
       <p3><b> Comments </p3></b><br>
       {% for comment in recipeComments %}

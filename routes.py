@@ -163,12 +163,19 @@ def recipe(recipeId):
         recipeComments.append(entry["comment"])
         usersWhoCommented.append(server.find_user_by_id_db(int(entry["userID"])))
 
-    # Find all relevent product hits for each ingredient
+    # Find all relevent product hits for each ingredient 
     for ingredient in server.find_recipe_ingredients_db(recipeId):
         ingredientProducts.append(productFinder.findBestProducts(ingredient))
 
+    # Calculate the total and effective price of the default chosen items
+    totalcost, effectivecost = 0, 0
+    for ingredientProduct in ingredientProducts:
+        totalcost += float(ingredientProduct[0]["cost"])
+        effectivecost += float(ingredientProduct[0]["portionCost"])
+
     # Possible post requests
     if request.method == "POST":
+        print(request.form.get("0"))
         if "bt" in request.form:
             if request.form["bt"] == 'logout':
                 authentication.is_authenticated = False;
@@ -187,7 +194,7 @@ def recipe(recipeId):
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, ingredientProducts = ingredientProducts, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, ingredientProducts = ingredientProducts, totalcost = totalcost, effectivecost = effectivecost, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
