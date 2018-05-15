@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import MainHeader from './Main_Header';
 import GoogleLogo from '../images/Google.png';
 
 class RecipeComment extends Component {
