@@ -74,15 +74,26 @@ class ViewRecipe extends Component {
           <div className="recipe_heading">
             COMMENTS
           </div>
-          COMMENT
-          COMMENT
           <div className="recipe_container">
-          <div className="recipe">
-            <div className="recipe_top">
-            REPLY
+            <div className="recipe">
+              COMMENT
             </div>
-            <textarea name="comment" className="commentbox" placeholder="Add your comment here..."/>
           </div>
+          <div className="recipe_container">
+            <div className="recipe">
+              COMMENT
+            </div>
+          </div>
+          <div className="recipe_container">
+            <div className="recipe">
+              <div className="recipe_comment">
+                <div className="recipe_subheading">
+                  REPLY
+                </div>
+                <textarea name="comment" className="commentbox" placeholder="Add your comment here..."/>
+                <input type="submit" value="Submit" name="reply_bt" className="searchbt"/>
+              </div>
+            </div>
           </div>
         </div>
       </div>

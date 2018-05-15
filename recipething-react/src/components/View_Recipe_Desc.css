@@ -21,10 +21,6 @@
   border-radius: 10px;
 }
 
-.recipe_top {
-  display: flex;
-}
-
 .recipe_name {
   font-weight: bold;
   font-size: 40px;

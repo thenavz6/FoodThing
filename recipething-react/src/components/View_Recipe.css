@@ -48,13 +48,22 @@ td:nth-child(3) {
     width: 15%;
 }
 
+.recipe_comment {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .commentbox {
+  font-family: 'Pangolin', sans-serif;
   background: white;
   color: gray;
   border-radius: 10px;
   font-size: 20px;
   padding: 12.5px;
   outline: none;
+  height: 100px;
+  width: 865px;
 }
 
 .commentbox:focus {
