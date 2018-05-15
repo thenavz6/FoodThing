@@ -28,7 +28,7 @@ def updateToken():
     # print(authentication.xor(request.form['token']))
 
     if (user == None):
-        return redirect(url_for("error"))
+        return -1
 
     authentication.is_authenticated = True
     authentication.userid = int(user[0])
@@ -77,9 +77,9 @@ def searchRecipe(query):
         for num in randomPicks:
             if len(recipeId) >= 5:
                 break
-            recipeId.append(databaseRecipes[num][0])
-            recipeLabels.append(databaseRecipes[num][2])
-            recipeImageLinks.append(databaseRecipes[num][3])
+            recipeId.append(databaseRecipes[num]["recipeID"])
+            recipeLabels.append(databaseRecipes[num]["recipeLabel"])
+            recipeImageLinks.append(databaseRecipes[num]["recipeImageLink"])
 
         # Fill in the remaining slots with API Calls (new recipes not in our database)
         remainder = 9 - len(recipeId)
@@ -135,8 +135,8 @@ def recipe(recipeId):
     # Makes future requests (like favouriting and commenting MUCH FASTER)
     recipeHit = server.find_recipe_id_db(recipeId)
     if recipeHit != None:
-        recipeLabel = recipeHit[2]
-        recipeImage = recipeHit[3]
+        recipeLabel = recipeHit["recipeLabel"]
+        recipeImage = recipeHit["recipeImageLink"]
         for ingredient in server.find_recipe_ingredients_db(recipeId):
             recipeIngredients.append(ingredient[1])
 
