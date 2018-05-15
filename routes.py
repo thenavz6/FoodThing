@@ -169,7 +169,6 @@ def recipe(recipeId):
 
     # Possible post requests
     if request.method == "POST":
-        print(request.form["product_0"])
         if "bt" in request.form:
             if request.form["bt"] == 'logout':
                 authentication.is_authenticated = False;
