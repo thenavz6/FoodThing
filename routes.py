@@ -1,11 +1,11 @@
 from flask import *
 import requests
 import json
-import random
 
 import authentication
 import server
 from server import app
+from helperFunctions import *
 
 
 @app.route("/",methods=["GET", "POST"])
@@ -26,12 +26,11 @@ def updateToken():
     user = server.find_user_by_email_db(request.form['email'])
 
     # print(authentication.xor(request.form['token']))
-
     if (user == None):
-        return redirect(url_for("error"))
+        return -1
 
     authentication.is_authenticated = True
-    authentication.userid = int(user[0])
+    authentication.userid = int(user["userID"])
     authentication.email = request.form['email']
     authentication.username = request.form['fullname']
     authentication.imageurl = request.form['imageurl']
@@ -61,9 +60,7 @@ def searchRecipe(query):
 
     # Initialise required values
     global recipeId
-    recipeLabels = []
-    recipeImageLinks = []
-    recipeIngredients = []
+    recipeLabels, recipeImageLinks, recipeIngredients = [], [], []
     rand = random.randint(1,50)
 
     if request.method == "GET":
@@ -72,18 +69,15 @@ def searchRecipe(query):
         # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
         # This is to reduce API calls
         databaseRecipes = server.find_recipes_keyword_db(query)
-        randomPicks = [x for x in range(len(databaseRecipes))]
-        random.shuffle(randomPicks)
-        for num in randomPicks:
+        for num in randomSortedNumbers(len(databaseRecipes)):
             if len(recipeId) >= 5:
                 break
-            recipeId.append(databaseRecipes[num][0])
-            recipeLabels.append(databaseRecipes[num][2])
-            recipeImageLinks.append(databaseRecipes[num][3])
+            recipeId.append(databaseRecipes[num]["recipeID"])
+            recipeLabels.append(databaseRecipes[num]["recipeLabel"])
+            recipeImageLinks.append(databaseRecipes[num]["recipeImageLink"])
 
         # Fill in the remaining slots with API Calls (new recipes not in our database)
         remainder = 9 - len(recipeId)
-        # print("ONLY MADE "+str(remainder)+" API CALLS")
         response = requests.get("https://api.edamam.com/search?q="+str(query)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
         if (response.status_code != 200):
@@ -96,12 +90,10 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
             recipeLabels.append(item.get('recipe').get('label'))
             recipeImageLinks.append(item.get('recipe').get('image'))
             recipeIngredients = []
-            print(item.get('recipe').get('label'))
             for ingredient in item.get('recipe').get('ingredients'):
                 recipeIngredients.append(ingredient.get('text'))                
 
             # Add the recipe and its properties to the database too for faster future searches if we don't have a record of it already
-            # TODO also save to database from specific recipe page if its not in our db 
             if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image')) != -1:
                 server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
@@ -127,18 +119,16 @@ def recipe(recipeId):
         return redirect(url_for("main"))
 
     # Initialise these values
-    recipeLabel = ""
-    recipeImage = ""
-    recipeIngredients = []
+    recipeLabel, recipeImage, recipeIngredients = "", "", []
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
     recipeHit = server.find_recipe_id_db(recipeId)
     if recipeHit != None:
-        recipeLabel = recipeHit[2]
-        recipeImage = recipeHit[3]
+        recipeLabel = recipeHit["recipeLabel"]
+        recipeImage = recipeHit["recipeImageLink"]
         for ingredient in server.find_recipe_ingredients_db(recipeId):
-            recipeIngredients.append(ingredient[1])
+            recipeIngredients.append(ingredient["ingredientDesc"])
 
     # Only if we do not have it in the db then we ask edamam
     else:
@@ -161,15 +151,15 @@ def recipe(recipeId):
     isFavourited = False
     userFavourites = server.find_user_favourites_db(authentication.userid)
     for favourite in userFavourites:
-        if recipeId == favourite[1]:
+        if recipeId == favourite["recipeID"]:
             isFavourited = True
 
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
     recipeComments = []
     for entry in server.get_recipe_comments_db(recipeId):
-        recipeComments.append(entry[2])
-        usersWhoCommented.append(server.find_user_by_id_db(int(entry[1])))
+        recipeComments.append(entry["comment"])
+        usersWhoCommented.append(server.find_user_by_id_db(int(entry["userID"])))
 
     # Possible post requests
     if request.method == "POST":
@@ -201,25 +191,25 @@ def userprofile(userId):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
+    # Default name and image passed if user not found
+    profilename = "No one lives here :("
+    profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
+    profilefavourites = []
+
     # Find the given user in the database or error for non-integer input
     try:
         userHit = server.find_user_by_id_db(int(userId))
     except ValueError as e:
         return redirect(url_for("error"))
 
-    # Default name and image passed if user not found
-    profilename = "No one lives here :("
-    profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
-    profilefavourites = []
-
     # Load parameters based on database result
     if userHit != None:
-        profilename = userHit[2]
-        profileimage = userHit[3]
+        profilename = userHit["fullname"]
+        profileimage = userHit["imageurl"]
         profilefavourites = []
         findfavourites = server.find_user_favourites_db(userId)
         for favourite in findfavourites:
-            profilefavourites.append(favourite[1])
+            profilefavourites.append(favourite["recipeID"])
 
     # Possible post requests
     if request.method == "POST":
@@ -242,3 +232,4 @@ def uploadRecipe():
         return redirect(url_for("main"))
 
     return render_template("uploadrecipe.html")
+

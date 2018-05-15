@@ -55,9 +55,9 @@
       <p3><b> Comments </p3></b><br>
       {% for comment in recipeComments %}
             <form method="POST">
-                <input align="left" type="image" src={{usersWhoCommented[loop.index - 1][3]}} width="20" height="20" value={{usersWhoCommented[loop.index - 1][0]}} name="user">
+                <input align="left" type="image" src={{usersWhoCommented[loop.index - 1]["imageurl"]}} width="20" height="20" value={{usersWhoCommented[loop.index - 1]["userID"]}} name="user">
             </form>
-            <b> {{ usersWhoCommented[loop.index - 1][2] }} says </b> {{ comment }}               
+            <b> {{ usersWhoCommented[loop.index - 1]["fullname"] }} says </b> {{ comment }}               
       {% endfor %}
       <br>
       <form method="POST">
