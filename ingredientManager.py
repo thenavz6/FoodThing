@@ -24,10 +24,9 @@ unitDictionary = {
     'quart' : ["quart", "quarts"],
     'gallon' : ["gallon", "gallons"],
     'milliliter' : ["milliliter", "millilitre", "milliliters", "millilitres", "ml"],
-    'liter' : ["liter", "litre", "liters", "litres"],
+    'liter' : ["liter", "litre", "liters", "litres", "l"],
     'unit' : ["unit", "box", "bag", "container", "bunch"]
 }
-
 
 
 # Return the matching key if that's key's list has the given measure
