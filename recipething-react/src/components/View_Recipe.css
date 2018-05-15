@@ -48,7 +48,7 @@ td:nth-child(3) {
     width: 15%;
 }
 
-.recipe_comment {
+.recipe_reply {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -70,4 +70,9 @@ td:nth-child(3) {
   border-radius: 10px;
   border-color: gray;
   background: silver;
+}
+
+.comment_content {
+  display: inline-flex;
+  flex: 1;
 }
