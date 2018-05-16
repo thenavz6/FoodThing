@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Popup from "reactjs-popup";
 import MainHeader from './Main_Header';
 import ViewRecipeDesc from './View_Recipe_Desc';
 import RecipeComment from './Recipe_Comment';
@@ -21,51 +20,45 @@ class ViewRecipe extends Component {
             <table className="ingredient_list">
               <tbody>
                 <tr>
-                  <td>
+                  <td className="ingredient_list_element">
                     1 Cheesecake
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     $8.95
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     BigCake
                   </td>
-                  <td>
-                    <Popup trigger={<div className="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
-                      <span><SwapIngredient/></span>
-                    </Popup>
+                  <td className="ingredient_list_element">
+                    <SwapIngredient/>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="ingredient_list_element">
                     1L Milk
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     $1.50
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     Walmart
                   </td>
-                  <td>
-                    <Popup trigger={<div className="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
-                      <span><SwapIngredient/></span>
-                    </Popup>
+                  <td className="ingredient_list_element">
+                    <SwapIngredient/>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="ingredient_list_element">
                     1L Milkshake Mix
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     $1.55
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     Kelis
                   </td>
-                  <td>
-                    <Popup trigger={<div className="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
-                      <span><SwapIngredient/></span>
-                    </Popup>
+                  <td className="ingredient_list_element">
+                    <SwapIngredient/>
                   </td>
                 </tr>
               </tbody>

@@ -15,4 +15,5 @@
 
 .favourites_button:active {
   background: lime;
+  border-color: green;
 }

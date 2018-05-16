@@ -59,12 +59,13 @@
   background: green;
   border: green;
   color: white;
+  cursor: pointer;
 }
 
-.searchbt:focus {
+.searchbt:active {
   border-radius: 10px;
-  border-color: lime;
   background: lime;
+  border-color: green;
 }
 
 .notifyimage {
