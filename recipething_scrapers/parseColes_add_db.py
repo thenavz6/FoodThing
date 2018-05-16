@@ -36,7 +36,7 @@ for entry in content:
 
     # Find the quantity of the amount. Coles always writes this first.
     quantity = ''
-    for char in measure:
+    for char in measure.strip():
         if not char.isalpha():
             quantity += char
         else:
@@ -52,8 +52,15 @@ for entry in content:
             unit = value
             break
 
+    # Remove 's' or 'es' from the end of keywords. This should give better results.
+    # When compared, ingredients in ProductManager.py will also remove 's' or 'es'.
     keywords = []
     for word in name.split():
+        if len(word) > 3:
+            if word.endswith('es'):
+                word = word[:-2]
+            elif word.endswith('s'):
+                word = word[:-1]
         keywords.append(word)
 
     # Write this into a database with two tables    

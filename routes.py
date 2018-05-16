@@ -140,7 +140,10 @@ def recipe(recipeId):
 
         if (response.status_code != 200):
             return redirect(url_for("error"))
-        recipe = response.json()[0]
+        try:
+            recipe = response.json()[0]
+        except IndexError:
+            return redirect(url_for("error"))
         recipeLabel = recipe.get('label')
         recipeImage = recipe.get('image')
         for ingredient in recipe.get('ingredients'):

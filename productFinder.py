@@ -30,12 +30,21 @@ def findBestProducts(ingredient):
 
     # For each keyword etc. 'sour cream buttermilk' we want to search the product database
     for word in ingredient["item"].split():
+        # Remove possible plural from end of ingredient keyword. DB products have the same applied, so matches still hit.
+        if len(word) > 3:
+            if word.endswith('es'):
+                word = word[:-2]
+            elif word.endswith('s'):
+                word = word[:-1]
+
         products = server.find_products_keyword_db(word)
         # Get the product from from it's overview table
         for product in products:
+            # Score based on length of product name
             wordsInLabel = len(server.get_product_overview_db(product["productID"])["label"].split())      
             score = float(1.0 / float(wordsInLabel))
-            # We've seen this product before, so increment its hit count
+
+            # Check if we have seen this productID/product before
             if product["productID"] in productHits:
                 productHits[product["productID"]] += score
             else:
