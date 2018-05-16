@@ -13,7 +13,8 @@ commonWords = [
     "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as", "before", "after", "pkt", "coarsely", "lightly",
     "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", 
     "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "coles", "Coles", "branded", "tasty", "manning", "valley", "farm", "caged", "cage", "range",
-    "red", "green", "food", "beechworth", "capilano", "saxa", "hoyts", "masterfoods", "mckenzies", "continental"
+    "red", "green", "food", "beechworth", "capilano", "saxa", "hoyts", "masterfoods", "mckenzies", "continental", "plain", "reduced", "queens", "heinz", "salted",
+    "unsalted", "ready"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
