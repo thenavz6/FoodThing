@@ -12,13 +12,13 @@ colesUnits = ["mg", "kg", "g", "ml", "l"]
 with open("coles_products.txt") as f:
     content = f.readlines()
 
-content = [x.strip().lower() for x in content] 
+content = [x.strip() for x in content] 
 
 for entry in content:
     tmp = entry.split(",")
-    name = tmp[0]
-    measure = tmp[1]
-    cost = tmp[2]
+    name = tmp[0].lower()
+    measure = tmp[1].lower()
+    cost = tmp[2].lower()
     link = tmp[3]
 
     # Note that we need to extract quantity and unit of measure from the amount value
