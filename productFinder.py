@@ -40,8 +40,11 @@ def findBestProducts(ingredient):
         products = server.find_products_keyword_db(word)
         # Get the product from from it's overview table
         for product in products:
-            # Score based on length of product name
-            wordsInLabel = len(server.get_product_overview_db(product["productID"])["label"].split())      
+            # Score based on length of product name, excluding numbers like "120" that describe quantity
+            wordsInLabel = 0
+            for word in server.get_product_overview_db(product["productID"])["label"].split():
+                if word.isalpha():
+                    wordsInLabel += 1   
             score = float(1.0 / float(wordsInLabel))
 
             # Check if we have seen this productID/product before

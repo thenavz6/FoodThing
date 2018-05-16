@@ -11,9 +11,9 @@ commonWords = [
     "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", 
     "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
     "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as", "before", "after", "pkt", "coarsely", "lightly",
-    "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", "brand",
-    "cold", "hot", "all", "purpose", "hulled", "whole", "coles", "Coles", "branded",
-    "red", "green"
+    "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", 
+    "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "coles", "Coles", "branded", "tasty", "manning", "valley", "farm", "caged", "cage", "range",
+    "red", "green", "food", "beechworth", "capilano", "saxa", "hoyts", "masterfoods", "mckenzies", "continental"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
