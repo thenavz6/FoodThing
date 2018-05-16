@@ -21,7 +21,7 @@ unitConverter = {
     'unit' : 1.0
 }
 
-# Parameter: The ingredient entry from the databse
+# Parameter: The ingredient entry from the database: recipe_ingredients
 # Returns the best, most relevent products for this ingredient
 # Also considers conversions and costs etc.
 def findBestProducts(ingredient):
@@ -33,7 +33,7 @@ def findBestProducts(ingredient):
         products = server.find_products_keyword_db(word)
         # Get the product from from it's overview table
         for product in products:
-            wordsInLabel = len(server.get_product_overview_db(product["productID"])["label"])
+            wordsInLabel = len(server.get_product_overview_db(product["productID"])["label"].split())      
             score = float(1.0 / float(wordsInLabel))
             # We've seen this product before, so increment its hit count
             if product["productID"] in productHits:
@@ -60,11 +60,13 @@ def convertToDetailList(sortedProducts, ingredient):
     for item in sortedProducts:
         productOverview = server.get_product_overview_db(item[0])
 
+        # Standardize all measures to grams 
         standardizedUnit1 = ingredientManager.findKeyFromMeasureDict(productOverview["unit"])
         gramMeasure1 = convertAmountToGram(productOverview["quantity"], standardizedUnit1)
         standardizedUnit2 = ingredient["measure"]
         gramMeasure2 = convertAmountToGram(ingredient["quantity"], ingredient["measure"])
     
+        # Calculate how many portions are needed (etc. 0.25 of that item or 2 of these items)
         portionCost = 0
         if productOverview["unit"] == "unit" and ingredient["measure"] == "unit":
             portionCost = float(productOverview["cost"]) * float(ingredient["quantity"])
@@ -72,6 +74,10 @@ def convertToDetailList(sortedProducts, ingredient):
             portionCost = float(productOverview["cost"])
         else:
             portionCost = (gramMeasure2 / gramMeasure1) * float(productOverview["cost"])
+            # If we need to buy more than 2 of these, it's likely the type of product we are looking for
+            if gramMeasure2/gramMeasure1 > 2.02:
+                continue
+       
 
         productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "cost" : productOverview["cost"], "grams" : gramMeasure1, "portionCost" : portionCost, "image" : productOverview["imagelink"]}
         productList.append(productDict)
