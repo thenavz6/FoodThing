@@ -12,7 +12,7 @@ commonWords = [
     "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
     "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as", "before", "after", "pkt", "coarsely", "lightly",
     "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "sliced", "cans", "cool", "warm", "chunks",
-    "cold", "hot", "all", "purpose", "hulled"
+    "cold", "hot", "all", "purpose", "hulled", "whole"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
