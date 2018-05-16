@@ -11,7 +11,7 @@ from textParser import *
 
 unitDictionary = {
     'cup': ["cup", "cups"],
-    'tablespoon': ["tablespoon", "tblsp", "tbsps", "tbp", "tbps", "tbsp", "tablespoons"],
+    'tablespoon': ["tablespoon", "tblsp", "tbsps", "tbp","tbs", "tbps", "tbsp", "tablespoons"],
     'teaspoon': ["teaspoon", "teasp", "teasps", "tsp", "tsps", "teaspoons"],
     'ounce' : ["oz", "ounce", "ounces"],
     'gram' : ["gram", "grams", "g"],
