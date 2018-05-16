@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import MainHeader from './Main_Header';
 import ViewRecipeDesc from './View_Recipe_Desc';
+import RecipeComment from './Recipe_Comment';
+import RecipeCommentReply from './Recipe_Comment_Reply.js';
 import './View_Recipe.css';
 
 class ViewRecipe extends Component {
@@ -74,16 +76,9 @@ class ViewRecipe extends Component {
           <div className="recipe_heading">
             COMMENTS
           </div>
-          COMMENT
-          COMMENT
-          <div className="recipe_container">
-          <div className="recipe">
-            <div className="recipe_top">
-            REPLY
-            </div>
-            <textarea name="comment" className="commentbox" placeholder="Add your comment here..."/>
-          </div>
-          </div>
+          <RecipeComment/>
+          <RecipeComment/>
+          <RecipeCommentReply/>
         </div>
       </div>
     );

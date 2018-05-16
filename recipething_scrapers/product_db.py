@@ -1,5 +1,5 @@
 import sqlite3
-DATABASE = '../database.db'
+DATABASE = '../products.db'
 
 #############################################
 ### General Product database Functions #####
@@ -39,3 +39,4 @@ def init():
 
 
 init()
+
