@@ -1,0 +1,37 @@
+.green_background {
+  background: #DEFFDE;
+  border-radius: 20px;
+}
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-color: lime;
+}
+
+.indent {
+  padding-left: 5%;
+}
+
+.swap_heading {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 40px;
+  padding-top: 10px;
+}
+
+.swap_subheading {
+  display: flex;
+  width: 100%;
+  color: violet;
+  font-weight: bold;
+  font-size: 40px;
+  padding: 10px;
+}
+
+.store_dropdown {
+  display: flex;
+  padding: 10px;
+}

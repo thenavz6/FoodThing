@@ -1,14 +1,18 @@
 .favourites_button {
   display: flex;
   justify-content: center;
-  background-color: lime;
+  background: green;
   color: white;
   border-radius: 10px;
   font-size: 30px;
-  padding: 30px;
+  padding: 20px;
   margin-bottom: 10px;
   height: 100%;
   margin-left: 37.5%;
   margin-right: 37.5%;
   font-weight: bold;
+}
+
+.favourites_button:active {
+  background: lime;
 }

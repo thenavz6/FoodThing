@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import Popup from "reactjs-popup";
 import MainHeader from './Main_Header';
 import ViewRecipeDesc from './View_Recipe_Desc';
 import RecipeComment from './Recipe_Comment';
 import RecipeCommentReply from './Recipe_Comment_Reply.js';
+import SwapIngredient from './Swap_Ingredient';
 import './View_Recipe.css';
 
 class ViewRecipe extends Component {
@@ -28,8 +30,10 @@ class ViewRecipe extends Component {
                   <td>
                     BigCake
                   </td>
-                  <td className="swapbt">
-                    SWAP
+                  <td>
+                    <Popup trigger={<div className="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
+                      <span><SwapIngredient/></span>
+                    </Popup>
                   </td>
                 </tr>
                 <tr>
@@ -42,8 +46,10 @@ class ViewRecipe extends Component {
                   <td>
                     Walmart
                   </td>
-                  <td className="swapbt">
-                    SWAP
+                  <td>
+                    <Popup trigger={<div className="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
+                      <span><SwapIngredient/></span>
+                    </Popup>
                   </td>
                 </tr>
                 <tr>
@@ -56,8 +62,10 @@ class ViewRecipe extends Component {
                   <td>
                     Kelis
                   </td>
-                  <td className="swapbt">
-                    SWAP
+                  <td>
+                    <Popup trigger={<div className="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
+                      <span><SwapIngredient/></span>
+                    </Popup>
                   </td>
                 </tr>
               </tbody>

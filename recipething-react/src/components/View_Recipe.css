@@ -16,9 +16,10 @@ ol {
   text-align: right;
 }
 
-.swapbt {
+button {
   display: inline;
   justify-content: center;
+  font-family: "Pangolin", sans-serif;
   background-color: green;
   color: white;
   border-radius: 10px;
@@ -26,6 +27,12 @@ ol {
   padding: 5px;
   height: 100%;
   font-weight: bold;
+  outline: none;
+}
+
+button:active {
+  border-radius: 10px;
+  background: lime;
 }
 
 table {
@@ -35,7 +42,7 @@ table {
 }
 
 td:nth-child(1) {
-  width: 50%;
+  width: 30%;
 }
 td:nth-child(even) {
     margin-left: 100px;
