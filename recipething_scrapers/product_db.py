@@ -37,6 +37,5 @@ def init():
     db.commit()
     db.close()
 
-
 init()
 
