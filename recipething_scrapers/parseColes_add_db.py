@@ -16,7 +16,7 @@ content = [x.strip().lower() for x in content]
 
 for entry in content:
     tmp = entry.split(",")
-    name = textParser.removeCommonWords(tmp[0])
+    name = tmp[0]
     measure = tmp[1]
     cost = tmp[2]
     link = tmp[3]
@@ -55,14 +55,17 @@ for entry in content:
 
     # Remove 's' or 'es' from the end of keywords. This should give better results.
     # When compared, ingredients in ProductManager.py will also remove 's' or 'es'.
+    # Also remove common words from keywords since keywords will be used to count hits.
     keywords = []
     for word in name.split():
-        if len(word) > 3:
-            if word.endswith('es'):
-                word = word[:-2]
-            elif word.endswith('s'):
-                word = word[:-1]
-        keywords.append(word)
+        if word.isalpha():
+            if len(word) > 3:
+                if word.endswith('es'):
+                    word = word[:-2]
+                elif word.endswith('s'):
+                    word = word[:-1]
+            keywords.append(word)
+    keywords = textParser.removeCommonWords(" ".join(keywords)).split()
 
     # Write this into a database with two tables    
     product_db.add_product_overview(name, link, quantity, unit, cost, "coles")
