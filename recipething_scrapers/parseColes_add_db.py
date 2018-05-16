@@ -1,4 +1,5 @@
 import product_db
+import textParser
 
 #############################################
 ### COLES specific scraped data parsing ####
@@ -15,7 +16,7 @@ content = [x.strip().lower() for x in content]
 
 for entry in content:
     tmp = entry.split(",")
-    name = tmp[0]
+    name = textParser.removeCommonWords(tmp[0])
     measure = tmp[1]
     cost = tmp[2]
     link = tmp[3]

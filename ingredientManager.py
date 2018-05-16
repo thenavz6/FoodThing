@@ -99,8 +99,7 @@ def convertIngredient(ingredientString):
     item = item.lower()
     item = item.strip()
 
-    print("Work in Progress! Amount: " + str(determineFinalAmount(amount)) + ". Measure: " + measure + ". Item: " + item)
-    # print("Final amount is: " + determineFinalAmount(fractionStringToFloat(parseUnicodeFraction(amount))))
+    # print("[DEBUG] Amount: " + str(determineFinalAmount(amount)) + ". Measure: " + measure + ". Item: " + item)
     # For the text we filter out common words such as "of", "a", "dash", "store", "bought" etc.
     parameters[0] = str(determineFinalAmount(amount))
     parameters[1] = measure
