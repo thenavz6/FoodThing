@@ -54,9 +54,13 @@
             <b> {{ ingredient }} </b>
             <select class="form-control" id={{loop.index-1}} name={{loop.index-1}} onChange="myNewFunction(this);">
             {% for product in ingredientProducts[outer_loop.index - 1] %}
-                    <option id="test" value={{ loop.index - 1 }}>{{product["productID"]}} {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["portionCost"]}} DEBUG hitScore: {{product["hitScore"]}} </option>
+                    <option id="test" value={{ loop.index - 1 }}>{{product["productID"]}} {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["portionCost"]}} DEBUG hitScore: {{product["hitScore"]}} </option> 
             {% endfor %}
             <select>
+
+            {% for product in ingredientProducts[outer_loop.index - 1] %}
+                <input type="image" src={{product["image"]}} width="100" height="100" value={{product["productID"]}} name="bt">
+            {% endfor %}
       {% endfor %} 
       <br>
 
