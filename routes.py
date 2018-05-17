@@ -6,6 +6,7 @@ import authentication
 import server
 from server import app
 import productFinder
+import textParser
 from helperFunctions import *
 
 
@@ -217,6 +218,7 @@ def userprofile(userId):
     profilename = "No one lives here :("
     profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
     profilefavourites = []
+    profilerecipes = []
 
     # Find the given user in the database or error for non-integer input
     try:
@@ -229,9 +231,17 @@ def userprofile(userId):
         profilename = userHit["fullname"]
         profileimage = userHit["imageurl"]
         profilefavourites = []
+
         findfavourites = server.find_user_favourites_db(userId)
+        tmp = []
         for favourite in findfavourites:
-            profilefavourites.append(favourite["recipeID"])
+            tmp.append(favourite["recipeID"])
+        for favourite in tmp:
+            profilefavourites.append(server.find_recipe_id_db(favourite))
+
+        findRecipes = server.find_user_recipes_db(userId)
+        for recipe in findRecipes:
+            profilerecipes.append(recipe)
 
     # Possible post requests
     if request.method == "POST":
@@ -243,9 +253,15 @@ def userprofile(userId):
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
 
-    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
+savedLabel = ''
+savedImageurl = ''
+numOfIngredients = 1
+savedIngredients = []
+numOfSteps = 1
+savedSteps = []
 # The page for uploading user recipes
 @app.route("/uploadRecipe", methods=["GET", "POST"])
 def uploadRecipe():
@@ -253,5 +269,47 @@ def uploadRecipe():
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    return render_template("uploadrecipe.html")
+    global numOfIngredients
+    global numOfSteps
+    global savedIngredients
+    global savedSteps
+    global savedLabel
+    global savedImageurl
+
+    # Reset the number of ingredients and steps for this page
+    if request.method == "GET":
+        numOfIngredients = 1
+        numOfSteps = 1   
+        savedIngredients = []
+        savedSteps = []     
+
+    if request.method == "POST":
+        if "add_ingred_bt" in request.form:
+            savedLabel = request.form["recipename"]
+            savedImageurl = request.form["imageurl"]
+            if request.form["ingredient_"+str(numOfIngredients-1)].strip() != '':
+                savedIngredients.append(request.form["ingredient_"+str(numOfIngredients-1)])
+                numOfIngredients += 1
+        if "add_step_bt" in request.form:
+            savedLabel = request.form["recipename"]
+            savedImageurl = request.form["imageurl"]
+            if request.form["step_"+str(numOfSteps-1)].strip() != '':
+                savedSteps.append(request.form["step_"+str(numOfSteps-1)])
+                numOfSteps += 1
+        if "submit_bt" in request.form:
+
+            # Hope this doesn't hit already existed id when appended with userid
+            rand = random.randint(1,10000)
+            recipeId = str(authentication.userid) + "recipe" + str(rand)
+            server.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"])
+            ingredientList = []
+            for i in range(numOfIngredients):
+                ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
+            server.add_recipe_ingredients_db(recipeId, ingredientList)
+            for i in range(numOfSteps):
+                pass
+                # print(request.form["step_"+str(i)])
+            return redirect(url_for("recipe", recipeId = recipeId))
+
+    return render_template("uploadrecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, userid = authentication.userid, userimage = authentication.imageurl)
 

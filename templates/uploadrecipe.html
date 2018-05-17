@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='../static/navbar.css'>
-    <title>User Profile</title>
+    <title>Upload Recipe</title>
 
 </head>
 
@@ -23,7 +23,9 @@
   			<input type="submit" value="Search" name="bt">
 		</form>
     </div>
-    <img align="right" src={{imageurl}} alt="You">
+    <a href="https://localhost:5000/user/{{userid}}">
+    <img align="right" src={{userimage}} alt="You">
+    </a>
     <form method="POST">
   		<input align="right" type="submit" value="logout" name="bt">
 	</form>   
@@ -34,14 +36,21 @@
   <div class="row-fluid" id="main">
       Fill in the form:
       <form method="POST">
-          Recipe Name: <input type="text" name="recipename" placeholder="recipeName"><br>
-          Image Link: <input type="text" name="imageurl" placeholder="imageurl"><br>
-          Ingredient1: <input type="text" name="ingredient1" placeholder="100mL of condensed cream etc."><br>
-          Ingredient2: <input type="text" name="ingredient2"><br>
-          Ingredient3: <input type="text" name="ingredient3"><br>
-          Ingredient4: <input type="text" name="ingredient4"><br>
-          Ingredient5: <input type="text" name="ingredient5"><br>
-          <input type="submit" value="Submit Recipe" name="bt">
+          Recipe Name: <input type="text" name="recipename" value="{{savedLabel}}" placeholder="recipeName"><br>
+
+          Image Link: <input type="text" name="imageurl" value="{{savedImageurl}}" placeholder="imageurl"><br>
+
+          {% for i in range(numOfIngredients) %}
+              Ingredient: <input type="text" name="ingredient_{{i}}" value="{{savedIngredients[i]}}" placeholder="100mL of condensed cream etc."><br>
+          {% endfor %}
+          <input type="submit" value="Add Ingredient" name="add_ingred_bt"><br>
+
+          {% for i in range(numOfSteps) %}
+              Step {{ i + 1 }}: <input type="text" name="step_{{i}}" value="{{savedSteps[i]}}" placeholder="Chop up the onions"><br>
+          {% endfor %}
+          <input type="submit" value="Add Step" name="add_step_bt"><br><br>      
+
+          <input type="submit" value="Submit Recipe" name="submit_bt">
       </form>
   </div>
 </div>
