@@ -16,9 +16,10 @@ ol {
   text-align: right;
 }
 
-.swapbt {
+button {
   display: inline;
   justify-content: center;
+  font-family: "Pangolin", sans-serif;
   background-color: green;
   color: white;
   border-radius: 10px;
@@ -26,23 +27,31 @@ ol {
   padding: 5px;
   height: 100%;
   font-weight: bold;
+  outline: none;
+  cursor: pointer;
 }
 
-table {
+button:active {
+  border-radius: 10px;
+  background: lime;
+  border-color: green;
+}
+
+.ingredient_list {
   table-layout: fixed;
-  width: 110%;
+  width: 105%;
   margin-bottom: 30px;
 }
 
-td:nth-child(1) {
-  width: 50%;
+.ingredient_list_element:nth-child(1) {
+  width: 30%;
 }
-td:nth-child(even) {
+.ingredient_list_element:nth-child(even) {
     margin-left: 100px;
     text-align: right;
     width: 15%;
 }
-td:nth-child(3) {
+.ingredient_list_element:nth-child(3) {
     margin-left: 100px;
     text-align: right;
     width: 15%;

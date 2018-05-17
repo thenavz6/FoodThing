@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import Favourites from './components/Favourites';
 import UserProfile from './components/UserProfile';
 import ViewRecipe from './components/View_Recipe';
+import AddRecipe from './components/Add_Recipe';
 import './index.css';
 
 ReactDOM.render(
@@ -19,6 +20,7 @@ ReactDOM.render(
       <Route path="/favourites" component={Favourites}/>
       <Route path="/profile" component={UserProfile}/>
       <Route path="/view_recipe" component={ViewRecipe}/>
+      <Route path="/add_recipe" component={AddRecipe}/>
     </div>
   </Router>,
   document.getElementById('root')

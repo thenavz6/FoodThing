@@ -19,7 +19,7 @@ const MainHeader = () => (
           </div>
           <NavLink to="/"><img src={NotificationsImage} alt="notifyimage" className="notifyimage"/></NavLink>
           <div className="rightbuttons">
-            <NavLink className="navlink" to="/">ADD RECIPE</NavLink>
+            <NavLink className="navlink" to="/add_recipe">ADD RECIPE</NavLink>
           </div>
           <div className="buttondivider">|</div>
           <div className="rightbuttons">

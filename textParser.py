@@ -53,6 +53,24 @@ def removeCommonWords(string):
     return result
 
 
+# Turns a string such as "12ml" into something like "12 ml"
+def seperateAlphaAndDigit(string):
+    result = ''
+    lastIsDigit = False
+    for c in string:
+        if lastIsDigit and c.isalpha():
+            result += ' '
+            result += c
+        else:
+            if c.isdigit():
+                lastIsDigit = True
+            else:
+                lastIsDigit = False
+            result += c
+        if c.isalpha():
+            lastIsDigit = False
+    return result  
+
 #################################################################
 ############# Ingredient Measure Parser ########################
 #===============================================================

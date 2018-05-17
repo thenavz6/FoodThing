@@ -117,6 +117,18 @@ def find_user_favourites_db(userId):
     return hits
 
 
+# Returns all entries from recipe_overview TABLE where userdID is userId 
+# Etc. gets all recipes uploaded by the given user
+def find_user_recipes_db(userId):
+    entry = [userId]
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
+    c = db.cursor()
+    c.execute('SELECT * from recipe_overview WHERE userID=?', entry)
+    hits = c.fetchall()
+    db.close()
+    return hits
+
 # Adds a new recipe overview entry and also recipe_keyword entries
 def add_recipe_overview_db(recipeId, userId, label, urllink):
     entry = [recipeId, userId, label, urllink]

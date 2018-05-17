@@ -50,20 +50,22 @@
 .searchbt {
   display: inline;
   font-family: 'Pangolin', sans-serif;
-  border-color: green;
   font-size: 20px;
   width: 85px;
   height: 50px;
   margin-right: 100px;
   border-radius: 10px;
   outline: none;
-  background: #DEFFDE;
+  background: green;
+  border: green;
+  color: white;
+  cursor: pointer;
 }
 
-.searchbt:focus {
+.searchbt:active {
   border-radius: 10px;
-  border-color: lime;
-  background: green;
+  background: lime;
+  border-color: green;
 }
 
 .notifyimage {

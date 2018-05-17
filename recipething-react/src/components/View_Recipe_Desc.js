@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import OpenStar from '../images/open_star.png';
 import ClosedStar from '../images/closed_star.png';
 import './View_Recipe_Desc.css';
@@ -13,9 +12,7 @@ class View_Recipe_Desc extends Component {
           <div className="recipe_info">
             <div className="recipeinfo1">
               <div className="recipe_name">
-                <NavLink to="/view_recipe" className="navlink">
-                  TWO DESSERTS, ONE CUP
-                </NavLink>
+                TWO DESSERTS, ONE CUP
               </div>
               <div className="recipefavourite">
                 <img src={OpenStar} alt="OpenStar" height="40" width="40"/>
