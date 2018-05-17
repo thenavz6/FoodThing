@@ -50,7 +50,8 @@
 .recipefavourite {
   display: flex;
   flex: 1;
-  vertical-align: top;
+  flex-direction: row;
+  justify-content: flex-end;
   align-self: flex-start;
 }
 
