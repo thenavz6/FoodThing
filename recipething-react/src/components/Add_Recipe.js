@@ -41,6 +41,7 @@ class AddRecipe extends Component {
                 Recipe Instructions:
               </div>
               <textarea name="recipe_instructions_text" className="add_recipe_box3" placeholder="Enter the recipe's instructions here..."/>
+              <input type="submit" value="Add Recipe" name="add_recipe_bt" className="add_recipe_bt"/>
             </div>
           </div>
         </div>

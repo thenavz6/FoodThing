@@ -116,3 +116,25 @@
   background: silver;
   outline: none;
 }
+
+.add_recipe_bt {
+  display: flex;
+  justify-content: center;
+  margin-top: -20px;
+  font-family: 'Pangolin', sans-serif;
+  font-size: 20px;
+  width: 120px;
+  height: 50px;
+  border-radius: 10px;
+  outline: none;
+  background: green;
+  border: green;
+  color: white;
+  cursor: pointer;
+}
+
+.add_recipe_bt:active {
+  border-radius: 10px;
+  background: lime;
+  border-color: green;
+}
