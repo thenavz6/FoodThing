@@ -43,10 +43,22 @@
       </form>
       <br><br>
       {% endif %}
-      Put User Recipes Here<br><br>
-      Put Favourites Here (Currently recipeIDs)<br>
+
+      <h2> User Recipes: </h2>
+      {% for recipe in profilerecipes %}
+          {{ recipe["recipeLabel"] }}
+          <a href="https://localhost:5000/recipe/{{recipe["recipeID"]}}"><br>
+          <img width="100" height="100" align="left" src={{recipe["recipeImageLink"]}} alt="You"><br><br><br><br><br>
+          </a>
+      {% endfor %}
+      <br><br>
+
+      <h2> Favourites </h2> 
       {% for favourite in profilefavourites %}
-          {{ favourite }}<br>
+          {{ favourite["recipeLabel"] }}<br>
+          <a href="https://localhost:5000/recipe/{{favourite["recipeID"]}}"><br>
+          <img width="100" height="100" align="left" src={{favourite["recipeImageLink"]}} alt="You"><br><br><br><br><br>
+          </a>
       {% endfor %}
   </div>
 </div>

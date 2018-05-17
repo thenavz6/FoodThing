@@ -5,7 +5,7 @@
 #################  General Text Parser #########################
 #################################################################
 
-# Words that are alphabetic but don't describe the actual ingredients' product. Could also be brand names.
+# Words that are alphabetic but don't describe the actual ingredients' product
 # Also best to remove adjectives that are being used to describe cooking steps
 commonWords = [
     "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", 
@@ -52,6 +52,24 @@ def removeCommonWords(string):
             result += word + " "
     return result
 
+
+# Turns a string such as "12ml" into something like "12 ml"
+def seperateAlphaAndDigit(string):
+    result = ''
+    lastIsDigit = False
+    for c in string:
+        if lastIsDigit and c.isalpha():
+            result += ' '
+            result += c
+        else:
+            if c.isdigit():
+                lastIsDigit = True
+            else:
+                lastIsDigit = False
+            result += c
+        if c.isalpha():
+            lastIsDigit = False
+    return result  
 
 #################################################################
 ############# Ingredient Measure Parser ########################
