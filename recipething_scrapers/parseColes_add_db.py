@@ -53,6 +53,21 @@ for entry in content:
             unit = value
             break
 
+    # Sometimes Coles stores writes "12 pack of eggs" but stores measures in grams. 
+    # So ends up not quantifying well. Try to find these products and convert them.
+    # Coles writes either 5pk or 5 pack in the name
+    if unit != "unit":
+        try:
+            foundIndex = name.split().index("pack")
+            if (foundIndex > 0):
+                quantity = name.split()[foundIndex - 1]
+                unit = "unit"
+        except ValueError:
+            pass
+        # Add in for "pk" later
+    quantity = str(quantity)
+            
+
     # Remove 's' or 'es' from the end of keywords. This should give better results.
     # When compared, ingredients in ProductManager.py will also remove 's' or 'es'. 
     keywords = []
