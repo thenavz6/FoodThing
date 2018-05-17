@@ -39,8 +39,7 @@
 
 .recipeinfo2 {
   display: flex;
-  justify-content: column;
-  text-align: right;
+  justify-content: flex-end;
 }
 
 .recipetitle {
@@ -51,7 +50,8 @@
 .recipefavourite {
   display: flex;
   flex: 1;
-  justify-content: flex-end;
+  vertical-align: top;
+  align-self: flex-start;
 }
 
 .recipetime {
