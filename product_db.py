@@ -1,5 +1,5 @@
 import sqlite3
-DATABASE = '../products.db'
+DATABASE = 'products.db'
 
 #############################################
 ### General Product database Functions #####

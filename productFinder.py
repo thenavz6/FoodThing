@@ -1,4 +1,4 @@
-import server
+import database
 import ingredientManager
 import textParser
 
@@ -38,13 +38,13 @@ def findBestProducts(ingredient):
             elif word.endswith('s'):
                 word = word[:-1]
 
-        products = server.find_products_keyword_db(word)
+        products = database.find_products_keyword_db(word)
         # Get the product from from it's overview table
         for product in products:
             # Score based on length of product name, excluding numbers like "120" that describe quantity
             wordsInLabel = 0
-            for word in server.get_product_overview_db(product["productID"])["label"].split():
-                if word.isalpha() and not word in textParser.commonWords:
+            for word in database.get_product_overview_db(product["productID"])["label"].split():
+                if word.isalpha() and not word.lower() in textParser.commonWords and not word.lower() in textParser.brands:
                     wordsInLabel += 1   
             score = float(1.0 / float(wordsInLabel))
 
@@ -71,7 +71,7 @@ def capNumberOfResults(sortedProducts, limit):
 def convertToDetailList(sortedProducts, ingredient):
     productList = []
     for item in sortedProducts:
-        productOverview = server.get_product_overview_db(item[0])
+        productOverview = database.get_product_overview_db(item[0])
 
         # Standardize all measures to grams 
         standardizedUnit1 = ingredientManager.findKeyFromMeasureDict(productOverview["unit"])
@@ -100,4 +100,16 @@ def convertToDetailList(sortedProducts, ingredient):
 # Converts the given quantity and unit to grams, etc. 5 pounds = x grams
 def convertAmountToGram(quantity, unit):
     return float(quantity) *  unitConverter[str(unit)]
+
+
+# Remove price outliers (based on portionCost) from a list of productDict
+def removeOutliers(productDictList):
+    # Collect a list of all the portionPrices
+    portionPrices = []
+    for productDict in productDictList:
+        portionPrices.append(productDict["portionCost"])
+
+    
+    
+
 

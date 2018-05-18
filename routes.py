@@ -4,11 +4,11 @@ import json
 
 import authentication
 import server
+import database
 from server import app
 import productFinder
 import textParser
 from helperFunctions import *
-
 
 
 @app.route("/",methods=["GET", "POST"])
@@ -25,8 +25,8 @@ def error():
 # After verification, we create a database account for the user and update their token.
 @app.route("/updateToken", methods=["GET", "POST"])
 def updateToken():
-    server.update_user_db(request.form['email'], request.form['fullname'], request.form['imageurl'], request.form['token'])
-    user = server.find_user_by_email_db(request.form['email'])
+    database.update_user_db(request.form['email'], request.form['fullname'], request.form['imageurl'], request.form['token'], "This is my profile!")
+    user = database.find_user_by_email_db(request.form['email'])
 
     # print(authentication.xor(request.form['token']))
     if (user == None):
@@ -71,7 +71,7 @@ def searchRecipe(query):
         # With a recipe search, we get at most half (5) of the items from our database if possible
         # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
         # This is to reduce API calls
-        databaseRecipes = server.find_recipes_keyword_db(query)
+        databaseRecipes = database.find_recipes_keyword_db(query)
         for num in randomSortedNumbers(len(databaseRecipes)):
             if len(recipeId) >= 5:
                 break
@@ -97,8 +97,8 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
                 recipeIngredients.append(ingredient.get('text'))
 
             # Add the recipe and its properties to the database too for faster future searches if we don't have a record of it already
-            if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'),item.get('recipe').get('totalTime')) != -1:
-                server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
+            if database.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'),item.get('recipe').get('totalTime')) != -1:
+                database.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
     # Possible post requests
     if request.method == "POST":
@@ -154,7 +154,7 @@ def advancedSearch(included,excluded,prepTime):
         print(included)
         print(excluded)
         print(prepTime)
-        databaseRecipes = server.find_recipes_overview_db(included, excluded, prepTime)
+        databaseRecipes = database.find_recipes_overview_db(included, excluded, prepTime)
         for num in randomSortedNumbers(len(databaseRecipes)):
             if len(recipeId) >= 5:
                 break
@@ -182,8 +182,8 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder)+"&e
                 recipeIngredients.append(ingredient.get('text'))
 
             # Add the recipe and its properties to the database too for faster future searches if we don't have a record of it already
-            if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'),item.get('recipe').get('totalTime')) != -1:
-                server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
+            if database.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'),item.get('recipe').get('totalTime')) != -1:
+                database.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
     # Possible post requests
     if request.method == "POST":
@@ -210,11 +210,11 @@ def recipe(recipeId):
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
-    recipeHit = server.find_recipe_id_db(recipeId)
+    recipeHit = database.find_recipe_id_db(recipeId)
     if recipeHit != None:
         recipeLabel = recipeHit["recipeLabel"]
         recipeImage = recipeHit["recipeImageLink"]
-        for ingredient in server.find_recipe_ingredients_db(recipeId):
+        for ingredient in database.find_recipe_ingredients_db(recipeId):
             recipeIngredients.append(ingredient["ingredientDesc"])
 
     # Only if we do not have it in the db then we ask edamam
@@ -235,12 +235,12 @@ def recipe(recipeId):
         for ingredient in recipe.get('ingredients'):
             recipeIngredients.append(ingredient.get('text'))
         # Also add the recipe to the db since we didn't have it
-        server.add_recipe_overview_db(recipeId, -1, recipeLabel, recipeImage,prepTime)
-        server.add_recipe_ingredients_db(recipeId, recipeIngredients)
+        database.add_recipe_overview_db(recipeId, -1, recipeLabel, recipeImage,prepTime)
+        database.add_recipe_ingredients_db(recipeId, recipeIngredients)
 
     # Check if the user has favourited this recipe
     isFavourited = False
-    userFavourites = server.find_user_favourites_db(authentication.userid)
+    userFavourites = database.find_user_favourites_db(authentication.userid)
     for favourite in userFavourites:
         if recipeId == favourite["recipeID"]:
             isFavourited = True
@@ -248,12 +248,12 @@ def recipe(recipeId):
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
     recipeComments = []
-    for entry in server.get_recipe_comments_db(recipeId):
+    for entry in database.get_recipe_comments_db(recipeId):
         recipeComments.append(entry["comment"])
-        usersWhoCommented.append(server.find_user_by_id_db(int(entry["userID"])))
+        usersWhoCommented.append(database.find_user_by_id_db(int(entry["userID"])))
 
     # Find all relevent product hits for each ingredient
-    for ingredient in server.find_recipe_ingredients_db(recipeId):
+    for ingredient in database.find_recipe_ingredients_db(recipeId):
         ingredientProducts.append(productFinder.findBestProducts(ingredient))
 
     # Calculate the total and effective price of the default chosen items
@@ -278,13 +278,13 @@ def recipe(recipeId):
             if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
                 return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
             if request.form["bt"] == "comment":
-                server.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
+                database.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
                 return redirect(url_for("recipe", recipeId = recipeId))
             if request.form["bt"] == "Favourite":
-                server.add_user_favourite_db(authentication.userid, recipeId)
+                database.add_user_favourite_db(authentication.userid, recipeId)
                 return redirect(url_for("recipe", recipeId = recipeId))
             if request.form["bt"] == "Unfavourite":
-                server.delete_user_favourite_db(authentication.userid, recipeId)
+                database.delete_user_favourite_db(authentication.userid, recipeId)
                 return redirect(url_for("recipe", recipeId = recipeId))
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
@@ -307,7 +307,7 @@ def userprofile(userId):
 
     # Find the given user in the database or error for non-integer input
     try:
-        userHit = server.find_user_by_id_db(int(userId))
+        userHit = database.find_user_by_id_db(int(userId))
     except ValueError as e:
         return redirect(url_for("error"))
 
@@ -317,14 +317,14 @@ def userprofile(userId):
         profileimage = userHit["imageurl"]
         profilefavourites = []
 
-        findfavourites = server.find_user_favourites_db(userId)
+        findfavourites = database.find_user_favourites_db(userId)
         tmp = []
         for favourite in findfavourites:
             tmp.append(favourite["recipeID"])
         for favourite in tmp:
-            profilefavourites.append(server.find_recipe_id_db(favourite))
+            profilefavourites.append(database.find_recipe_id_db(favourite))
 
-        findRecipes = server.find_user_recipes_db(userId)
+        findRecipes = database.find_user_recipes_db(userId)
         for recipe in findRecipes:
             profilerecipes.append(recipe)
 
@@ -338,7 +338,7 @@ def userprofile(userId):
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
 
-    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileid = userId, profileuser = userHit, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
 savedLabel = ''
@@ -386,11 +386,11 @@ def uploadRecipe():
             # Hope this doesn't hit already existed id when appended with userid
             rand = random.randint(1,10000)
             recipeId = str(authentication.userid) + "recipe" + str(rand)
-            server.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"])
+            database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"], 0)
             ingredientList = []
             for i in range(numOfIngredients):
                 ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
-            server.add_recipe_ingredients_db(recipeId, ingredientList)
+            database.add_recipe_ingredients_db(recipeId, ingredientList)
             for i in range(numOfSteps):
                 pass
                 # print(request.form["step_"+str(i)])
