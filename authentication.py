@@ -1,6 +1,6 @@
 import itertools
 
-is_authenticated = False
+is_authenticated = True
 userid = -1
 email = ""
 username = ""
@@ -13,4 +13,4 @@ key = "*(HT#KDMSFGKDSF#()@Jdngfuidsnfej #@UJ3rufnbUFBNES(D hf8932wur832hnoRNFOSD
 def xor(s):
     global key
     key = key * (len(s) / len(key) + 1)
-    return ''.join(chr(ord(x) ^ ord(y)) for (x,y) in itertools.izip(s, key)) 
+    return ''.join(chr(ord(x) ^ ord(y)) for (x,y) in itertools.izip(s, key))

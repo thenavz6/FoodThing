@@ -13,7 +13,7 @@ def init_db():
     db = sqlite3.connect(DATABASE)
     db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL, prepTime REAL)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
@@ -26,7 +26,7 @@ def init_db():
 def update_user_db(email, name, imageurl, token):
     if check_user_db(email) == 0:
         entry = [email, name, imageurl, token]
-        db = sqlite3.connect(DATABASE)        
+        db = sqlite3.connect(DATABASE)
         db.execute('INSERT INTO users (email, fullname, imageurl, token) VALUES (?,?,?,?)', entry)
     else:
         # print("User already in database")
@@ -117,14 +117,26 @@ def find_user_favourites_db(userId):
     return hits
 
 
+# Returns all entries from recipe_overview TABLE where userdID is userId
+# Etc. gets all recipes uploaded by the given user
+def find_user_recipes_db(userId):
+    entry = [userId]
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
+    c = db.cursor()
+    c.execute('SELECT * from recipe_overview WHERE userID=?', entry)
+    hits = c.fetchall()
+    db.close()
+    return hits
+
 # Adds a new recipe overview entry and also recipe_keyword entries
-def add_recipe_overview_db(recipeId, userId, label, urllink):
-    entry = [recipeId, userId, label, urllink]
+def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime):
+    entry = [recipeId, userId, label, urllink, prepTime]
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"2.5")', entry)
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"2.5",?)', entry)
         for word in label.split(" "):
             add_recipe_keyword_db(c, recipeId, word)
     except sqlite3.IntegrityError as e:
@@ -158,6 +170,32 @@ def find_recipes_keyword_db(word):
         recipes.append(recipe)
     db.close()
     return recipes
+
+#returns recipes from recipe_overview TABLE that have matching keywords, exclude matching exclusions and are less than needed preptime
+def find_recipes_overview_db(included, excluded, prepTime):
+    arguments = []
+    arguments.append(included.lower())
+    arguments.append(excluded.lower())
+    excllist = [excluded.lower()]
+    preptimelist = [prepTime]
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from recipe_keywords WHERE keyword=? AND NOT keyword=?', arguments)
+    hits = c.fetchall()
+    recipes = []
+    final = []
+    for hit in hits:
+        recipes.append(hit[0])
+    for id in recipes:
+        args = []
+        args.append(id)
+        args.append(prepTime)
+        c.execute('SELECT * FROM recipe_overview WHERE recipeID=? AND prepTime<=?',args)
+        hits = c.fetchall()
+        for hit in hits:
+            final.append(find_recipe_id_db(hit[0]))
+    db.close()
+    return final
 
 
 # Return entries from recipe_overview TABLE that have a matching recipeId
@@ -262,4 +300,3 @@ def dict_factory(cursor, row):
 
 
 init_db()
-

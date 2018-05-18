@@ -1,5 +1,6 @@
 import server
 import ingredientManager
+import textParser
 
 # Converts all given terms to GRAMS to standardize comparison between different measures
 unitConverter = {
@@ -40,8 +41,11 @@ def findBestProducts(ingredient):
         products = server.find_products_keyword_db(word)
         # Get the product from from it's overview table
         for product in products:
-            # Score based on length of product name
-            wordsInLabel = len(server.get_product_overview_db(product["productID"])["label"].split())      
+            # Score based on length of product name, excluding numbers like "120" that describe quantity
+            wordsInLabel = 0
+            for word in server.get_product_overview_db(product["productID"])["label"].split():
+                if word.isalpha() and not word in textParser.commonWords:
+                    wordsInLabel += 1   
             score = float(1.0 / float(wordsInLabel))
 
             # Check if we have seen this productID/product before
@@ -78,7 +82,7 @@ def convertToDetailList(sortedProducts, ingredient):
         # Calculate how many portions are needed (etc. 0.25 of that item or 2 of these items)
         portionCost = 0
         if productOverview["unit"] == "unit" and ingredient["measure"] == "unit":
-            portionCost = float(productOverview["cost"]) * float(ingredient["quantity"])
+            portionCost = float(productOverview["cost"]) * (float(ingredient["quantity"]) / float(productOverview["quantity"]))
         elif productOverview["unit"] == "unit" or ingredient["measure"] == "unit":
             portionCost = float(productOverview["cost"])
         else:

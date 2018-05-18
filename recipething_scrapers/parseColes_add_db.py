@@ -1,4 +1,5 @@
 import product_db
+import textParser
 
 #############################################
 ### COLES specific scraped data parsing ####
@@ -11,13 +12,13 @@ colesUnits = ["mg", "kg", "g", "ml", "l"]
 with open("coles_products.txt") as f:
     content = f.readlines()
 
-content = [x.strip().lower() for x in content] 
+content = [x.strip() for x in content] 
 
 for entry in content:
     tmp = entry.split(",")
-    name = tmp[0]
-    measure = tmp[1]
-    cost = tmp[2]
+    name = tmp[0].lower()
+    measure = tmp[1].lower()
+    cost = tmp[2].lower()
     link = tmp[3]
 
     # Note that we need to extract quantity and unit of measure from the amount value
@@ -52,16 +53,37 @@ for entry in content:
             unit = value
             break
 
+    # Sometimes Coles stores writes "12 pack of eggs" but stores measures in grams. 
+    # So ends up not quantifying well. Try to find these products and convert them.
+    # Coles writes either 5pk or 5 pack in the name
+    if unit != "unit":
+        try:
+            foundIndex = name.split().index("pack")
+            if (foundIndex > 0):
+                quantity = name.split()[foundIndex - 1]
+                unit = "unit"
+        except ValueError:
+            pass
+        # Add in for "pk" later
+    quantity = str(quantity)
+            
+
     # Remove 's' or 'es' from the end of keywords. This should give better results.
-    # When compared, ingredients in ProductManager.py will also remove 's' or 'es'.
+    # When compared, ingredients in ProductManager.py will also remove 's' or 'es'. 
     keywords = []
     for word in name.split():
-        if len(word) > 3:
-            if word.endswith('es'):
-                word = word[:-2]
-            elif word.endswith('s'):
-                word = word[:-1]
-        keywords.append(word)
+        if word.isalpha():
+            if len(word) > 3:
+                if word.endswith('es'):
+                    word = word[:-2]
+                elif word.endswith('s'):
+                    word = word[:-1]
+            keywords.append(word)
+
+    # Also remove common words from keywords since keywords will be used to count hits.
+    keywords = textParser.removeCommonWords(" ".join(keywords)).split()
+    # Remove duplicate words so a product called "Creams cream" doesn't hit twice. 
+    keywords = list(set(keywords))
 
     # Write this into a database with two tables    
     product_db.add_product_overview(name, link, quantity, unit, cost, "coles")

@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='../static/navbar.css'>
-    <title>User Profile</title>
+    <title>AdvancedSearch</title>
 
 </head>
 
@@ -23,8 +23,8 @@
   			<input type="submit" value="Search" name="bt">
 		</form>
     </div>
-    <a href="https://localhost:5000/user/{{myuserid}}">
-    <img align="right" src={{userimage}} alt="You">
+    <a href="https://localhost:5000/user/{{userid}}">
+    <img align="right" src={{imageurl}} alt="You">
     </a>
     <form method="POST">
   		<input align="right" type="submit" value="logout" name="bt">
@@ -35,31 +35,18 @@
 
 <div class="container-fluid">
   <div class="row-fluid" id="main">
-      {{ profilename }} <br>
-      <img src={{ profileimage }} alt="You"><br><br>
-      {% if profileid|int == myuserid|int %}
-      <form method="POST">
-          <input type="submit" value="Upload Recipe" name="bt">
-      </form>
-      <br><br>
-      {% endif %}
-
-      <h2> User Recipes: </h2>
-      {% for recipe in profilerecipes %}
-          {{ recipe["recipeLabel"] }}
-          <a href="https://localhost:5000/recipe/{{recipe["recipeID"]}}"><br>
-          <img width="100" height="100" align="left" src={{recipe["recipeImageLink"]}} alt="You"><br><br><br><br><br>
-          </a>
+    <h1> AdvancedSearch </h1>
+    <form method="POST">
+    Minimum Rating <select style="width:200px" class="form-control" id=1 name=2 onChange="myNewFunction(this);">
+      {% for i in range(1,6) %}
+              <option id="test" value={{i}}>{{i}}</option>
       {% endfor %}
-      <br><br>
-
-      <h2> Favourites </h2> 
-      {% for favourite in profilefavourites %}
-          {{ favourite["recipeLabel"] }}<br>
-          <a href="https://localhost:5000/recipe/{{favourite["recipeID"]}}"><br>
-          <img width="100" height="100" align="left" src={{favourite["recipeImageLink"]}} alt="You"><br><br><br><br><br>
-          </a>
-      {% endfor %}
+    </select>
+    Longest Preparation Time <input type="text" name="maxPrepTime"><br>
+    Key Words <input type="text" name="KeyWords"><br>
+    Exclude Ingredients <input type="text" name="excludedIngredients" placeholder="comma seperated"><br>
+    <input type="submit" value="AdvancedSearch" name="bt">
+  </form>
   </div>
 </div>
 

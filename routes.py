@@ -6,6 +6,7 @@ import authentication
 import server
 from server import app
 import productFinder
+import textParser
 from helperFunctions import *
 
 
@@ -93,10 +94,10 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
             recipeImageLinks.append(item.get('recipe').get('image'))
             recipeIngredients = []
             for ingredient in item.get('recipe').get('ingredients'):
-                recipeIngredients.append(ingredient.get('text'))                
+                recipeIngredients.append(ingredient.get('text'))
 
             # Add the recipe and its properties to the database too for faster future searches if we don't have a record of it already
-            if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image')) != -1:
+            if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'),item.get('recipe').get('totalTime')) != -1:
                 server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
 
     # Possible post requests
@@ -111,6 +112,90 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder))
 
     return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, userid = authentication.userid, imageurl = authentication.imageurl)
 
+
+@app.route("/advancedSearchPage", methods=["GET", "POST"])
+def advancedSearchPage():
+    # Ensure the user is logged in
+    if authentication.is_authenticated == False:
+        return redirect(url_for("main"))
+
+    if request.method == "GET":
+        return render_template("advancedSearch.html")
+    if request.method == "POST":
+        if request.form["bt"] == 'logout':
+            authentication.is_authenticated = False;
+            return redirect(url_for("main"))
+        if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
+            return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
+        if request.form["bt"] == "AdvancedSearch":
+            print(request.form["KeyWords"])
+            print(request.form["excludedIngredients"])
+            print(request.form["maxPrepTime"])
+            return redirect(url_for("advancedSearch",included = request.form["KeyWords"], excluded = request.form["excludedIngredients"],prepTime = request.form["maxPrepTime"]))
+
+
+
+@app.route("/advancedSearch/<included>/<excluded>/<prepTime>", methods=["GET", "POST"])
+def advancedSearch(included,excluded,prepTime):
+    # Ensure the user is logged in
+    if authentication.is_authenticated == False:
+        return redirect(url_for("main"))
+
+    # Initialise required values
+    global recipeId
+    recipeLabels, recipeImageLinks, recipeIngredients = [], [], []
+    rand = random.randint(1,50)
+
+    if request.method == "GET":
+        recipeId = []
+        # With a recipe search, we get at most half (5) of the items from our database if possible
+        # Won't handle multi worded queries very well. Dealing with multi worded queries is a whole different problem too.
+        # This is to reduce API calls
+        print(included)
+        print(excluded)
+        print(prepTime)
+        databaseRecipes = server.find_recipes_overview_db(included, excluded, prepTime)
+        for num in randomSortedNumbers(len(databaseRecipes)):
+            if len(recipeId) >= 5:
+                break
+            recipeId.append(databaseRecipes[num]["recipeID"])
+            recipeLabels.append(databaseRecipes[num]["recipeLabel"])
+            recipeImageLinks.append(databaseRecipes[num]["recipeImageLink"])
+
+        # Fill in the remaining slots with API Calls (new recipes not in our database)
+        remainder = 9 - len(recipeId)
+        exclusionQuery = "+".join(excluded.split(","))
+        inclusionQuery = included
+        response = requests.get("https://api.edamam.com/search?q="+str(inclusionQuery)+"&app_id=c565299e&app_key=\
+b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+remainder)+"&excluded="+exclusionQuery+"&time="+prepTime)
+        if (response.status_code != 200):
+            return redirect(url_for("error"))
+        jsonData = response.json()["hits"]
+
+        # For each item/recipe we get back we will append them onto our lists
+        for item in jsonData:
+            recipeId.append(item.get('recipe').get('uri').split("_",1)[1])
+            recipeLabels.append(item.get('recipe').get('label'))
+            recipeImageLinks.append(item.get('recipe').get('image'))
+            recipeIngredients = []
+            for ingredient in item.get('recipe').get('ingredients'):
+                recipeIngredients.append(ingredient.get('text'))
+
+            # Add the recipe and its properties to the database too for faster future searches if we don't have a record of it already
+            if server.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'),item.get('recipe').get('totalTime')) != -1:
+                server.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
+
+    # Possible post requests
+    if request.method == "POST":
+        if request.form["bt"] == 'logout':
+            authentication.is_authenticated = False;
+            return redirect(url_for("main"))
+        if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
+            return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
+        if request.form["bt"][:6] == "recipe":
+            return redirect(url_for("recipe", recipeId = recipeId[int(request.form["bt"][7:])]))
+
+    return render_template("dashboard.html", labelList = recipeLabels, imageList = recipeImageLinks, userid = authentication.userid, imageurl = authentication.imageurl)
 
 # The 'specific' recipe page that details instructions and ingredients.
 # Later this should lead to the substitution pop-up box and so and so.
@@ -146,10 +231,11 @@ def recipe(recipeId):
             return redirect(url_for("error"))
         recipeLabel = recipe.get('label')
         recipeImage = recipe.get('image')
+        prepTime = recipe.get('totalTime')
         for ingredient in recipe.get('ingredients'):
             recipeIngredients.append(ingredient.get('text'))
         # Also add the recipe to the db since we didn't have it
-        server.add_recipe_overview_db(recipeId, -1, recipeLabel, recipeImage)
+        server.add_recipe_overview_db(recipeId, -1, recipeLabel, recipeImage,prepTime)
         server.add_recipe_ingredients_db(recipeId, recipeIngredients)
 
     # Check if the user has favourited this recipe
@@ -166,7 +252,7 @@ def recipe(recipeId):
         recipeComments.append(entry["comment"])
         usersWhoCommented.append(server.find_user_by_id_db(int(entry["userID"])))
 
-    # Find all relevent product hits for each ingredient 
+    # Find all relevent product hits for each ingredient
     for ingredient in server.find_recipe_ingredients_db(recipeId):
         ingredientProducts.append(productFinder.findBestProducts(ingredient))
 
@@ -217,6 +303,7 @@ def userprofile(userId):
     profilename = "No one lives here :("
     profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
     profilefavourites = []
+    profilerecipes = []
 
     # Find the given user in the database or error for non-integer input
     try:
@@ -229,9 +316,17 @@ def userprofile(userId):
         profilename = userHit["fullname"]
         profileimage = userHit["imageurl"]
         profilefavourites = []
+
         findfavourites = server.find_user_favourites_db(userId)
+        tmp = []
         for favourite in findfavourites:
-            profilefavourites.append(favourite["recipeID"])
+            tmp.append(favourite["recipeID"])
+        for favourite in tmp:
+            profilefavourites.append(server.find_recipe_id_db(favourite))
+
+        findRecipes = server.find_user_recipes_db(userId)
+        for recipe in findRecipes:
+            profilerecipes.append(recipe)
 
     # Possible post requests
     if request.method == "POST":
@@ -243,9 +338,15 @@ def userprofile(userId):
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
 
-    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileid = userId, profilename = profilename, profileimage = profileimage, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
+savedLabel = ''
+savedImageurl = ''
+numOfIngredients = 1
+savedIngredients = []
+numOfSteps = 1
+savedSteps = []
 # The page for uploading user recipes
 @app.route("/uploadRecipe", methods=["GET", "POST"])
 def uploadRecipe():
@@ -253,5 +354,46 @@ def uploadRecipe():
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    return render_template("uploadrecipe.html")
+    global numOfIngredients
+    global numOfSteps
+    global savedIngredients
+    global savedSteps
+    global savedLabel
+    global savedImageurl
 
+    # Reset the number of ingredients and steps for this page
+    if request.method == "GET":
+        numOfIngredients = 1
+        numOfSteps = 1
+        savedIngredients = []
+        savedSteps = []
+
+    if request.method == "POST":
+        if "add_ingred_bt" in request.form:
+            savedLabel = request.form["recipename"]
+            savedImageurl = request.form["imageurl"]
+            if request.form["ingredient_"+str(numOfIngredients-1)].strip() != '':
+                savedIngredients.append(request.form["ingredient_"+str(numOfIngredients-1)])
+                numOfIngredients += 1
+        if "add_step_bt" in request.form:
+            savedLabel = request.form["recipename"]
+            savedImageurl = request.form["imageurl"]
+            if request.form["step_"+str(numOfSteps-1)].strip() != '':
+                savedSteps.append(request.form["step_"+str(numOfSteps-1)])
+                numOfSteps += 1
+        if "submit_bt" in request.form:
+
+            # Hope this doesn't hit already existed id when appended with userid
+            rand = random.randint(1,10000)
+            recipeId = str(authentication.userid) + "recipe" + str(rand)
+            server.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"])
+            ingredientList = []
+            for i in range(numOfIngredients):
+                ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
+            server.add_recipe_ingredients_db(recipeId, ingredientList)
+            for i in range(numOfSteps):
+                pass
+                # print(request.form["step_"+str(i)])
+            return redirect(url_for("recipe", recipeId = recipeId))
+
+    return render_template("uploadrecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, userid = authentication.userid, userimage = authentication.imageurl)

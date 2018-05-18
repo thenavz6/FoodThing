@@ -3,6 +3,7 @@ import MainHeader from './Main_Header';
 import ViewRecipeDesc from './View_Recipe_Desc';
 import RecipeComment from './Recipe_Comment';
 import RecipeCommentReply from './Recipe_Comment_Reply.js';
+import SwapIngredient from './Swap_Ingredient';
 import './View_Recipe.css';
 
 class ViewRecipe extends Component {
@@ -19,45 +20,45 @@ class ViewRecipe extends Component {
             <table className="ingredient_list">
               <tbody>
                 <tr>
-                  <td>
+                  <td className="ingredient_list_element">
                     1 Cheesecake
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     $8.95
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     BigCake
                   </td>
-                  <td className="swapbt">
-                    SWAP
+                  <td className="ingredient_list_element">
+                    <SwapIngredient/>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="ingredient_list_element">
                     1L Milk
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     $1.50
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     Walmart
                   </td>
-                  <td className="swapbt">
-                    SWAP
+                  <td className="ingredient_list_element">
+                    <SwapIngredient/>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="ingredient_list_element">
                     1L Milkshake Mix
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     $1.55
                   </td>
-                  <td>
+                  <td className="ingredient_list_element">
                     Kelis
                   </td>
-                  <td className="swapbt">
-                    SWAP
+                  <td className="ingredient_list_element">
+                    <SwapIngredient/>
                   </td>
                 </tr>
               </tbody>

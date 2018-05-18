@@ -52,11 +52,25 @@
       {% for ingredient in recipeIngredients %}
             {% set outer_loop = loop %}
             <b> {{ ingredient }} </b>
+            <div class="container-fluid">
             <select class="form-control" id={{loop.index-1}} name={{loop.index-1}} onChange="myNewFunction(this);">
             {% for product in ingredientProducts[outer_loop.index - 1] %}
-                    <option id="test" value={{ loop.index - 1 }}>{{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["portionCost"]}}</option>
+                    <option id="test" value={{ loop.index - 1 }}>{{product["productID"]}} {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["portionCost"]}} DEBUG hitScore: {{product["hitScore"]}} </option> 
             {% endfor %}
-            <select>
+            </select>
+            <br>
+
+            {% for product in ingredientProducts[outer_loop.index - 1] %}
+                <div class="navbar-header">
+                    <input type="image" src={{product["image"]}} width="100" height="100" value={{product["productID"]}} name="bt"><br>
+                    "{{ product["label"] }}"<br>
+                    "{{product["quantity"]}} {{product["unit"]}}"<br>
+                    "REAL COST: ${{product["cost"]}}" <br>
+                    "EFF. COST: ${{product["portionCost"]}}" <br>
+                </div>
+            {% endfor %}
+            </div>
+            <br><br>
       {% endfor %} 
       <br>
 

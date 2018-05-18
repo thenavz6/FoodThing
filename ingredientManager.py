@@ -11,7 +11,7 @@ from textParser import *
 
 unitDictionary = {
     'cup': ["cup", "cups"],
-    'tablespoon': ["tablespoon", "tblsp", "tbsps", "tbp", "tbps", "tbsp", "tablespoons"],
+    'tablespoon': ["tablespoon", "tblsp", "tbsps", "tbp","tbs", "tbps", "tbsp", "tablespoons"],
     'teaspoon': ["teaspoon", "teasp", "teasps", "tsp", "tsps", "teaspoons"],
     'ounce' : ["oz", "ounce", "ounces"],
     'gram' : ["gram", "grams", "g"],
@@ -45,7 +45,8 @@ def findKeyFromMeasureDict(measure):
 def convertIngredient(ingredientString):
     ingredientString = filterInput(ingredientString)   
     ingredientString = removeBracketedText(ingredientString)
-    ingredientString = removeCommonWords(ingredientString)      
+    ingredientString = removeCommonWords(ingredientString) 
+    ingredientString = ingredientString.lower()     
     parameters = ["", "", ""]
 
 
@@ -54,7 +55,7 @@ def convertIngredient(ingredientString):
     # If we cannot find a measure, we assume it is a "unit" such as an entire product etc. "5 oranges"
     measure = 'unit'
     givenMeasure = ''
-    for word in ingredientString.split(" "):
+    for word in ingredientString.split():
         if findKeyFromMeasureDict(word) != -1:
             measure = findKeyFromMeasureDict(word)
             givenMeasure = word
@@ -66,8 +67,8 @@ def convertIngredient(ingredientString):
     # This can still give us problems for instance if a range of numbers or strange text is given such as "1/2". Need to parse, so we do
     amount = ''
     if measure != 'unit':
-        indexOfMeasure = (ingredientString.split(" ")).index(givenMeasure)
-        wordsBeforeMeasure = (ingredientString.split(" "))[:indexOfMeasure]
+        indexOfMeasure = (ingredientString.split()).index(givenMeasure)
+        wordsBeforeMeasure = (ingredientString.split())[:indexOfMeasure]
         for word in reversed(wordsBeforeMeasure):
             if not word.isalpha() and len(amount) != 0:
                 amount = word + " " + amount
@@ -76,7 +77,7 @@ def convertIngredient(ingredientString):
             else:
                 break
     else:
-        for word in ingredientString.split(" "):
+        for word in ingredientString.split():
             if not word.isalpha():
                 amount = word
                 break     
@@ -87,20 +88,19 @@ def convertIngredient(ingredientString):
     # Try and determine the actual product name or product keywords from the ingredientString
     item = ''
     if measure != 'unit':
-        indexOfMeasure = (ingredientString.split(" ")).index(givenMeasure)
-        wordsAfterMeasure = (ingredientString.split(" "))[indexOfMeasure:]
+        indexOfMeasure = (ingredientString.split()).index(givenMeasure)
+        wordsAfterMeasure = (ingredientString.split())[indexOfMeasure:]
         for word in wordsAfterMeasure[1:]:
             if word.isalpha():
                 item += word + " "
     else:
-        for word in ingredientString.split(" "):
+        for word in ingredientString.split():
             if word.isalpha():
                 item += word + " "
     item = item.lower()
     item = item.strip()
 
-    print("Work in Progress! Amount: " + str(determineFinalAmount(amount)) + ". Measure: " + measure + ". Item: " + item)
-    # print("Final amount is: " + determineFinalAmount(fractionStringToFloat(parseUnicodeFraction(amount))))
+    # print("[DEBUG] Amount: " + str(determineFinalAmount(amount)) + ". Measure: " + measure + ". Item: " + item)
     # For the text we filter out common words such as "of", "a", "dash", "store", "bought" etc.
     parameters[0] = str(determineFinalAmount(amount))
     parameters[1] = measure
