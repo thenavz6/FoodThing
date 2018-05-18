@@ -82,7 +82,7 @@ def convertToDetailList(sortedProducts, ingredient):
         # Calculate how many portions are needed (etc. 0.25 of that item or 2 of these items)
         portionCost = 0
         if productOverview["unit"] == "unit" and ingredient["measure"] == "unit":
-            portionCost = float(productOverview["cost"]) * float(ingredient["quantity"])
+            portionCost = float(productOverview["cost"]) * (float(ingredient["quantity"]) / float(productOverview["quantity"]))
         elif productOverview["unit"] == "unit" or ingredient["measure"] == "unit":
             portionCost = float(productOverview["cost"])
         else:
