@@ -13,16 +13,18 @@ commonWords = [
     "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
     "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as", "before", "after", "pkt", "coarsely", "lightly",
     "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", 
-    "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "coles", "Coles", "branded", "tasty", "manning", "valley", "farm", "caged", "cage", "range",
-    "red", "green", "food", "beechworth", "capilano", "saxa", "hoyts", "masterfoods", "mckenzies", "continental", "plain", "reduced", "queens", "heinz", "salted",
-    "unsalted", "ready", "light", "mixed"
+    "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "branded", "tasty", "farm", "caged", "cage", "range", "red", "green", "food", "plain", "reduced", 
+    "salted", "unsalted", "ready", "light", "mixed", "natural", "spring", "ultimate", "traditional", "organic", "normal", "size", "sized", "very", "free", "table", "plain",
+    "jumbo", "eco", "living", "x", "x-large", "extra", "pure", "cook", "cooking"
 ]
 
 # If we can know what words in an ingredient or product describe a brand then 
 # we can make the searches have better hits. Put in lower-case only.
-brands = [
-    "coles", "beechworth", "manning", "valley", "capilano", "saxa", "hoyts", "masterfoods",
-    "mckenzies", "continental", "queens", "heinz", "obento", "balconi"
+brandNames = [
+    "coles", "beechworth", "manning", "valley", "capilano", "saxa", "hoyts", "masterfoods", "cadbury", "arnott's", "kellog's",
+    "mckenzies", "continental", "queens", "heinz", "obento", "balconi", "evian", "mount frankling", "kraft", "nestle", "nescafe",
+    "lidnt", "sanitarium", "golden", "circle", "bega", "spc", "uncle", "tobys", "streets", "john", "west", "farmers", "pura",
+    "kewpie", "norganic", "praise", "thomy", "crosse", "hellmans", "nobbys", "csr", "jeenys", "wings", "pace", "queen"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
@@ -65,7 +67,7 @@ def removeCommonWords(string):
 def removeBrandWords(string):
     result = ''
     for word in string.split():
-        if word.lower() in brands:
+        if word.lower() in brandNames:
             pass
         else:
             result += word + " "
