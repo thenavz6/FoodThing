@@ -9,13 +9,14 @@
 # Also best to remove adjectives that are being used to describe cooking steps
 # Put in lower case only.
 commonWords = [
-    "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", 
+    "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", "garden",
     "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
     "then", "at", "thinly", "sliced", "diced", "medium", "container", "store", "bought", "such", "as", "before", "after", "pkt", "coarsely", "lightly",
-    "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", 
+    "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cuts", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", 
     "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "branded", "tasty", "farm", "caged", "cage", "range", "red", "green", "food", "plain", "reduced", 
     "salted", "unsalted", "ready", "light", "mixed", "natural", "spring", "ultimate", "traditional", "organic", "normal", "size", "sized", "very", "free", "table", "plain",
-    "jumbo", "eco", "living", "x", "x-large", "extra", "pure", "cook", "cooking"
+    "jumbo", "eco", "living", "x", "x-large", "extra", "pure", "cook", "cooking", "pure", "clear", "clean", "squeezed", "loose", "packed", "prepacked", "gourmet",
+    "essence", "mix", "pieces", "sticks", "bars", "blocks", 
 ]
 
 # If we can know what words in an ingredient or product describe a brand then 
@@ -24,7 +25,7 @@ brandNames = [
     "coles", "beechworth", "manning", "valley", "capilano", "saxa", "hoyts", "masterfoods", "cadbury", "arnott's", "kellog's",
     "mckenzies", "continental", "queens", "heinz", "obento", "balconi", "evian", "mount frankling", "kraft", "nestle", "nescafe",
     "lidnt", "sanitarium", "golden", "circle", "bega", "spc", "uncle", "tobys", "streets", "john", "west", "farmers", "pura",
-    "kewpie", "norganic", "praise", "thomy", "crosse", "hellmans", "nobbys", "csr", "jeenys", "wings", "pace", "queen"
+    "kewpie", "norganic", "praise", "thomy", "crosse", "hellmans", "nobbys", "csr", "jeenys", "wings", "pace", "queen", "twinings"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space

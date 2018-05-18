@@ -49,12 +49,11 @@ def findBestProducts(ingredient):
 
             productDbEntry = database.get_product_overview_db(product["productID"])
             # Every hit product will have a score of 1 added to it 
-            score = 1
             # Check if we have seen this productID/product before
             if product["productID"] in productHits:
-                productHits[product["productID"]] += score
+                productHits[product["productID"]] += 1
             else:
-                productHits.update({product["productID"] : score})
+                productHits.update({product["productID"] : 1})
 
         for key, value in productHits.items():
             # Calculate the number of words in the products name to adjust hit score
@@ -63,7 +62,7 @@ def findBestProducts(ingredient):
             for word in productDbEntry["label"].split():
                 if word.isalpha() and not word in textParser.commonWords and not word in textParser.brandNames:
                     wordsInName += 1
-            productHits[key] = float(value) / (float(wordsInIngredient) * wordsInName)
+            productHits[key] = (float(value)) / (float(wordsInIngredient) * float(wordsInName))
 
     # Sort the product hits based on hitscore and cap the number of product results
     sortedProducts = sorted(productHits.items(), key=lambda x : x[1], reverse=True)
@@ -111,16 +110,5 @@ def convertToDetailList(sortedProducts, ingredient):
 # Converts the given quantity and unit to grams, etc. 5 pounds = x grams
 def convertAmountToGram(quantity, unit):
     return float(quantity) *  unitConverter[str(unit)]
-
-
-# Remove price outliers (based on portionCost) from a list of productDict
-def removeOutliers(productDictList):
-    # Collect a list of all the portionPrices
-    portionPrices = []
-    for productDict in productDictList:
-        portionPrices.append(productDict["portionCost"])
-
-    
-    
 
 

@@ -4,10 +4,11 @@ import json
 
 import authentication
 import server
-import database
 from server import app
-import productFinder
+import database
 import textParser
+import productFinder
+import costCalculator
 from helperFunctions import *
 
 
@@ -256,17 +257,7 @@ def recipe(recipeId):
     for ingredient in database.find_recipe_ingredients_db(recipeId):
         ingredientProducts.append(productFinder.findBestProducts(ingredient))
 
-    # Calculate the total and effective price of the default chosen items
-    totalcost, effectivecost = 0, 0
-    for ingredientProduct in ingredientProducts:
-        try:
-            totalcost += float(ingredientProduct[0]["cost"])
-        except IndexError:
-            pass
-        try:
-            effectivecost += float(ingredientProduct[0]["portionCost"])
-        except IndexError:
-            pass
+    costCalculator.calcBestCost(ingredientProducts)
 
     # Possible post requests
     if request.method == "POST":
@@ -289,7 +280,7 @@ def recipe(recipeId):
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, ingredientProducts = ingredientProducts, totalcost = totalcost, effectivecost = effectivecost, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeId = recipeId, recipeLabel = recipeLabel, recipeImage = recipeImage, recipeIngredients = recipeIngredients, ingredientProducts = ingredientProducts, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
@@ -330,11 +321,14 @@ def userprofile(userId):
 
     # Possible post requests
     if request.method == "POST":
-        if request.form["bt"] == "Upload Recipe":
-            return redirect(url_for("uploadRecipe"))
         if request.form["bt"] == 'logout':
             authentication.is_authenticated = False;
             return redirect(url_for("main"))
+        if request.form["bt"] == "Upload Recipe":
+            return redirect(url_for("uploadRecipe"))
+        if request.form["bt"] == "UpdateDesc":
+            database.set_desc_user_db(authentication.userid, request.form["updatedesc"])
+            return redirect(url_for("userprofile", userId = userId))
         if request.form["bt"] == "Search" and request.form["searchtext"].strip() != "":
             return redirect(url_for("searchRecipe", query = request.form["searchtext"]))
 
