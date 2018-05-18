@@ -76,8 +76,8 @@ for entry in content:
         except ValueError:
                 pass
 
-    # If we still can't figure out quantity, just guess 1
-    if quantity.strip() == '':
+    # If we still can't figure out quantity or got a non-number quantity, just guess 1
+    if not quantity.strip().isdigit():
         quantity = "1"
     quantity = str(quantity.strip())
             

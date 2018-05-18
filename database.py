@@ -3,7 +3,7 @@ import ingredientManager
 from sqlite3 import Error
 
 
-DATABASE = 'database.db'
+DATABASE = 'recipething.db'
 PRODUCT_DB = 'products.db'
 
 
