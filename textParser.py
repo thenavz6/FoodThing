@@ -7,6 +7,7 @@
 
 # Words that are alphabetic but don't describe the actual ingredients' product
 # Also best to remove adjectives that are being used to describe cooking steps
+# Put in lower case only.
 commonWords = [
     "of", "the", "and", "or", "into", "&", "like", "some", "this", "that", "where", "when", "i", "to", "room", "temperature", "washed", "trimmed", 
     "large", "lg", "small", "sml", "taste", "tasted", "fine", "finely", "grated", "chopped", "torn", "cut", "pieces", "coaresly", "cooled", "melted",
@@ -14,7 +15,14 @@ commonWords = [
     "beaten", "for", "more", "plus", "pans", "fresh", "whites", "sifted", "pan", "peeled", "cut", "drained", "slices", "cans", "cool", "warm", "chunks", "frozen", "pack", 
     "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "coles", "Coles", "branded", "tasty", "manning", "valley", "farm", "caged", "cage", "range",
     "red", "green", "food", "beechworth", "capilano", "saxa", "hoyts", "masterfoods", "mckenzies", "continental", "plain", "reduced", "queens", "heinz", "salted",
-    "unsalted", "ready"
+    "unsalted", "ready", "light", "mixed"
+]
+
+# If we can know what words in an ingredient or product describe a brand then 
+# we can make the searches have better hits. Put in lower-case only.
+brands = [
+    "coles", "beechworth", "manning", "valley", "capilano", "saxa", "hoyts", "masterfoods",
+    "mckenzies", "continental", "queens", "heinz", "obento", "balconi"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
@@ -46,7 +54,18 @@ def removeBracketedText(string):
 def removeCommonWords(string):
     result = ''
     for word in string.split():
-        if word in commonWords:
+        if word.lower() in commonWords:
+            pass
+        else:
+            result += word + " "
+    return result
+
+
+# Removes any brand names/words as contained in the brands List from this string
+def removeBrandWords(string):
+    result = ''
+    for word in string.split():
+        if word.lower() in brands:
             pass
         else:
             result += word + " "

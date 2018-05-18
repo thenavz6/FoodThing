@@ -9,7 +9,7 @@ import textParser
 # It is important to put shorter terms like "g" after "kg" since first hit is taken
 colesUnits = ["mg", "kg", "g", "ml", "l"]
 
-with open("coles_products.txt") as f:
+with open("recipething_scraped/coles_products.txt") as f:
     content = f.readlines()
 
 content = [x.strip() for x in content] 
@@ -42,8 +42,6 @@ for entry in content:
             quantity += char
         else:
             break
-    if quantity.strip() == '':
-        quantity = "1"
 
     # Find the unit of measure of the amount
     # Use the colesUnits list to find a unit Coles uses
@@ -64,8 +62,24 @@ for entry in content:
                 unit = "unit"
         except ValueError:
             pass
-        # Add in for "pk" later
-    quantity = str(quantity)
+    # Also try for things like "5pk"
+    if unit != "unit":
+        number = ''
+        try:
+            foundIndex = name.index("pk")
+            counter = 1
+            while name[foundIndex - counter].isdigit():
+                number += str(name[foundIndex - counter])
+                counter += 1
+            quantity = number[::-1]
+            unit = "unit"
+        except ValueError:
+                pass
+
+    # If we still can't figure out quantity, just guess 1
+    if quantity.strip() == '':
+        quantity = "1"
+    quantity = str(quantity.strip())
             
 
     # Remove 's' or 'es' from the end of keywords. This should give better results.
@@ -82,6 +96,7 @@ for entry in content:
 
     # Also remove common words from keywords since keywords will be used to count hits.
     keywords = textParser.removeCommonWords(" ".join(keywords)).split()
+    keywords = textParser.removeBrandWords(" ".join(keywords)).split()
     # Remove duplicate words so a product called "Creams cream" doesn't hit twice. 
     keywords = list(set(keywords))
 
