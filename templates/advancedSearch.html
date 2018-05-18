@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='../static/navbar.css'>
+    <title>AdvancedSearch</title>
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard">RecipeThing</a>
+		<form method="POST">
+  			Search Recipe: <input type="text" name="searchtext"><br>
+  			<input type="submit" value="Search" name="bt">
+		</form>
+    </div>
+    <a href="https://localhost:5000/user/{{userid}}">
+    <img align="right" src={{imageurl}} alt="You">
+    </a>
+    <form method="POST">
+  		<input align="right" type="submit" value="logout" name="bt">
+	</form>
+  </div>
+</nav>
+
+
+<div class="container-fluid">
+  <div class="row-fluid" id="main">
+    <h1> AdvancedSearch </h1>
+    <form method="POST">
+    Minimum Rating <select style="width:200px" class="form-control" id=1 name=2 onChange="myNewFunction(this);">
+      {% for i in range(1,6) %}
+              <option id="test" value={{i}}>{{i}}</option>
+      {% endfor %}
+    </select>
+    Longest Preparation Time <input type="text" name="maxPrepTime"><br>
+    Key Words <input type="text" name="KeyWords"><br>
+    Exclude Ingredients <input type="text" name="excludedIngredients" placeholder="comma seperated"><br>
+    <input type="submit" value="AdvancedSearch" name="bt">
+  </form>
+  </div>
+</div>
+
+
+</body>
+</html>
