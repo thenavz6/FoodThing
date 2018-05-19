@@ -50,9 +50,9 @@
         <h3 align="left">Est Cost (effective) ${{recipeDict["effectiveCost"]}}</h3>
         <form align="left" method="POST">
             {% if recipeDict["isfav"] == False %}
-                <input type="submit" value="Favourite" name="recipe_fav">
+                <button type="submit" name="Favourite" value={{recipeDict["id"]}}> Favourite </button>
             {% else %}
-                <input type="submit" value="Unavourite" name="recipe_fav">
+                <button type="submit" name="Unfavourite" value={{recipeDict["id"]}}> Unfavourite </button>
             {% endif %}
 	    </form> 
       </div>
