@@ -39,6 +39,16 @@
 
 
 <div class="container-fluid" align="center">
+  <form method="POST">
+    <select name="sorttype">
+        <option value="Cost">Cost</option>
+        <option value="Rating">Rating</option>
+        <option value="Prep Time">Prep Time</option>
+    </select>
+    <input align="right" type="submit" value="Sort" name="sortbt">
+    <input align="right" type="submit" value="Advanced Search" name="advbt">
+  </form>
+
   <div class="row-fluid" id="main">
       {% for recipe in recipes %}
       <div class="row">
@@ -51,9 +61,9 @@
         <h3 align="left">Est Cost (effective) ${{recipe["effectiveCost"]}}</h3>
         <form align="left" method="POST">
             {% if recipe["isfav"] == False %}
-                <input type="submit" value="Favourite" name="recipe_fav">
+                <button type="submit" name="Favourite" value={{recipe["id"]}}> Favourite </button>
             {% else %}
-                <input type="submit" value="Unavourite" name="recipe_fav">
+                <button type="submit" name="Unfavourite" value={{recipe["id"]}}> Unfavourite </button>
             {% endif %}
 	    </form> 
       </div>
