@@ -53,20 +53,20 @@
       {% for recipe in recipes %}
       <div class="row">
         <form method="POST">
-            <input align="left" type="image" src={{recipe["image"]}} width="400" height="400" value=recipehit_{{recipe["id"]}} name="bt">
+            <input align="left" type="image" src={{recipe["image"]}} width="300" height="300" value=recipehit_{{recipe["id"]}} name="bt">
         </form>
         <h2 align="left">{{recipe["name"]}}</h2>
-        <h3 align="left">Rated {{recipe["rating"]}}</h3>
-        <h3 align="left">Prep Time {{recipe["preptime"]}} mins</h3>
-        <h3 align="left">Est Cost (effective) ${{recipe["effectiveCost"]}}</h3>
-        <form align="left" method="POST">
+        <form align="right" method="POST">
             {% if recipe["isfav"] == False %}
                 <button type="submit" name="Favourite" value={{recipe["id"]}}> Favourite </button>
             {% else %}
                 <button type="submit" name="Unfavourite" value={{recipe["id"]}}> Unfavourite </button>
             {% endif %}
 	    </form> 
-      </div>
+        <font color="green"><h3 align="right">Prep Time {{recipe["preptime"]}} mins</h3></font>
+        <h3 align="left">Rated {{recipe["rating"]}}</h3>
+        <font color="e569ca"><h3 align="right">Est Cost (effective) ${{recipe["effectiveCost"]}}</h3></font>
+      </div><br>
       {% endfor %}
   </div>
 </div>

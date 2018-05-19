@@ -65,6 +65,7 @@ def sortRecipeDictionaries(dictionaryList, sortType):
                         dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]   
                 except ValueError:
                     # Value for Prep Time is unknown = ???
+                    if dictionaryList[j]["preptime"] == "???":
                         dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]      
         
     return dictionaryList

@@ -69,6 +69,7 @@ def findBestProducts(ingredient):
     sortedProducts = sorted(productHits.items(), key=lambda x : x[1], reverse=True)
     sortedProducts = capNumberOfResults(sortedProducts, 20)
     detailList = convertToDetailList(sortedProducts, ingredient)
+    detailList = sortBestHitsByPrice(detailList)
     return detailList
 
 
@@ -110,6 +111,20 @@ def convertToDetailList(sortedProducts, ingredient):
         productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"]}
         productList.append(productDict)
     return productList
+
+
+# Sorts the equal highest hitscore products by price based on the detaillist provided in the argument
+# We don't bother sorting the rest at the moment
+def sortBestHitsByPrice(detailList):
+    if len(detailList) > 0:
+        bestHitScore = float(detailList[0]["hitScore"] )   
+        for i in range(0, len(detailList) - 1):
+            for j in range(0, len(detailList) - 1):
+                if float(detailList[j + 1]["hitScore"]) < bestHitScore:
+                    break
+                if detailList[j]["effectiveCost"] > detailList[j + 1]["effectiveCost"]:
+                    detailList[j + 1], detailList[j] = detailList[j], detailList[j + 1]
+    return detailList
 
 
 # Converts the given quantity and unit to grams, etc. 5 pounds = x grams

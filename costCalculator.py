@@ -2,7 +2,7 @@
 # to determine the cheapest cost while still maintaining relevent products
 
 def calcBestCost(ingredientProducts):
-    # TODO change the hitScore to a range, right now only looks at products with == highestHitScore
+    # TODO possible change the hitScore to a range, right now only looks at products with == highestHitScore
     bestHitCost = 0
     bestHitPortionCost = 0
     for products in ingredientProducts:
