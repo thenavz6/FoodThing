@@ -18,8 +18,8 @@ def calcBestCost(ingredientProducts):
         for product in products:
 
             if product["hitScore"] == highestHitScore:
-                if product["portionCost"] < lowestPortionPrice:
-                    lowestPortionPrice = product["portionCost"] 
+                if product["effectiveCost"] < lowestPortionPrice:
+                    lowestPortionPrice = product["effectiveCost"] 
                     matchingFullPrice = product["cost"]
         bestHitPortionCost += float(lowestPortionPrice)
         bestHitCost += float(matchingFullPrice)

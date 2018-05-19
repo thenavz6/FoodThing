@@ -3,4 +3,4 @@ So these should be the sorting order:
     Default: Pick product for each ingredient that has the highest hitscore
     Cheapest: Pick the cheapest of the prodcuts that from the products from 10% offset from highest hitscore
 
-RealCost is not calculated correctly. This is clear when more than one of product would be needed to meet the measure of ingredient required.
+Make all the button post requests in the header into a common function so they have to only be changed/written in one place rather than most of the routes.

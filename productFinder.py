@@ -1,6 +1,7 @@
 import database
 import ingredientManager
 import textParser
+import math
 
 # Converts all given terms to GRAMS to standardize comparison between different measures
 unitConverter = {
@@ -100,9 +101,13 @@ def convertToDetailList(sortedProducts, ingredient):
             # If we need to buy more than 5 of these, probably a better product...
             if gramMeasure2/gramMeasure1 > 5.02:
                 continue
+
+        # The real cost is the base cost * the ceiling of the portions. 
+        # Etc. If we need 500mL and this means we need 1.5 portions of a product, we need to actually buy 2.
+        realCost = float(productOverview["cost"]) * math.ceil(portionCost / float(productOverview["cost"]))
        
 
-        productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "cost" : productOverview["cost"], "grams" : gramMeasure1, "portionCost" : portionCost, "image" : productOverview["imagelink"]}
+        productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "cost" : productOverview["cost"], "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"]}
         productList.append(productDict)
     return productList
 

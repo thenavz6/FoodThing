@@ -16,16 +16,17 @@ commonWords = [
     "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "branded", "tasty", "farm", "caged", "cage", "range", "red", "green", "food", "plain", "reduced", 
     "salted", "unsalted", "ready", "light", "mixed", "natural", "spring", "ultimate", "traditional", "organic", "normal", "size", "sized", "very", "free", "table", "plain",
     "jumbo", "eco", "living", "x", "x-large", "extra", "pure", "cook", "cooking", "pure", "clear", "clean", "squeezed", "loose", "packed", "prepacked", "gourmet",
-    "essence", "mix", "pieces", "sticks", "bars", "blocks", 
+    "essence", "mix", "pieces", "sticks", "bars", "blocks", "flavoured", "flavoured", "instant", "fat", "skim", "lite", "full", "baby", "powder", "only"
 ]
 
 # If we can know what words in an ingredient or product describe a brand then 
 # we can make the searches have better hits. Put in lower-case only.
 brandNames = [
     "coles", "beechworth", "manning", "valley", "capilano", "saxa", "hoyts", "masterfoods", "cadbury", "arnott's", "kellog's",
-    "mckenzies", "continental", "queens", "heinz", "obento", "balconi", "evian", "mount frankling", "kraft", "nestle", "nescafe",
+    "mckenzies", "continental", "queens", "heinz", "obento", "balconi", "evian", "mount", "franklin", "kraft", "nestle", "nescafe",
     "lidnt", "sanitarium", "golden", "circle", "bega", "spc", "uncle", "tobys", "streets", "john", "west", "farmers", "pura",
-    "kewpie", "norganic", "praise", "thomy", "crosse", "hellmans", "nobbys", "csr", "jeenys", "wings", "pace", "queen", "twinings"
+    "kewpie", "norganic", "praise", "thomy", "crosse", "hellmans", "nobbys", "csr", "jeenys", "wings", "pace", "queen", "twinings",
+    "betty", "crocker", "aunt", "a2", "devondale", "pauls", "tempo", "creative"
 ]
 
 # General input string filtering to remove unwanted characters and replace them with a space
