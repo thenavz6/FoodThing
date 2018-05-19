@@ -157,7 +157,7 @@ def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime):
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"2.5",?)', entry)
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"3",?)', entry)
         for word in label.split(" "):
             add_recipe_keyword_db(c, recipeId, word)
     except sqlite3.IntegrityError as e:
