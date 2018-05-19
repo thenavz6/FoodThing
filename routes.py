@@ -48,6 +48,7 @@ def recipeCardRequests(requestform):
         database.add_user_favourite_db(authentication.userid, requestform["Favourite"])
         return True
     if "Unfavourite" in requestform:
+        database.delete_user_favourite_db(authentication.userid, requestform["Unfavourite"])
         return True
     return None
 
@@ -188,15 +189,11 @@ def recipe(recipeId):
     if request.method == "POST":
         if headerRequests(request.form) != None:
             return headerRequests(request.form)    
+        if recipeCardRequests(request.form) != None:
+            return redirect(url_for("recipe", recipeId = recipeId))
         if "bt" in request.form:
             if request.form["bt"] == "comment":
                 database.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
-                return redirect(url_for("recipe", recipeId = recipeId))
-            if request.form["bt"] == "Favourite":
-                database.add_user_favourite_db(authentication.userid, recipeId)
-                return redirect(url_for("recipe", recipeId = recipeId))
-            if request.form["bt"] == "Unfavourite":
-                database.delete_user_favourite_db(authentication.userid, recipeId)
                 return redirect(url_for("recipe", recipeId = recipeId))
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
