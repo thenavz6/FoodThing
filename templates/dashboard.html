@@ -40,17 +40,21 @@
 
 <div class="container-fluid" align="center">
   <div class="row-fluid" id="main">
-      {% for label in labelList %}
+      {% for recipe in recipes %}
       <div class="row">
         <form method="POST">
-            <input align="left" type="image" src={{imageList[loop.index - 1]}} width="400" height="400" value="recipe_{{loop.index - 1}}" name="bt">
+            <input align="left" type="image" src={{recipe["image"]}} width="400" height="400" value=recipehit_{{recipe["id"]}} name="bt">
         </form>
-        <h2 align="left">{{label}}</h2>
-        <h3 align="left">Rating</h3>
-        <h3 align="left">Prep Time</h3>
-        <h3 align="left">Estimated Cost</h3>
+        <h2 align="left">{{recipe["name"]}}</h2>
+        <h3 align="left">Rated {{recipe["rating"]}}</h3>
+        <h3 align="left">Prep Time {{recipe["preptime"]}} mins</h3>
+        <h3 align="left">Est Cost (effective) ${{recipe["effectiveCost"]}}</h3>
         <form align="left" method="POST">
-            <input type="submit" value="Favourite" name="recipe_fav">
+            {% if recipe["isfav"] == False %}
+                <input type="submit" value="Favourite" name="recipe_fav">
+            {% else %}
+                <input type="submit" value="Unavourite" name="recipe_fav">
+            {% endif %}
 	    </form> 
       </div>
       {% endfor %}
