@@ -74,7 +74,7 @@
             <br>
 
             {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
-                <div class="navbar-header">
+                <div class="navbar-header" {% if loop.index - 1 == 0 %} style="border:1px solid green;" {% endif %}>
                     <input type="image" src={{product["image"]}} width="100" height="100" value={{product["productID"]}} name="bt"><br>
                     "{{ product["label"] }}"<br>
                     "{{product["quantity"]}} {{product["unit"]}}"<br>
