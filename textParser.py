@@ -16,7 +16,7 @@ commonWords = [
     "brand", "cold", "hot", "all", "purpose", "hulled", "whole", "branded", "tasty", "farm", "caged", "cage", "range", "red", "green", "food", "plain", "reduced", 
     "salted", "unsalted", "ready", "light", "mixed", "natural", "spring", "ultimate", "traditional", "organic", "normal", "size", "sized", "very", "free", "table", "plain",
     "jumbo", "eco", "living", "x", "x-large", "extra", "pure", "cook", "cooking", "pure", "clear", "clean", "squeezed", "loose", "packed", "prepacked", "gourmet",
-    "essence", "mix", "pieces", "sticks", "bars", "blocks", "flavoured", "flavoured", "instant", "fat", "skim", "lite", "full", "baby", "only", "minced", "australia",
+    "essence", "pieces", "sticks", "bars", "blocks", "flavoured", "flavoured", "instant", "fat", "skim", "lite", "full", "baby", "only", "minced", "australia",
     "australian", "gluten", "quick", "double", "single", "triple", "tempting", "tempt", "texting", "spraying", "nonstick", "dairy"
 ]
 
@@ -37,6 +37,17 @@ def filterInput(string):
         if c == u"⁄":
             filtered += "/"
         elif c in ["'", ",", '"', "-", "."]:
+            filtered += " "
+        else:
+            filtered += c
+    return filtered
+
+
+# Remove a certain character from input and replace it with a space
+def filterCharacter(string, char):
+    filtered = ''
+    for c in string:
+        if c == char:
             filtered += " "
         else:
             filtered += c

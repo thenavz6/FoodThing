@@ -29,6 +29,7 @@ def getRecipeDictionaries(recipeIDList, userId):
             "image": overviewEntry["recipeImageLink"],
             "ingredients" : recipeIngredients,                  # Each ingredient etc. "eggs"
             "ingredientProducts" : ingredientProducts,          # Each product that hit the above ingredient, etc. "12pk eggs", "free range eggs"
+            "instructions" : overviewEntry["recipeInstructions"],
             "rating" : overviewEntry["recipeRating"],
             "preptime": "???" if (float(overviewEntry["prepTime"]) == 0) else str(overviewEntry["prepTime"]),
             "isfav" : database.is_user_favourited_db(userId, recipeId),
@@ -89,7 +90,8 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+num)
     # For each recipe we get back, we add them to our local database if they aren't there already
     jsonData = response.json()["hits"]
     for item in jsonData:
-        if database.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'), item.get('recipe').get('totalTime')) != -1:
+        # -1 indicates no uploading user since sourced externally. "" in last entry indicates no instruction steps since sourced externally.
+        if database.add_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1], -1, item.get('recipe').get('label'), item.get('recipe').get('image'), item.get('recipe').get('totalTime'), "") != -1:
             recipeIngredients = []
             for ingredient in item.get('recipe').get('ingredients'):
                 recipeIngredients.append(ingredient.get('text'))
@@ -111,7 +113,7 @@ b90e6fb2878260b8f991bd4f9a8663ca")
     recipeIngredients = []
     for ingredient in recipe.get('ingredients'):
         recipeIngredients.append(ingredient.get('text'))
-    database.add_recipe_overview_db(recipeId, -1, recipe.get('label'), recipe.get('image'), recipe.get('totalTime'))
+    database.add_recipe_overview_db(recipeId, -1, recipe.get('label'), recipe.get('image'), recipe.get('totalTime'), "")
     database.add_recipe_ingredients_db(recipeId, recipeIngredients)
 
     return True

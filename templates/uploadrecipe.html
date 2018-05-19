@@ -41,9 +41,10 @@
       Fill in the form:
       <form method="POST">
           Recipe Name: <input type="text" name="recipename" value="{{savedLabel}}" placeholder="recipeName"><br>
-
           Image Link: <input type="text" name="imageurl" value="{{savedImageurl}}" placeholder="imageurl"><br>
+          Preparation Time: <input type="text" name="preptime" value="{{savedPreptime}}" placeholder="15"> minutes <br>
 
+          <br>
           {% for i in range(numOfIngredients) %}
               Ingredient: <input type="text" name="ingredient_{{i}}" value="{{savedIngredients[i]}}" placeholder="100mL of condensed cream etc."><br>
           {% endfor %}
