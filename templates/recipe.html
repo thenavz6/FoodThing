@@ -58,7 +58,7 @@
       </div>
 
       <br>
-      <b><font size="12"> Ingredient List: </font></b><br>
+      <b><font size="12"> Ingredients: </font></b><br>
       <ul>
       {% for ingredient in recipeDict["ingredients"] %}
             {% set outer_loop = loop %}
@@ -87,6 +87,11 @@
             <br><br>
       {% endfor %} 
       <br>
+
+      <b><font size="12"> Steps: </font></b><br>
+      {% for step in steps %}
+        {{loop.index}}. {{ step }} <br>
+      {% endfor %}
 
       <br>
       <p3><b> Comments </p3></b><br>

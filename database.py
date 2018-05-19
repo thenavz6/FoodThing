@@ -11,7 +11,7 @@ def init_db():
     db = sqlite3.connect(DATABASE)
     db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT, description TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL, prepTime REAL)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL, prepTime REAL, recipeInstructions TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
@@ -151,13 +151,13 @@ def find_user_recipes_db(userId):
     return hits
 
 # Adds a new recipe overview entry and also recipe_keyword entries if we don't have it already
-def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime):
-    entry = [recipeId, userId, label, urllink, prepTime]
+def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedInstructions):
+    entry = [recipeId, userId, label, urllink, prepTime, parsedInstructions]
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
 
     try:
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"3",?)', entry)
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"3",?,?)', entry)
         for word in label.split(" "):
             add_recipe_keyword_db(c, recipeId, word)
     except sqlite3.IntegrityError as e:

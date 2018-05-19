@@ -198,7 +198,7 @@ def recipe(recipeId):
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeDict = recipeDict, userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeDict = recipeDict, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
@@ -253,6 +253,7 @@ def userprofile(userId):
 
 savedLabel = ''
 savedImageurl = ''
+savedPreptime = ''
 numOfIngredients = 1
 savedIngredients = []
 numOfSteps = 1
@@ -270,6 +271,7 @@ def uploadRecipe():
     global savedSteps
     global savedLabel
     global savedImageurl
+    global savedPreptime
 
     # Reset the number of ingredients and steps for this page
     if request.method == "GET":
@@ -285,6 +287,7 @@ def uploadRecipe():
         if "add_ingred_bt" in request.form:
             savedLabel = request.form["recipename"]
             savedImageurl = request.form["imageurl"]
+            savedPreptime = request.form["preptime"]
             if request.form["ingredient_"+str(numOfIngredients-1)].strip() != '':
                 savedIngredients.append(request.form["ingredient_"+str(numOfIngredients-1)])
                 numOfIngredients += 1
@@ -292,6 +295,7 @@ def uploadRecipe():
         if "add_step_bt" in request.form:
             savedLabel = request.form["recipename"]
             savedImageurl = request.form["imageurl"]
+            savedPreptime = request.form["preptime"]
             if request.form["step_"+str(numOfSteps-1)].strip() != '':
                 savedSteps.append(request.form["step_"+str(numOfSteps-1)])
                 numOfSteps += 1
@@ -300,14 +304,25 @@ def uploadRecipe():
             # Hope this doesn't hit already existed id when appended with userid
             rand = random.randint(1,10000)
             recipeId = str(authentication.userid) + "recipe" + str(rand)
-            database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"], 0)
+            preptime = 0
+            try:
+                preptime = int(request.form["preptime"])
+            except ValueError:
+                pass
+            
             ingredientList = []
             for i in range(numOfIngredients):
                 ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
             database.add_recipe_ingredients_db(recipeId, ingredientList)
+
+            ingredientString = ''
+            # parse out ";" characters from all steps. This is because we will use ; to seperate the steps for storage in db    
             for i in range(numOfSteps):
-                pass
-                # print(request.form["step_"+str(i)])
+                tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")       
+                ingredientString += (tmp + " ; ")
+
+            database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"], preptime, ingredientString)
+
             return redirect(url_for("recipe", recipeId = recipeId))
 
-    return render_template("uploadrecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, userid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("uploadrecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, savedPreptime = savedPreptime, userid = authentication.userid, userimage = authentication.imageurl)
