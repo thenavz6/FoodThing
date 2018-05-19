@@ -15,20 +15,24 @@
 
 <body>
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard">RecipeThing</a>
+  <div class="container-fluid" display="inline-block">
+      <table style=width:100%>
+
 		<form method="POST">
-  			Search Recipe: <input type="text" name="searchtext"><br>
-  			<input type="submit" value="Search" name="bt">
+  			<input align="left" type="text" name="searchtext" placeholder="Search...">
+  			<button align="left" type="submit" value="Search" name="headerbt"><i class="fa fa-search"></i></button>
 		</form>
-    </div>
-    <a href="https://localhost:5000/user/{{myuserid}}">
-    <img align="right" src={{userimage}} alt="You">
-    </a>
-    <form method="POST">
-  		<input align="right" type="submit" value="logout" name="bt">
-	</form>
+        <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard" align="center">RecipeThing</a>
+
+        <form method="POST">
+            <input align="right" type="submit" value="Add Recipe" name="headerbt">
+  		    <input align="right" type="submit" value="Profile" name="headerbt">
+            <input align="right" type="submit" value="Logout" name="headerbt">
+	    </form> 
+        <a href="https://localhost:5000/user/{{userid}}">
+            <img align="right" src={{imageurl}} alt="You">
+        </a>
+      </table>
   </div>
 </nav>
 

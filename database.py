@@ -126,6 +126,18 @@ def find_user_favourites_db(userId):
     return hits
 
 
+# Checks if a certain user has a certain recipe as favourited by examining user_favourites TABLE
+def is_user_favourited_db(userId, recipeId):
+    entry = [userId, recipeId]
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('SELECT * from user_favourites WHERE userID=? AND recipeID=?', entry)
+    hits = c.fetchall()
+    if hits == []:
+        return False
+    return True
+
+
 # Returns all entries from recipe_overview TABLE where userdID is userId
 # Etc. gets all recipes uploaded by the given user
 def find_user_recipes_db(userId):
@@ -138,7 +150,7 @@ def find_user_recipes_db(userId):
     db.close()
     return hits
 
-# Adds a new recipe overview entry and also recipe_keyword entries
+# Adds a new recipe overview entry and also recipe_keyword entries if we don't have it already
 def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime):
     entry = [recipeId, userId, label, urllink, prepTime]
     db = sqlite3.connect(DATABASE)
@@ -152,8 +164,8 @@ def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime):
         # print("Recipe already in database")
         return -1
     except sqlite3.OperationalError as e:
-        pass
         # illegal character
+        return -1
 
     db.commit()
     db.close()

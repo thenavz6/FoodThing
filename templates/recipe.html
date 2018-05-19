@@ -15,20 +15,24 @@
 
 <body>
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard">RecipeThing</a>
+  <div class="container-fluid" display="inline-block">
+      <table style=width:100%>
+
 		<form method="POST">
-  			Search Recipe: <input type="text" name="searchtext"><br>
-  			<input type="submit" value="Search" name="bt">
+  			<input align="left" type="text" name="searchtext" placeholder="Search...">
+  			<button align="left" type="submit" value="Search" name="headerbt"><i class="fa fa-search"></i></button>
 		</form>
-    </div>
-    <a href="https://localhost:5000/user/{{userid}}">
-    <img align="right" src={{imageurl}} alt="You">
-    </a>
-    <form method="POST">
-  		<input align="right" type="submit" value="logout" name="bt">
-	</form>   
+        <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard" align="center">RecipeThing</a>
+
+        <form method="POST">
+            <input align="right" type="submit" value="Add Recipe" name="headerbt">
+  		    <input align="right" type="submit" value="Profile" name="headerbt">
+            <input align="right" type="submit" value="Logout" name="headerbt">
+	    </form> 
+        <a href="https://localhost:5000/user/{{userid}}">
+            <img align="right" src={{imageurl}} alt="You">
+        </a>
+      </table>
   </div>
 </nav>
 
@@ -36,39 +40,47 @@
 <div class="container-fluid">
   <div class="row-fluid" id="main">
 
-      <p3><b> {{ recipeLabel }} </p3></b><br><br>
-      <img src = {{ recipeImage }} width="400" height="400"><br>
-      <form method="POST">
-      {% if isFavourited == true %}
-          <input type="submit" name="bt" value="Unfavourite"> 
-      {% else %}
-          <input type="submit" name="bt" value="Favourite">
-      {% endif %}
-      </form>
+      <div class="row">
+        <form method="POST">
+            <img align="left" type="image" src={{recipeDict["image"]}} width="400" height="400" value="recipe">
+        </form>
+        <h2 align="left">{{recipeDict["name"]}}</h2>
+        <h3 align="left">Rated {{recipeDict["rating"]}}</h3>
+        <h3 align="left">Prep Time {{recipeDict["preptime"]}} mins</h3>
+        <h3 align="left">Est Cost (effective) ${{recipeDict["effectiveCost"]}}</h3>
+        <form align="left" method="POST">
+            {% if recipeDict["isfav"] == False %}
+                <input type="submit" value="Favourite" name="recipe_fav">
+            {% else %}
+                <input type="submit" value="Unavourite" name="recipe_fav">
+            {% endif %}
+	    </form> 
+      </div>
 
       <br>
       <b><font size="12"> Ingredient List: </font></b><br>
       <ul>
-      {% for ingredient in recipeIngredients %}
+      {% for ingredient in recipeDict["ingredients"] %}
             {% set outer_loop = loop %}
-            <b> {{ ingredient }} </b>
+            <b> {{ ingredient["ingredientDesc"] }} </b>
             <div class="container-fluid">
             <select class="form-control" id={{loop.index-1}} name={{loop.index-1}} onChange="myNewFunction(this);">
-            {% for product in ingredientProducts[outer_loop.index - 1] %}
+            {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
                     <option id="test" value={{ loop.index - 1 }}>{{product["productID"]}} 
                     {{ product["label"] }}
-                    {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["portionCost"]}} DEBUG hitScore: {{product["hitScore"]}} </option> 
+                    {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["effectiveCost"]}} DEBUG hitScore: {{product["hitScore"]}} </option> 
             {% endfor %}
             </select>
             <br>
 
-            {% for product in ingredientProducts[outer_loop.index - 1] %}
+            {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
                 <div class="navbar-header">
                     <input type="image" src={{product["image"]}} width="100" height="100" value={{product["productID"]}} name="bt"><br>
                     "{{ product["label"] }}"<br>
                     "{{product["quantity"]}} {{product["unit"]}}"<br>
-                    "REAL COST: ${{product["cost"]}}" <br>
-                    "EFF. COST: ${{product["portionCost"]}}" <br>
+                    "PRODUCT COST: ${{product["unitCost"]}}" <br>
+                    "REAL COST: ${{product["realCost"]}}" <br>
+                    "EFF. COST: ${{product["effectiveCost"]}}" <br>
                 </div>
             {% endfor %}
             </div>
