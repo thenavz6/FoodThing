@@ -13,7 +13,7 @@ import recipeDataCollector
 from helperFunctions import *
 
 # Some global settings
-OFFLINEMODE = True          # Will not contact edamam. Only source locally.
+OFFLINEMODE = False                              # Will not contact edamam for search queries. Only source locally.
 
 @app.route("/",methods=["GET", "POST"])
 def main():
@@ -43,13 +43,12 @@ def headerRequests(requestform):
 
 # The possible requests that can be made from a 'Recipe Card' (just favouriting atm, add star rating later)
 def recipeCardRequests(requestform):
-    if "recipe_fav" in requestform:
-        if requestform["recipe_fav"] == "Favourite":
-            # database.add_user_favourite_db(authentication.userId, recipeId)
-            pass
-        else:
-            # delete_user_favourite_db(userId, recipeId)
-            pass
+    print(requestform)
+    if "Favourite" in requestform:
+        database.add_user_favourite_db(authentication.userid, requestform["Favourite"])
+        return True
+    if "Unfavourite" in requestform:
+        return True
     return None
 
 # We need to verify this token with Google for security. So TODO that later.
@@ -139,42 +138,44 @@ def advancedSearch(query,excluded,prepTime):
                 break
             recipeId.append(databaseRecipes[num]["recipeID"])
 
-    recipes = recipeDataCollector.getRecipeDictionaries(recipeId, authentication.userid)
+        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, authentication.userid)
 
     # Possible post requests
     if request.method == "POST":
         if headerRequests(request.form) != None:
             return headerRequests(request.form)    
         if recipeCardRequests(request.form) != None:
-            return recipeCardRequests(request.form)
+            return redirect(url_for("userprofile", userId = authentication.userid))
+        if "advbt" in request.form:
+            return redirect(url_for("advancedSearchPage"))
+        if "sortbt" in request.form:
+            recipes = recipeDataCollector.sortRecipeDictionaries(recipes, request.form["sorttype"])
         if "bt" in request.form and request.form["bt"][:9] == "recipehit":
             return redirect(url_for("recipe", recipeId = request.form["bt"][10:]))
 
     return render_template("dashboard.html", recipes = recipes, userid = authentication.userid, imageurl = authentication.imageurl)
 
+
 # The 'specific' recipe page that details instructions and ingredients.
 # Later this should lead to the substitution pop-up box and so and so.
+recipeDict = {}
 @app.route("/recipe/<recipeId>", methods=["GET", "POST"])
 def recipe(recipeId):
     # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
+    global recipeDict
+
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
     recipeHit = database.find_recipe_id_db(recipeId)
-    if recipeHit == None:
+    if recipeHit == []:
         recipeDataCollector.recieveSingleRecipe(recipeId)
         recipeHit = database.find_recipe_id_db(recipeId)
 
-    recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid)[0]
-
-    # Check if the user has favourited this recipe
-    isFavourited = False
-    userFavourites = database.find_user_favourites_db(authentication.userid)
-    for favourite in userFavourites:
-        if recipeId == favourite["recipeID"]:
-            isFavourited = True
+    if request.method == "GET":
+        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid)[0]
 
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
@@ -200,7 +201,7 @@ def recipe(recipeId):
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
 
-    return render_template("recipe.html", recipeDict = recipeDict, userid = authentication.userid, imageurl = authentication.imageurl, isFavourited = isFavourited, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeDict = recipeDict, userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile

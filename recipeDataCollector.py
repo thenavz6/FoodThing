@@ -38,6 +38,35 @@ def getRecipeDictionaries(recipeIDList, userId):
         
         dictionaryList.append(recipeDict)
 
+    sortRecipeDictionaries(dictionaryList, "Cost")
+    return dictionaryList
+
+
+# Sorts the above 'datatype' based on the sortType parameter
+def sortRecipeDictionaries(dictionaryList, sortType):
+    # Bubblesort (inefficient but lists are relatively small)
+    if sortType == "Cost":
+        for i in range(0, len(dictionaryList)):
+            for j in range(0, len(dictionaryList) - 1):
+                if float(dictionaryList[j]["effectiveCost"]) > float(dictionaryList[j + 1]["effectiveCost"]):
+                    dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j] 
+
+    if sortType == "Rating":
+        for i in range(0, len(dictionaryList)):
+            for j in range(0, len(dictionaryList) - 1):
+                if float(dictionaryList[j]["rating"]) < float(dictionaryList[j + 1]["rating"]):
+                    dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]  
+
+    if sortType == "Prep Time":
+        for i in range(0, len(dictionaryList)):
+            for j in range(0, len(dictionaryList) - 1):
+                try:
+                    if float(dictionaryList[j]["preptime"]) > float(dictionaryList[j + 1]["preptime"]):
+                        dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]   
+                except ValueError:
+                    # Value for Prep Time is unknown = ???
+                        dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]      
+        
     return dictionaryList
 
 
@@ -52,7 +81,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+num)
     if prepTime != None:
         requestString += "&time="+prepTime
 
-    response = requestString
+    response = requests.get(requestString)
     if response.status_code != 200:
         return False
     
@@ -86,5 +115,3 @@ b90e6fb2878260b8f991bd4f9a8663ca")
 
     return True
     
-
-
