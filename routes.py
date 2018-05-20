@@ -52,6 +52,7 @@ def recipeCardRequests(requestform):
         return True
     return None
 
+
 # We need to verify this token with Google for security. So TODO that later.
 # After verification, we create a database account for the user and update their token.
 @app.route("/updateToken", methods=["GET", "POST"])
@@ -161,6 +162,7 @@ def advancedSearch(query,excluded,prepTime):
 # The 'specific' recipe page that details instructions and ingredients.
 # Later this should lead to the substitution pop-up box and so and so.
 recipeDict = {}
+selectedProducts = []
 prefStore = "any"
 @app.route("/recipe/<recipeId>", methods=["GET", "POST"])
 def recipe(recipeId):
@@ -168,7 +170,7 @@ def recipe(recipeId):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    global recipeDict, prefStore
+    global recipeDict, selectedProducts, prefStore
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
@@ -179,6 +181,20 @@ def recipe(recipeId):
 
     if request.method == "GET":
         recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
+        # By default we select the cheapest, most relevent products
+        selectedProducts = []
+        for ingredient in recipeDict:
+            selectedProducts.append(0)
+
+    # Calculate the total effective price based on the selectedProducts
+    totalEffectiveCost, i = 0, 0
+    for ingredient in recipeDict["ingredients"]:
+        try:
+            totalEffectiveCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["effectiveCost"]
+        except IndexError:
+            pass
+        i += 1
+        
 
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
@@ -202,8 +218,29 @@ def recipe(recipeId):
         if "storebt" in request.form:
             prefStore = request.form["selectstore"]
             recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
+            # Reset product preferences
+            for i in range(0, len(selectedProducts)):
+                selectedProducts[i] = 0
+            # Recalculate the total effective price based on the selectedProducts
+            totalEffectiveCost, i = 0, 0
+            for ingredient in recipeDict["ingredients"]:
+                try:
+                    totalEffectiveCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["effectiveCost"]
+                except IndexError:
+                    pass
+                i += 1
+        if "productbt" in request.form:
+            selectedProducts[int(request.form["productbt"].split("_")[0])] = int(request.form["productbt"].split("_")[1])
+            # Recalculate the total effective price based on the selectedProducts
+            totalEffectiveCost, i = 0, 0
+            for ingredient in recipeDict["ingredients"]:
+                try:
+                    totalEffectiveCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["effectiveCost"]
+                except IndexError:
+                    pass
+                i += 1
 
-    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile

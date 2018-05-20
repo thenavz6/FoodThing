@@ -47,7 +47,7 @@
         <h2 align="left">{{recipeDict["name"]}}</h2>
         <h3 align="left">Rated {{recipeDict["rating"]}}</h3>
         <h3 align="left">Prep Time {{recipeDict["preptime"]}} mins</h3>
-        <h3 align="left">Est Cost (effective) ${{recipeDict["effectiveCost"]}}</h3>
+        <h3 align="left">Est Cost (effective) ${{totalEffectiveCost}}</h3>
         <form align="left" method="POST">
             {% if recipeDict["isfav"] == False %}
                 <button type="submit" name="Favourite" value={{recipeDict["id"]}}> Favourite </button>
@@ -75,7 +75,7 @@
             {% set outer_loop = loop %}
             <b> {{ ingredient["ingredientDesc"] }} </b>
             <div class="container-fluid">
-            <select class="form-control" id={{loop.index-1}} name={{loop.index-1}} onChange="myNewFunction(this);">
+            <select class="form-control" id={{loop.index-1}} name={{loop.index-1}}">
             {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
                     <option id="test" value={{ loop.index - 1 }}>{{product["productID"]}} 
                     {{ product["label"] }}
@@ -85,8 +85,10 @@
             <br>
 
             {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
-                <div class="navbar-header" {% if loop.index - 1 == 0 %} style="border:1px solid green;" {% endif %}>
-                    <input type="image" src={{product["image"]}} width="100" height="100" value={{product["productID"]}} name="bt"><br>
+                <div class="navbar-header" {% if selectedProducts[outer_loop.index-1]|int == loop.index-1|int %} style="border:1px solid green;" {% endif %}>
+                    <form method="POST">
+                        <input type="image" src={{product["image"]}} width="100" height="100" value={{outer_loop.index-1}}_{{loop.index-1}} name="productbt"><br>
+                    </form>
                     "{{ product["label"] }}"<br>
                     "{{product["quantity"]}} {{product["unit"]}}"<br>
                     <b>"{{product["store"].capitalize()}}" </b><br>
