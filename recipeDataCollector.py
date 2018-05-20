@@ -10,7 +10,7 @@ import productFinder
 import costCalculator
 import random
 
-def getRecipeDictionaries(recipeIDList, userId):
+def getRecipeDictionaries(recipeIDList, userId, shopname):
     dictionaryList = []
     for recipeId in recipeIDList:
         # Find the recipe overview from the recipe_overview TABLE
@@ -20,7 +20,7 @@ def getRecipeDictionaries(recipeIDList, userId):
         ingredientProducts = []
         recipeIngredients = database.find_recipe_ingredients_db(recipeId)
         for ingredient in recipeIngredients:
-            ingredientProducts.append(productFinder.findBestProducts(ingredient))
+            ingredientProducts.append(productFinder.findBestProducts(ingredient, shopname))
         estcost = costCalculator.calcBestCost(ingredientProducts)
 
         recipeDict = {

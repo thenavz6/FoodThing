@@ -280,25 +280,32 @@ def get_recipe_comments_db(recipeId):
 
 
 # Gets all of the products from the product_keywords TABLE that have a matching keyword
+# If shopname is not None then only look for products in that shop
 def find_products_keyword_db(word):
     entry = [word]
     db = sqlite3.connect(PRODUCT_DB)
     db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from product_keywords WHERE keyword=?', entry)
-    hits = c.fetchall()
+    hits = c.fetchall() 
     db.close()
     return hits
 
 
 # Find the product from the product_overview TABLE that has the matching productId
-def get_product_overview_db(productId):
-    entry = [productId]
+def get_product_overview_db(productId, shopname):
     db = sqlite3.connect(PRODUCT_DB)
     db.row_factory = dict_factory
     c = db.cursor()
-    c.execute('SELECT * from product_overview WHERE productID=?', entry)
-    hit = c.fetchone()
+    hit = []
+    if shopname == None:
+        entry = [productId]
+        c.execute('SELECT * from product_overview WHERE productID=?', entry)
+        hit = c.fetchone()
+    else:
+        entry = [productId, shopname]
+        c.execute('SELECT * from product_overview WHERE productID=? AND store=?', entry)
+        hit = c.fetchone()
     db.close()
     return hit
 

@@ -76,6 +76,7 @@ def updateToken():
 # Otherwise when the user clicked on a recipe, we were making the API requests again and this took the user to the wrong recipe.
 recipeId = []
 recipes = []
+sortType = "Cost"
 @app.route("/dashboard",methods=["GET", "POST"])
 def dashboard():
     # Ensure the user is logged in
@@ -120,8 +121,7 @@ def advancedSearch(query,excluded,prepTime):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    global recipeId
-    global recipes    
+    global recipeId, recipes, sortType
 
     if request.method == "GET":
         if OFFLINEMODE == False:
@@ -139,7 +139,7 @@ def advancedSearch(query,excluded,prepTime):
                 break
             recipeId.append(databaseRecipes[num]["recipeID"])
 
-        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, authentication.userid)
+        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, authentication.userid, None)
 
     # Possible post requests
     if request.method == "POST":
@@ -150,23 +150,25 @@ def advancedSearch(query,excluded,prepTime):
         if "advbt" in request.form:
             return redirect(url_for("advancedSearchPage"))
         if "sortbt" in request.form:
-            recipes = recipeDataCollector.sortRecipeDictionaries(recipes, request.form["sorttype"])
+            sortType = request.form["sorttype"]
+            recipes = recipeDataCollector.sortRecipeDictionaries(recipes, sortType)
         if "bt" in request.form and request.form["bt"][:9] == "recipehit":
             return redirect(url_for("recipe", recipeId = request.form["bt"][10:]))
 
-    return render_template("dashboard.html", recipes = recipes, userid = authentication.userid, imageurl = authentication.imageurl)
+    return render_template("dashboard.html", recipes = recipes, sortType = sortType, userid = authentication.userid, imageurl = authentication.imageurl)
 
 
 # The 'specific' recipe page that details instructions and ingredients.
 # Later this should lead to the substitution pop-up box and so and so.
 recipeDict = {}
+prefStore = "any"
 @app.route("/recipe/<recipeId>", methods=["GET", "POST"])
 def recipe(recipeId):
     # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    global recipeDict
+    global recipeDict, prefStore
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
@@ -176,7 +178,7 @@ def recipe(recipeId):
         recipeHit = database.find_recipe_id_db(recipeId)
 
     if request.method == "GET":
-        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid)[0]
+        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
 
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
@@ -197,8 +199,11 @@ def recipe(recipeId):
                 return redirect(url_for("recipe", recipeId = recipeId))
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
+        if "storebt" in request.form:
+            prefStore = request.form["selectstore"]
+            recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
 
-    return render_template("recipe.html", recipeDict = recipeDict, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
 
 # The page for viewing any user's profile
