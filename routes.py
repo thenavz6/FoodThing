@@ -183,7 +183,7 @@ def recipe(recipeId):
         recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
         # By default we select the cheapest, most relevent products
         selectedProducts = []
-        for ingredient in recipeDict:
+        for ingredient in recipeDict["ingredients"]:
             selectedProducts.append(0)
 
     # Calculate the total effective price based on the selectedProducts
