@@ -82,6 +82,12 @@ for entry in content:
     quantity = str(quantity.strip())
             
 
+    # Remove any common words or brand names from the products keywords to help better identify actual ingredient hits
+    # Save the original name for the overview product TABLE
+    originalName = name
+    name = textParser.removeCommonWords(name)
+    name = textParser.removeBrandWords(name)
+
     # Remove 's' or 'es' from the end of keywords. This should give better results.
     # When compared, ingredients in ProductManager.py will also remove 's' or 'es'. 
     keywords = []
@@ -94,15 +100,12 @@ for entry in content:
                     word = word[:-1]
             keywords.append(word)
 
-    # Also remove common words from keywords since keywords will be used to count hits.
-    keywords = textParser.removeCommonWords(" ".join(keywords)).split()
-    keywords = textParser.removeBrandWords(" ".join(keywords)).split()
     # Remove duplicate words so a product called "Creams cream" doesn't hit twice. 
     keywords = list(set(keywords))
 
-    # Write this into a database with two tables    
-    product_db.add_product_overview(name, link, quantity, unit, cost, "coles")
-    productId = product_db.find_product_id(name)
+    # Write this into a database overview as well as keywords 
+    product_db.add_product_overview(originalName, link, quantity, unit, cost, "coles")
+    productId = product_db.find_product_id(originalName, link, cost)
     for word in keywords:
         product_db.add_product_keyword(productId, word)
 

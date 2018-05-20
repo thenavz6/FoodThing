@@ -25,10 +25,14 @@ unitConverter = {
 
 # Parameter: The ingredient entry from the database: recipe_ingredients
 # Returns the best, most relevent products for this ingredient
-# Also considers conversions and costs etc.
-def findBestProducts(ingredient):
+# Also considers conversions and costs etc. 
+# If a shopname parameter is given (not None) then we only search the database for products listed in that store
+def findBestProducts(ingredient, shopname):
     # Dictionary that stores how many hits a given product has. etc 'product12' : 5, 'product2' : 2
     productHits = {}
+
+    if shopname != None and shopname.lower() == "any":
+        shopname = None
 
     wordsInIngredient = 0
     for word in ingredient["item"].split():
@@ -48,7 +52,10 @@ def findBestProducts(ingredient):
         # Get the product from from it's overview table
         for product in products:
 
-            productDbEntry = database.get_product_overview_db(product["productID"])
+            productDbEntry = database.get_product_overview_db(product["productID"], shopname)
+            # If this product is not available at the desiredstore
+            if productDbEntry == None:
+                continue
             # Every hit product will have a score of 1 added to it 
             # Check if we have seen this productID/product before
             if product["productID"] in productHits:
@@ -58,7 +65,7 @@ def findBestProducts(ingredient):
 
         for key, value in productHits.items():
             # Calculate the number of words in the products name to adjust hit score
-            productDbEntry = database.get_product_overview_db(key)
+            productDbEntry = database.get_product_overview_db(key, shopname)
             wordsInName = 0
             for word in productDbEntry["label"].split():
                 if word.isalpha() and not word in textParser.commonWords and not word in textParser.brandNames:
@@ -68,7 +75,7 @@ def findBestProducts(ingredient):
     # Sort the product hits based on hitscore and cap the number of product results
     sortedProducts = sorted(productHits.items(), key=lambda x : x[1], reverse=True)
     sortedProducts = capNumberOfResults(sortedProducts, 20)
-    detailList = convertToDetailList(sortedProducts, ingredient)
+    detailList = convertToDetailList(sortedProducts, ingredient, shopname)
     detailList = sortBestHitsByPrice(detailList)
     return detailList
 
@@ -80,10 +87,10 @@ def capNumberOfResults(sortedProducts, limit):
 # Turns the sortedProduct Dictionary into a list of lists that contains all properties of the product 
 # Each item in the list refers to a specific product for that ingredient. Each sublist contains detailed
 # information about that product. Takes in the general recipe_ingredient entry as second parameter to evaluate portion cost
-def convertToDetailList(sortedProducts, ingredient):
+def convertToDetailList(sortedProducts, ingredient, shopname):
     productList = []
     for item in sortedProducts:
-        productOverview = database.get_product_overview_db(item[0])
+        productOverview = database.get_product_overview_db(item[0], shopname)
 
         # Standardize all measures to grams 
         standardizedUnit1 = ingredientManager.findKeyFromMeasureDict(productOverview["unit"])
@@ -108,7 +115,7 @@ def convertToDetailList(sortedProducts, ingredient):
         realCost = float(productOverview["cost"]) * math.ceil(portionCost / float(productOverview["cost"]))
        
 
-        productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"]}
+        productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"], "store" : productOverview["store"]}
         productList.append(productDict)
     return productList
 
