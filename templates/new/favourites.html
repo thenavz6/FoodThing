@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div>
+  
+
+  {% include "includeMainHeader.html" %}
+
+
+  <div class="main_container">
+    {/*This should only appear if a registered user has no favourites.*/}
+    <div class="loggedin">
+      <div class="centered">
+        <h2>Click (<img src="static/images/open_star.png" alt="OpenStar" height="40" width="40"/>) to add recipes to your favourites.</h2>
+      </div>
+    </div>
+    <div class="notloggedin">
+      <div class="centered">
+        <h1>My Favourites</h1>
+      </div>
+
+
+    <!-- for i in recipe -->
+    {% include "includeRecipe.html" %}
+    <!-- End for -->
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
