@@ -301,43 +301,53 @@ def uploadRecipe():
             return headerRequests(request.form)
         # Adds an ingredient text field to the form
         if "add_ingred_bt" in request.form:
-            savedLabel = request.form["recipename"]
+            savedLabel = request.form["recipe_name"]
             savedImageurl = request.form["imageurl"]
-            savedPreptime = request.form["preptime"]
-            if request.form["ingredient_"+str(numOfIngredients-1)].strip() != '':
-                savedIngredients.append(request.form["ingredient_"+str(numOfIngredients-1)])
-                numOfIngredients += 1
+            savedPreptime = request.form["recipe_preptime"]
+            tmp = savedIngredients[:]
+            tmp.append(request.form["ingredient_"+str(numOfIngredients-1)])
+            savedIngredients = tmp[:]
+            tmp = savedSteps[:]
+            tmp.append(request.form["step_"+str(numOfSteps-1)])
+            savedSteps = tmp[:]
+            numOfIngredients += 1
         # Adds a step text field to the form
         if "add_step_bt" in request.form:
-            savedLabel = request.form["recipename"]
+            savedLabel = request.form["recipe_name"]
             savedImageurl = request.form["imageurl"]
-            savedPreptime = request.form["preptime"]
-            if request.form["step_"+str(numOfSteps-1)].strip() != '':
-                savedSteps.append(request.form["step_"+str(numOfSteps-1)])
-                numOfSteps += 1
+            savedPreptime = request.form["recipe_preptime"]
+            tmp = savedIngredients[:]
+            tmp.append(request.form["ingredient_"+str(numOfIngredients-1)])
+            savedIngredients = tmp[:]
+            tmp = savedSteps[:]
+            tmp.append(request.form["step_"+str(numOfSteps-1)])
+            savedSteps = tmp[:]
+            numOfSteps += 1
         # Submit the recipe to our database using the form fields
-        if "submit_bt" in request.form:
+        if "add_recipe_bt" in request.form:
             # Hope this doesn't hit already existed id when appended with userid
             rand = random.randint(1,10000)
             recipeId = str(authentication.userid) + "recipe" + str(rand)
             preptime = 0
             try:
-                preptime = int(request.form["preptime"])
+                preptime = int(request.form["recipe_preptime"])
             except ValueError:
                 pass
 
             ingredientList = []
             for i in range(numOfIngredients):
-                ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
+                if request.form["ingredient_"+str(i)].strip() != "":
+                    ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
             database.add_recipe_ingredients_db(recipeId, ingredientList)
 
             ingredientString = ''
             # parse out ";" characters from all steps. This is because we will use ; to seperate the steps for storage in db
             for i in range(numOfSteps):
-                tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")
-                ingredientString += (tmp + " ; ")
+                if request.form["step_"+str(i)].strip() != "":
+                    tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")
+                    ingredientString += (tmp + " ; ")
 
-            database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"], preptime, ingredientString)
+            database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], request.form["imageurl"], preptime, ingredientString)
 
             return redirect(url_for("recipe", recipeId = recipeId))
 

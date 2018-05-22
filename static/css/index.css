@@ -35,9 +35,9 @@ body {
 
 .main_container {
     background: white;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 25%;
+    margin-right: 25%;
     border-radius: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 2%;
+    padding-bottom: 15%;
 }
