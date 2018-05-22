@@ -20,27 +20,33 @@
         <div class="profile">
           <div class="profile_info">
             <div class="profile_name">
-              TOM BOB
+              {{ profileuser["name"] }}
             </div>
             <div class="profile_image_desc">
-              {/*Need a default image for new user profiles*/}
+              <!--- Need a default image for new user profiles --->
+              <!--- Backend passes one --->
               <div class="profile_image">
-                <img src="static/images/Google.png" alt="GoogleLogo" height="200" width="200"/>
+                <img src={{ profileuser["image"] }} alt="GoogleLogo" height="200" width="200"/>
               </div>
               <div class="right_desc">
                 <div class="profile_subheading">
                   DESCRIPTION
                 </div>
                 <div class="profile_desc">
-                  I love absorbing nutrients by inserting edible items into my face.
+                  {{ profileuser["desc"] }}
                 </div>
-                {/*This button should only be available to the relevant user*/}
-                <div class="rightbt">
-                  <div class="editbt">
-                    {/*Need to add ability to edit profile description*/}
-                    EDIT
-                  </div>
-                </div>
+                {% if myuserid|int == profileuser["id"]|int %}
+                  <!--- I am the owner of this page --->
+                  <div class="rightbt">
+                    <div class="editbt">  
+                    <!--- Edit profile desc button here --->
+                      <form method="POST">
+                  	      New Description: <input type="text" name="updatedesc"><br>
+                  		  <input type="submit" value="UpdateDesc" name="bt">
+                      </form>
+                    </div>
+                  </div>  
+                {% endif %}
               </div>
             </div>
           </div>
@@ -49,25 +55,25 @@
         
 
         <div class="profile_heading">
-          {/*Need to be either "Favourites" or "Your Favourites" depending on user*/}
-          YOUR FAVOURITES
+          <!--- Different text if am the 'owner' of this profilepage --->
+          {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
         </div>
         {/*Need to check if user has favourited any recipes, otherwise blank?*/}
 
         <!--- For each favorite recipe of the user --->
-        {% for item in userfavourites %}
+        {% for item in profileuser["profilefavourites"] %}
             {% with recipe=item %}
             {% include "includeRecipe.html" %}
             {% endwith %}
         {% endfor %}
 
         <div class="profile_heading">
-          {/*Need to be either "Recipes" or "Your Recipes" depending on user*/}
-          YOUR RECIPES
+           <!--- Different text if am the 'owner' of this profilepage --->
+          {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
         </div>
         
         <!--- For each uploaded recipe of the user --->
-        {% for item in userrecipes %}
+        {% for item in profileuser["profilerecipes"] %}
             {% with recipe=item %}
             {% include "includeRecipe.html" %}
             {% endwith %}
