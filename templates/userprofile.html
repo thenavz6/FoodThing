@@ -1,85 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/index.css">
   <link rel="stylesheet" type="text/css" href="static/css/profileDesc.css">
 {% endblock %}
 
 {% block body %}
-  <div>
-    
-
+  <div class="index">
   	{% include "includeMainHeader.html" %}
 
-
       <div class="main_container">
-        
 
-      <div class="profile_container">
-        <div class="profile">
-          <div class="profile_info">
-            <div class="profile_name">
-              {{ profileuser["name"] }}
-            </div>
-            <div class="profile_image_desc">
-              <!--- Need a default image for new user profiles --->
-              <!--- Backend passes one --->
-              <div class="profile_image">
-                <img src={{ profileuser["image"] }} alt="GoogleLogo" height="200" width="200"/>
+        <div class="profile_container">
+          <div class="profile">
+            <div class="profile_info">
+              <div class="profile_name">
+                {{ profileuser["name"] }}
               </div>
-              <div class="right_desc">
-                <div class="profile_subheading">
-                  DESCRIPTION
+              <div class="profile_image_desc">
+                <!--- Need a default image for new user profiles --->
+                <!--- Backend passes one --->
+                <div class="profile_image">
+                  <img src={{ profileuser["image"] }} alt="GoogleLogo" height="200" width="200"/>
                 </div>
-                <div class="profile_desc">
-                  {{ profileuser["desc"] }}
-                </div>
-                {% if myuserid|int == profileuser["id"]|int %}
-                  <!--- I am the owner of this page --->
-                  <div class="rightbt">
-                    <div class="editbt">  
-                    <!--- Edit profile desc button here --->
-                      <form method="POST">
+                <div class="right_desc">
+                  <div class="profile_subheading">
+                    DESCRIPTION
+                  </div>
+                  <div class="profile_desc">
+                    {{ profileuser["desc"] }}
+                  </div>
+                  {% if myuserid|int == profileuser["id"]|int %}
+                    <!--- I am the owner of this page --->
+                    <div class="rightbt">
+                      <div class="editbt">
+                      <!--- Edit profile desc button here --->
+                        <form method="POST">
                   	      New Description: <input type="text" name="updatedesc"><br>
-                  		  <input type="submit" value="UpdateDesc" name="bt">
-                      </form>
+                  		    <input type="submit" value="UpdateDesc" name="bt">
+                        </form>
+                      </div>
                     </div>
-                  </div>  
-                {% endif %}
+                  {% endif %}
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+      <div class="profile_heading">
+        <!--- Different text if am the 'owner' of this profilepage --->
+        {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
       </div>
-        
+      {/*Need to check if user has favourited any recipes, otherwise blank?*/}
 
-        <div class="profile_heading">
-          <!--- Different text if am the 'owner' of this profilepage --->
-          {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
-        </div>
-        {/*Need to check if user has favourited any recipes, otherwise blank?*/}
+      <!--- For each favorite recipe of the user --->
+      {% for item in profileuser["profilefavourites"] %}
+          {% with recipe=item %}
+          {% include "includeRecipe.html" %}
+          {% endwith %}
+      {% endfor %}
 
-        <!--- For each favorite recipe of the user --->
-        {% for item in profileuser["profilefavourites"] %}
-            {% with recipe=item %}
-            {% include "includeRecipe.html" %}
-            {% endwith %}
-        {% endfor %}
-
-        <div class="profile_heading">
-           <!--- Different text if am the 'owner' of this profilepage --->
-          {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
-        </div>
-        
-        <!--- For each uploaded recipe of the user --->
-        {% for item in profileuser["profilerecipes"] %}
-            {% with recipe=item %}
-            {% include "includeRecipe.html" %}
-            {% endwith %}
-        {% endfor %}
-
+      <div class="profile_heading">
+         <!--- Different text if am the 'owner' of this profilepage --->
+        {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
       </div>
+
+      <!--- For each uploaded recipe of the user --->
+      {% for item in profileuser["profilerecipes"] %}
+          {% with recipe=item %}
+          {% include "includeRecipe.html" %}
+          {% endwith %}
+      {% endfor %}
+
+    </div>
   </div>
 
 {% endblock %}
