@@ -13,7 +13,7 @@ import recipeDataCollector
 from helperFunctions import *
 
 # Some global settings
-OFFLINEMODE = False                              # Will not contact edamam for search queries. Only source locally.
+OFFLINEMODE = True                              # Will not contact edamam for search queries. Only source locally.
 
 @app.route("/",methods=["GET", "POST"])
 def main():
@@ -272,12 +272,20 @@ def userprofile(userId):
         tmp = []
         for favourite in findfavourites:
             tmp.append(favourite["recipeID"])
-        for favourite in tmp:
-            profilefavourites.append(database.find_recipe_id_db(favourite))
+        profilefavourites = recipeDataCollector.getRecipeDictionaries(tmp, authentication.userid, None)
 
-        findRecipes = database.find_user_recipes_db(userId)
+
+        findRecipes = database.find_user_recipes_db(userId) 
+        tmp = []
         for recipe in findRecipes:
-            profilerecipes.append(recipe)
+            tmp.append(recipe["recipeID"])
+        profilerecipes = recipeDataCollector.getRecipeDictionaries(tmp, authentication.userid, None)
+                
+    profileuser = {
+        "id"   : userId,
+        "name" : profilename,
+        "image": profileimage
+    }
 
     # Possible post requests
     if request.method == "POST":
@@ -290,7 +298,7 @@ def userprofile(userId):
                 database.set_desc_user_db(authentication.userid, request.form["updatedesc"])
                 return redirect(url_for("userprofile", userId = userId))
 
-    return render_template("userprofile.html", profileid = userId, profileuser = userHit, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileuser = profileuser, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
 savedLabel = ''

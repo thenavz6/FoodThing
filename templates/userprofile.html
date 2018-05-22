@@ -54,18 +54,24 @@
         </div>
         {/*Need to check if user has favourited any recipes, otherwise blank?*/}
 
-
-        {% include "includeRecipe.html" %}
-        
+        <!--- For each favorite recipe of the user --->
+        {% for item in userfavourites %}
+            {% with recipe=item %}
+            {% include "includeRecipe.html" %}
+            {% endwith %}
+        {% endfor %}
 
         <div class="profile_heading">
           {/*Need to be either "Recipes" or "Your Recipes" depending on user*/}
           YOUR RECIPES
         </div>
         
-
-        {% include "includeRecipe.html" %}
-
+        <!--- For each uploaded recipe of the user --->
+        {% for item in userrecipes %}
+            {% with recipe=item %}
+            {% include "includeRecipe.html" %}
+            {% endwith %}
+        {% endfor %}
 
       </div>
   </div>
