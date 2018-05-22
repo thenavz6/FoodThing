@@ -4,7 +4,17 @@
     <div class="overallrecipeinfo">
       <div class="recipeinfo1">
         <div class="recipetitle">
-          <a href={{ url_for('profile') }} class="navlink">
+          <!--- Need to pass in details of this recipe --->
+          <!--- These include:
+            recipeuserid
+            recipename
+            recipeisfav
+            recipeimage
+            recipepreptime
+            reciperating
+            recipeprice
+          --->
+          <a href={{ url_for('userprofile', userId=-1) }} class="navlink">
             TWO DESSERTS, ONE CUP
           </a>
         </div>

@@ -8,18 +8,24 @@
 
 {% block body %}
   <div>
-
+    {{ userid }}
+    <!--- The main header needs the userid --->
+    {% with userid=userid %}
     {% include "includeMainHeader.html" %}
-
+    {% endwith %}
 
     <div class="main_container">
-      <div class="favourites_button">
-        <a class="navlink" href={{ url_for('favourites') }}>My Favourites</a>
-      </div>
+    <!--- Backend does not have a specific favourites page. This has been changed to just have the
+          favourites on the given user's profile page 
+    --->
 
 
       <!-- for i in recipe -->
-      {% include "includeRecipe.html" %}
+      {% for item in recipes %}
+          {% with recipe=recipes[loop.index - 1] %}
+          {% include "includeRecipe.html" %}
+          {% endwith %}
+      {% endfor %}
       <!-- End for -->
 
 

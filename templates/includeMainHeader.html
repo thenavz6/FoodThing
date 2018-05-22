@@ -10,14 +10,14 @@
     <div class="recipething">
       <a class="navlink" href={{ url_for('dashboard') }}>RECIPETHING</a>
     </div>
-
     <a href="/"><img src="static/images/notifications.png" alt="notifyimage" class="notifyimage"/></a>
     <div class="rightbuttons">
-      <a class="navlink" href={{ url_for('add_recipe') }}>ADD RECIPE</a>
+      <a class="navlink" href={{ url_for('uploadRecipe') }}>ADD RECIPE</a>
     </div>
     <div class="buttondivider">|</div>
     <div class="rightbuttons">
-      <a class="navlink" href={{ url_for('profile') }}>PROFILE</a>
+      <!--- Pass in the user's userId--->
+      <a class="navlink" href={{ url_for('userprofile', userId=userid) }}>PROFILE</a>
     </div>
     <div class="buttondivider">|</div>
     <div class="rightbuttons">
