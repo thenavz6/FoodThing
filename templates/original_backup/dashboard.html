@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='../static/navbar.css'>
+    <title>Dashboard</title>
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid" display="inline-block">
+      <table style=width:100%>
+
+		<form method="POST">
+  			<input align="left" type="text" name="searchtext" placeholder="Search...">
+  			<button align="left" type="submit" value="Search" name="headerbt"><i class="fa fa-search"></i></button>
+		</form>
+        <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard" align="center">RecipeThing</a>
+
+        <form method="POST">
+            <input align="right" type="submit" value="Add Recipe" name="headerbt">
+  		    <input align="right" type="submit" value="Profile" name="headerbt">
+            <input align="right" type="submit" value="Logout" name="headerbt">
+	    </form> 
+        <a href="https://localhost:5000/user/{{userid}}">
+            <img align="right" src={{imageurl}} alt="You">
+        </a>
+      </table>
+  </div>
+</nav>
+
+
+<div class="container-fluid" align="center">
+  <form method="POST">
+    <select name="sorttype">
+        <option value="Cost" {% if sortType == "Cost" %} selected="selected" {% endif %} >Cost</option>
+        <option value="Rating" {% if sortType == "Rating" %} selected="selected" {% endif %} >Rating</option>
+        <option value="Prep Time" {% if sortType == "Prep Time" %} selected="selected" {% endif %} >Prep Time</option>
+    </select>
+    <input align="right" type="submit" value="Sort" name="sortbt">
+    <input align="right" type="submit" value="Advanced Search" name="advbt">
+  </form>
+
+  <div class="row-fluid" id="main">
+      {% for recipe in recipes %}
+      <div class="row">
+        <form method="POST">
+            <input align="left" type="image" src={{recipe["image"]}} width="300" height="300" value=recipehit_{{recipe["id"]}} name="bt">
+        </form>
+        <h2 align="left">{{recipe["name"]}}</h2>
+        <form align="right" method="POST">
+            {% if recipe["isfav"] == False %}
+                <button type="submit" name="Favourite" value={{recipe["id"]}}> Favourite </button>
+            {% else %}
+                <button type="submit" name="Unfavourite" value={{recipe["id"]}}> Unfavourite </button>
+            {% endif %}
+	    </form> 
+        <font color="green"><h3 align="right">Prep Time {{recipe["preptime"]}} mins</h3></font>
+        <h3 align="left">Rated {{recipe["rating"]}}</h3>
+        <font color="e569ca"><h3 align="right">Est Cost (effective) ${{recipe["effectiveCost"]}}</h3></font>
+      </div><br>
+      {% endfor %}
+  </div>
+</div>
+
+
+</body>
+</html>

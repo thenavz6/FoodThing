@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="538754422757-0hdcmi7st5bt29pbvv7csvlnv8r65fc4.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+      function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        document.getElementById("user_name").innerHTML = "Hello " + profile.getName();
+
+        // Things we will pass to our backend:
+        var email = profile.getEmail();
+        var fullname = profile.getName();
+        var imageurl = profile.getImageUrl();
+        var id_token = googleUser.getAuthResponse().id_token;
+
+        console.log("ID Token: " + id_token);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://localhost:5000/updateToken');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send('token='+id_token+'&email='+email+'&fullname='+fullname+'&imageurl='+imageurl);
+        xhr.onreadystatechange=function() {
+            if (xhr.readyState==4 && xhr.status==200) {
+                window.location.replace("https://localhost:5000/dashboard");
+            }
+        }
+      };
+    </script>
+
+    <link rel='stylesheet' href='../static/navbar.css'>
+    <title>Login</title>
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand nav-list" href="#">RecipeThing</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <img id = "logo" src="/static/logo.png" width = "550px" height="500px" class="img-responsive center-block">
+    </div>
+</div>
+
+<br>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 text-center">
+      <form method="post" action="/">
+          <button type="submit" name="facebook" value="1" class="btn btn-info">Facebook</button>
+          <button type="submit" name="google" value="1" class="btn btn-success">Google</button>
+      </form>
+    </div>
+    <div class="col-md-4 text-right"></div>
+  </div>
+</div>
+
+<br>
+<div align="center">
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+</div>
+<p align="center" id="user_name"></p>
+
+</body>
+</html>

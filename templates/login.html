@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% block title %}Login{% endblock %}
 
-    <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="538754422757-0hdcmi7st5bt29pbvv7csvlnv8r65fc4.apps.googleusercontent.com">
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/home.css">
+  <link rel="stylesheet" type="text/css" href="static/css/header.css">
+{% endblock %}
+
+{% block body %}
+
+    <!--- Google OAuth Start --->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="538754422757-0hdcmi7st5bt29pbvv7csvlnv8r65fc4.apps.googleusercontent.com">    
     <script>
       function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
@@ -46,48 +48,34 @@
         }
       };
     </script>
+    <!--- Google OAuth End --->
 
-    <link rel='stylesheet' href='../static/navbar.css'>
-    <title>Login</title>
+  <div>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-container">
+            <div class="recipething">RECIPETHING</div>
+        </div>
+    </nav>
 
-</head>
-
-
-<body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand nav-list" href="#">RecipeThing</a>
+    <div class="main_container">
+      <div class="logo_container">
+          <img src="static/images/logo.png" alt="logo" class="logo"/>
+      </div>
+      <div class="centered">
+        <h1>Welcome to RecipeThing!</h1>
+        <h2>Please login using one of the following options:</h2>
+      </div>
+      <div class="button_block">
+        <div align="center">
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+             <p align="center" id="user_name"></p>
+        </div>
+        <!--- No Guest Support at the moment
+        <div class="auth_button">
+          <a class="navlink" href={{ url_for('dashboard') }}>Continue as GUEST</a>
+        </div>
+        --->
+      </div>
     </div>
   </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <img id = "logo" src="/static/logo.png" width = "550px" height="500px" class="img-responsive center-block">
-    </div>
-</div>
-
-<br>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4 text-center">
-      <form method="post" action="/">
-          <button type="submit" name="facebook" value="1" class="btn btn-info">Facebook</button>
-          <button type="submit" name="google" value="1" class="btn btn-success">Google</button>
-      </form>
-    </div>
-    <div class="col-md-4 text-right"></div>
-  </div>
-</div>
-
-<br>
-<div align="center">
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-</div>
-<p align="center" id="user_name"></p>
-
-</body>
-</html>
+{% endblock %}

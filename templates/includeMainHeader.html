@@ -1,0 +1,27 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-container">
+    <img src="static/images/search.png" alt="searchimage" class="searchimage"/>
+
+    <form method="POST">
+          <input type="text" name="searchtext" placeholder="Search here..." class="searchbox"/>
+          <input type="submit" value="Search" name="search_bt" class="searchbt"/>
+    </form>
+
+    <div class="recipething">
+      <a class="navlink" href={{ url_for('dashboard') }}>RECIPETHING</a>
+    </div>
+
+    <a href="/"><img src="static/images/notifications.png" alt="notifyimage" class="notifyimage"/></a>
+    <div class="rightbuttons">
+      <a class="navlink" href={{ url_for('add_recipe') }}>ADD RECIPE</a>
+    </div>
+    <div class="buttondivider">|</div>
+    <div class="rightbuttons">
+      <a class="navlink" href={{ url_for('profile') }}>PROFILE</a>
+    </div>
+    <div class="buttondivider">|</div>
+    <div class="rightbuttons">
+      <a class="navlink" href="/">LOGOUT</a>
+    </div>
+  </div>
+</nav>

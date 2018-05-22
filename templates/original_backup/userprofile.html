@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='../static/navbar.css'>
+    <title>User Profile</title>
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid" display="inline-block">
+      <table style=width:100%>
+
+		<form method="POST">
+  			<input align="left" type="text" name="searchtext" placeholder="Search...">
+  			<button align="left" type="submit" value="Search" name="headerbt"><i class="fa fa-search"></i></button>
+		</form>
+        <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard" align="center">RecipeThing</a>
+
+        <form method="POST">
+            <input align="right" type="submit" value="Add Recipe" name="headerbt">
+  		    <input align="right" type="submit" value="Profile" name="headerbt">
+            <input align="right" type="submit" value="Logout" name="headerbt">
+	    </form> 
+        <a href="https://localhost:5000/user/{{userid}}">
+            <img align="right" src={{imageurl}} alt="You">
+        </a>
+      </table>
+  </div>
+</nav>
+
+
+<div class="container-fluid">
+  <div class="row-fluid" id="main">
+      {{ profileuser["fullname"] }} <br>
+      <img align = "left" width="250" height="250" src={{ profileuser["imageurl"] }} alt="You">
+
+      <h3> {{ profileuser["description"] }} </h3><br><br><br><br><br><br>
+
+      {% if profileid|int == myuserid|int %}
+      <form method="POST">
+  	      New Description: <input type="text" name="updatedesc"><br>
+  		  <input type="submit" value="UpdateDesc" name="bt">
+      </form>
+      <br><br><br>
+
+      
+      <form method="POST">
+          <input type="submit" value="Upload Recipe" name="bt">
+      </form>
+      {% endif %}
+      <br><br><br>
+
+       
+
+
+      <h2> User Recipes </h2>
+      {% for recipe in profilerecipes %}
+          {{ recipe["recipeLabel"] }}
+          <a href="https://localhost:5000/recipe/{{recipe["recipeID"]}}"><br>
+          <img width="100" height="100" align="left" src={{recipe["recipeImageLink"]}} alt="You"><br><br><br><br><br>
+          </a>
+      {% endfor %}
+      <br><br>
+
+      <h2> Favourites </h2> 
+      {% for favourite in profilefavourites %}
+          {{ favourite["recipeLabel"] }}<br>
+          <a href="https://localhost:5000/recipe/{{favourite["recipeID"]}}"><br>
+          <img width="100" height="100" align="left" src={{favourite["recipeImageLink"]}} alt="You"><br><br><br><br><br>
+          </a>
+      {% endfor %}
+  </div>
+</div>
+
+
+</body>
+</html>

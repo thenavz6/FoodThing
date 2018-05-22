@@ -37,7 +37,7 @@ a:active {
 
 .auth_button {
     position: relative;
-    background-color: lime;
+    background-color: #87d265;
     color: white;
     border-radius: 10px;
     font-size: 30px;
@@ -50,7 +50,7 @@ a:active {
 
 .auth_img_button {
     position: relative;
-    background-color: lime;
+    background-color: #87d265;
     color: white;
     border-radius: 10px;
     font-size: 30px;

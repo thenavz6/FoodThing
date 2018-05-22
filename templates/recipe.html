@@ -1,129 +1,109 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel='stylesheet' href='../static/navbar.css'>
-    <title>Recipe</title>
+{% block title %}{% endblock %}
 
-</head>
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/recipe.css">
+  <link rel="stylesheet" type="text/css" href="static/css/recipeDesc.css">
+  <link rel="stylesheet" type="text/css" href="static/css/swapIngredient.css">
+{% endblock %}
 
+{% block body %}
+  <div>
+    
 
-<body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid" display="inline-block">
-      <table style=width:100%>
-
-		<form method="POST">
-  			<input align="left" type="text" name="searchtext" placeholder="Search...">
-  			<button align="left" type="submit" value="Search" name="headerbt"><i class="fa fa-search"></i></button>
-		</form>
-        <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard" align="center">RecipeThing</a>
-
-        <form method="POST">
-            <input align="right" type="submit" value="Add Recipe" name="headerbt">
-  		    <input align="right" type="submit" value="Profile" name="headerbt">
-            <input align="right" type="submit" value="Logout" name="headerbt">
-	    </form> 
-        <a href="https://localhost:5000/user/{{userid}}">
-            <img align="right" src={{imageurl}} alt="You">
-        </a>
-      </table>
-  </div>
-</nav>
+      {% include "includeMainHeader.html" %}
 
 
-<div class="container-fluid">
-  <div class="row-fluid" id="main">
+    <div class="main_container">
+      
 
-      <div class="row">
-        <form method="POST">
-            <img align="left" type="image" src={{recipeDict["image"]}} width="400" height="400" value="recipe">
-        </form>
-        <h2 align="left">{{recipeDict["name"]}}</h2>
-        <h3 align="left">Rated {{recipeDict["rating"]}}</h3>
-        <h3 align="left">Prep Time {{recipeDict["preptime"]}} mins</h3>
-        <h3 align="left">Est Cost (effective) ${{totalEffectiveCost}}</h3>
-        <form align="left" method="POST">
-            {% if recipeDict["isfav"] == False %}
-                <button type="submit" name="Favourite" value={{recipeDict["id"]}}> Favourite </button>
-            {% else %}
-                <button type="submit" name="Unfavourite" value={{recipeDict["id"]}}> Unfavourite </button>
-            {% endif %}
-	    </form> 
+      {% include "includeViewRecipeDesc.html" %}
+      
+
+      <div class="recipe_heading">
+        INGREDIENTS
       </div>
+      <div class="list">
+        <table class="ingredient_list">
+          <tbody>
+            <tr>
+              <td class="ingredient_list_element">
+                1 Cheesecake
+              </td>
+              <td class="ingredient_list_element">
+                $8.95
+              </td>
+              <td class="ingredient_list_element">
+                BigCake
+              </td>
+              <td class="ingredient_list_element">
+                
 
-      <br>
-      <b><font size="12"> Ingredients: </font></b><br>
+                {% include "includeSwapIngredient.html" %}
+              
 
-    <form method="POST">
-    <select name="selectstore">
-        <option value="any" {% if prefStore == "any" %} selected="selected" {% endif %} > Any </option>
-        <option value="coles" {% if prefStore == "coles" %} selected="selected" {% endif %} >Coles </option>
-        <option value="woolworths" {% if prefStore == "woolworths" %} selected="selected" {% endif %} > Woolworths </option>
-    </select>
-    <input align="right" type="submit" value="Select" name="storebt">
-  </form>
-  <br><br>
+              </td>
+            </tr>
+            <tr>
+              <td class="ingredient_list_element">
+                1L Milk
+              </td>
+              <td class="ingredient_list_element">
+                $1.50
+              </td>
+              <td class="ingredient_list_element">
+                Walmart
+              </td>
+              <td class="ingredient_list_element">
+              
 
-      <ul>
-      {% for ingredient in recipeDict["ingredients"] %}
-            {% set outer_loop = loop %}
-            <b> {{ ingredient["ingredientDesc"] }} </b>
-            <div class="container-fluid">
-            <select class="form-control" id={{loop.index-1}} name={{loop.index-1}}">
-            {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
-                    <option id="test" value={{ loop.index - 1 }}>{{product["productID"]}} 
-                    {{ product["label"] }}
-                    {{product["quantity"]}} {{product["unit"]}} ${{product["cost"]}} Effective price: ${{product["effectiveCost"]}} DEBUG hitScore: {{product["hitScore"]}} </option> 
-            {% endfor %}
-            </select>
-            <br>
+                {% include "includeSwapIngredient.html" %}
+              
 
-            {% for product in recipeDict["ingredientProducts"][outer_loop.index - 1] %}
-                <div class="navbar-header" {% if selectedProducts[outer_loop.index-1]|int == loop.index-1|int %} style="border:1px solid green;" {% endif %}>
-                    <form method="POST">
-                        <input type="image" src={{product["image"]}} width="100" height="100" value={{outer_loop.index-1}}_{{loop.index-1}} name="productbt"><br>
-                    </form>
-                    "{{ product["label"] }}"<br>
-                    "{{product["quantity"]}} {{product["unit"]}}"<br>
-                    <b>"{{product["store"].capitalize()}}" </b><br>
-                    "PRODUCT COST: ${{product["unitCost"]}}" <br>
-                    "REAL COST: ${{product["realCost"]}}" <br>
-                    "EFF. COST: ${{product["effectiveCost"]}}" <br>
-                </div>
-            {% endfor %}
-            </div>
-            <br><br>
-      {% endfor %} 
-      <br>
+              </td>
+            </tr>
+            <tr>
+              <td class="ingredient_list_element">
+                1L Milkshake Mix
+              </td>
+              <td class="ingredient_list_element">
+                $1.55
+              </td>
+              <td class="ingredient_list_element">
+                Kelis
+              </td>
+              <td class="ingredient_list_element">
+              
 
-      <b><font size="12"> Steps: </font></b><br>
-      {% for step in steps %}
-        {{loop.index}}. {{ step }} <br>
-      {% endfor %}
+                {% include "includeSwapIngredient.html" %}
+              
 
-      <br>
-      <p3><b> Comments </p3></b><br>
-      {% for comment in recipeComments %}
-            <form method="POST">
-                <input align="left" type="image" src={{usersWhoCommented[loop.index - 1]["imageurl"]}} width="20" height="20" value={{usersWhoCommented[loop.index - 1]["userID"]}} name="user">
-            </form>
-            <b> {{ usersWhoCommented[loop.index - 1]["fullname"] }} says </b> {{ comment }}               
-      {% endfor %}
-      <br>
-      <form method="POST">
-          <textarea name="commentText" cols="40" rows="5"></textarea><br>
-          <input type="submit" value="comment" name="bt">
-      </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="recipe_heading">
+        INSTRUCTIONS
+      </div>
+      <div class="list">
+        <ol>
+          <li>Make the milkshake.</li>
+          <li>Shove a cheesecake on it.</li>
+          <li>Stir.</li>
+        </ol>
+      </div>
+      <div class="recipe_heading">
+        COMMENTS
+      </div>
+      
 
+      {% include "includeRecipeComment.html" %}
+      {% include "includeRecipeComment.html" %}
+      {% include "includeRecipeCommentReply.html" %}
+    
+
+    </div>
   </div>
-</div>
-
-
-</body>
-</html>
+{% endblock %}
