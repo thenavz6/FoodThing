@@ -10,6 +10,7 @@ import textParser
 import productFinder
 import costCalculator
 import recipeDataCollector
+import userDataCollector
 from helperFunctions import *
 
 # Some global settings
@@ -250,42 +251,7 @@ def userprofile(userId):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    # Default name and image passed if user not found
-    profilename = "No one lives here :("
-    profileimage = "https://i.vimeocdn.com/portrait/1274237_300x300"
-    profilefavourites = []
-    profilerecipes = []
-
-    # Find the given user in the database or error for non-integer input
-    try:
-        userHit = database.find_user_by_id_db(int(userId))
-    except ValueError as e:
-        return redirect(url_for("error"))
-
-    # Load parameters based on database result
-    if userHit != None:
-        profilename = userHit["fullname"]
-        profileimage = userHit["imageurl"]
-        profilefavourites = []
-
-        findfavourites = database.find_user_favourites_db(userId)
-        tmp = []
-        for favourite in findfavourites:
-            tmp.append(favourite["recipeID"])
-        profilefavourites = recipeDataCollector.getRecipeDictionaries(tmp, authentication.userid, None)
-
-
-        findRecipes = database.find_user_recipes_db(userId) 
-        tmp = []
-        for recipe in findRecipes:
-            tmp.append(recipe["recipeID"])
-        profilerecipes = recipeDataCollector.getRecipeDictionaries(tmp, authentication.userid, None)
-                
-    profileuser = {
-        "id"   : userId,
-        "name" : profilename,
-        "image": profileimage
-    }
+    profileuser = userDataCollector.getUserDictionary(userId)
 
     # Possible post requests
     if request.method == "POST":
@@ -298,7 +264,7 @@ def userprofile(userId):
                 database.set_desc_user_db(authentication.userid, request.form["updatedesc"])
                 return redirect(url_for("userprofile", userId = userId))
 
-    return render_template("userprofile.html", profileuser = profileuser, profilerecipes = profilerecipes, profilefavourites = profilefavourites, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileuser = profileuser, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
 savedLabel = ''
