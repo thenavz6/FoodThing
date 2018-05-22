@@ -1,69 +1,87 @@
-.recipe_container {
-  background: green;
-  margin-left: 10%;
-  margin-right: 10%;
-  margin-bottom: 10px;
-  padding-left: .15%;
-  padding-right: .15%;
-  padding-top: .2%;
-  padding-bottom: .2%;
-  display: flex;
-  justify-content: center;
-  border-radius: 10px;
-}
-
-.recipe {
-  background: #DEFFDE;
-  color: green;
-  width: 99.5%;
-  height: 10%;
-  padding: 1%;
-  border-radius: 10px;
-}
-
-.recipe_name {
-  font-weight: bold;
-  font-size: 40px;
-}
-
-.recipe_author {
+.list {
+  margin-left: 15%;
+  margin-right: 15%;
   font-size: 30px;
 }
 
-.recipe_info {
-  flex-direction: column;
-  width: 100%;
+ol {
+  margin-top: 0;
 }
 
-.recipe_image_desc {
-  display: flex;
+.ingredient_price {
+  display: inline-flex;
 }
 
-.recipe_subheading {
-  font-size: 35px;
+.ingredient_store {
+  text-align: right;
 }
 
-.recipe_desc {
+button {
+  display: inline;
+  justify-content: center;
+  font-family: "Pangolin", sans-serif;
+  background-color: green;
+  color: white;
+  border-radius: 10px;
   font-size: 20px;
-  text-align: justify;
+  padding: 5px;
+  height: 100%;
+  font-weight: bold;
+  outline: none;
+  cursor: pointer;
 }
 
-.recipe_time {
+button:active {
+  border-radius: 10px;
+  background: lime;
+  border-color: green;
+}
+
+.ingredient_list {
+  table-layout: fixed;
+  width: 105%;
+  margin-bottom: 30px;
+}
+
+.ingredient_list_element:nth-child(1) {
+  width: 30%;
+}
+.ingredient_list_element:nth-child(even) {
+    margin-left: 100px;
+    text-align: right;
+    width: 15%;
+}
+.ingredient_list_element:nth-child(3) {
+    margin-left: 100px;
+    text-align: right;
+    width: 15%;
+}
+
+.recipe_reply {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.commentbox {
+  font-family: 'Pangolin', sans-serif;
+  background: white;
+  color: gray;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 12.5px;
+  outline: none;
+  height: 100px;
+  width: 865px;
+}
+
+.commentbox:focus {
+  border-radius: 10px;
+  border-color: gray;
+  background: silver;
+}
+
+.comment_content {
+  display: inline-flex;
   flex: 1;
-  justify-content: flex-end;
-  font-weight: bold;
-  font-size: 40px;
-}
-
-.recipe_calories {
-  display: flex;
-  align-self: flex-end;
-  font-size: 25px;
-}
-
-.recipe_heading {
-  font-weight: bold;
-  font-size: 40px;
-  margin-left: 11%;
 }

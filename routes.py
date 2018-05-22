@@ -13,7 +13,7 @@ import recipeDataCollector
 from helperFunctions import *
 
 # Some global settings
-OFFLINEMODE = False                              # Will not contact edamam for search queries. Only source locally.
+OFFLINEMODE = True                              # Will not contact edamam for search queries. Only source locally.
 
 @app.route("/",methods=["GET", "POST"])
 def main():
@@ -108,7 +108,7 @@ def advancedSearchPage():
         return render_template("advancedSearch.html")
     if request.method == "POST":
         if headerRequests(request.form) != None:
-            return headerRequests(request.form) 
+            return headerRequests(request.form)
         if "bt" in request.form and request.form["bt"] == "AdvancedSearch":
             print(request.form["KeyWords"])
             print(request.form["excludedIngredients"])
@@ -128,7 +128,7 @@ def advancedSearch(query,excluded,prepTime):
         if OFFLINEMODE == False:
             # Everytime a search is done, we will ask edamam for 5 recipes that we also add locally
             recipeDataCollector.receiveRecipeData(query, 5, excluded, prepTime)
-        
+
         # Look through our database to get all recipeIds for hit recipes. Caps at 9 results.
         recipeId, databaseRecipes = [], []
         if excluded == None:
@@ -145,7 +145,7 @@ def advancedSearch(query,excluded,prepTime):
     # Possible post requests
     if request.method == "POST":
         if headerRequests(request.form) != None:
-            return headerRequests(request.form)    
+            return headerRequests(request.form)
         if recipeCardRequests(request.form) != None:
             return redirect(url_for("userprofile", userId = authentication.userid))
         if "advbt" in request.form:
@@ -194,7 +194,7 @@ def recipe(recipeId):
         except IndexError:
             pass
         i += 1
-        
+
 
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
@@ -206,7 +206,7 @@ def recipe(recipeId):
     # Possible post requests
     if request.method == "POST":
         if headerRequests(request.form) != None:
-            return headerRequests(request.form)    
+            return headerRequests(request.form)
         if recipeCardRequests(request.form) != None:
             return redirect(url_for("recipe", recipeId = recipeId))
         if "bt" in request.form:
@@ -282,8 +282,8 @@ def userprofile(userId):
     # Possible post requests
     if request.method == "POST":
         if headerRequests(request.form) != None:
-            return headerRequests(request.form) 
-        if "bt" in request.form:   
+            return headerRequests(request.form)
+        if "bt" in request.form:
             if request.form["bt"] == "Upload Recipe":
                 return redirect(url_for("uploadRecipe"))
             if request.form["bt"] == "UpdateDesc":
@@ -324,7 +324,7 @@ def uploadRecipe():
 
     if request.method == "POST":
         if headerRequests(request.form) != None:
-            return headerRequests(request.form) 
+            return headerRequests(request.form)
         # Adds an ingredient text field to the form
         if "add_ingred_bt" in request.form:
             savedLabel = request.form["recipename"]
@@ -351,16 +351,16 @@ def uploadRecipe():
                 preptime = int(request.form["preptime"])
             except ValueError:
                 pass
-            
+
             ingredientList = []
             for i in range(numOfIngredients):
                 ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
             database.add_recipe_ingredients_db(recipeId, ingredientList)
 
             ingredientString = ''
-            # parse out ";" characters from all steps. This is because we will use ; to seperate the steps for storage in db    
+            # parse out ";" characters from all steps. This is because we will use ; to seperate the steps for storage in db
             for i in range(numOfSteps):
-                tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")       
+                tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")
                 ingredientString += (tmp + " ; ")
 
             database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipename"], request.form["imageurl"], preptime, ingredientString)

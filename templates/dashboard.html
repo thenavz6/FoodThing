@@ -3,20 +3,17 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/index.css">
   <link rel="stylesheet" type="text/css" href="static/css/dashboard.css">
 {% endblock %}
 
 {% block body %}
-  <div>
-    {{ userid }}
-    <!--- The main header needs the userid --->
-    {% with userid=userid %}
+  <div class="index">
     {% include "includeMainHeader.html" %}
-    {% endwith %}
 
     <div class="main_container">
     <!--- Backend does not have a specific favourites page. This has been changed to just have the
-          favourites on the given user's profile page 
+          favourites on the given user's profile page
     --->
 
 
