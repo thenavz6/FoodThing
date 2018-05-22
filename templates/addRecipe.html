@@ -3,11 +3,12 @@
 {% block title %}Add Recipe{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/index.css">
   <link rel="stylesheet" type="text/css" href="static/css/addRecipe.css">
 {% endblock %}
 
 {% block body %}
-  <div>
+  <div class="index">
 
     {% include "includeMainHeader.html" %}
 
@@ -26,30 +27,31 @@
             </div>
           </div>
           <div class="add_recipe_columns">
-            <textarea name="recipe_name_text" class="add_recipe_box" placeholder="Enter the recipe name..."/>
-            <textarea name="time_required_text" class="add_recipe_box" placeholder="Enter the time required..."/>
+            <textarea name="recipe_name_text" class="add_recipe_box" placeholder="Enter the recipe name..."></textarea>
+            <textarea name="time_required_text" class="add_recipe_box" placeholder="Enter the time required..."></textarea>
           </div>
 
           <div class="add_recipe_subheading">
             Description:
           </div>
-          <textarea name="recipe_desc_text" class="add_recipe_box2" placeholder="Enter the recipe description..."/>
+          <textarea name="recipe_desc_text" class="add_recipe_box2" placeholder="Enter the recipe description..."></textarea>
 
           <div class="add_recipe_subheading">
             Recipe Image:
           </div>
-          <textarea name="recipe_image_text" class="add_recipe_box3" placeholder="Enter the image URL here..."/>
+          <textarea name="recipe_image_text" class="add_recipe_box3" placeholder="Enter the image URL here..."></textarea>
 
           <div class="add_recipe_subheading">
             Recipe Ingredients:
           </div>
-          <textarea name="recipe_ingredients_text" class="add_recipe_box3" placeholder="Enter the recipe's ingredients here..."/>
+          <textarea name="recipe_ingredients_text" class="add_recipe_box3" placeholder="Enter the recipe's ingredients here..."></textarea/>
 
           <div class="add_recipe_subheading">
             Recipe Instructions:
           </div>
-          <textarea name="recipe_instructions_text" class="add_recipe_box3" placeholder="Enter the recipe's instructions here..."/>
+          <textarea name="recipe_instructions_text" class="add_recipe_box3" placeholder="Enter the recipe's instructions here..."></textarea>
 
+          <!-- This needs to be back-end implemented --->
           <input type="submit" value="Add Recipe" name="add_recipe_bt" class="add_recipe_bt"/>
         </div>
       </div>
