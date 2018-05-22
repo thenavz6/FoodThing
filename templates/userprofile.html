@@ -9,46 +9,46 @@
 
 {% block body %}
   <div class="index">
+
   	{% include "includeMainHeader.html" %}
 
-      <div class="main_container">
-
-        <div class="profile_container">
-          <div class="profile">
-            <div class="profile_info">
-              <div class="profile_name">
-                {{ profileuser["name"] }}
+    <div class="main_container">
+      <div class="profile_container">
+        <div class="profile">
+          <div class="profile_info">
+            <div class="profile_name">
+              {{ profileuser["name"] }}
+            </div>
+            <div class="profile_image_desc">
+              <!--- Need a default image for new user profiles --->
+              <!--- Backend passes one --->
+              <div class="profile_image">
+                <img src={{ profileuser["image"] }} alt="GoogleLogo" height="200" width="200"/>
               </div>
-              <div class="profile_image_desc">
-                <!--- Need a default image for new user profiles --->
-                <!--- Backend passes one --->
-                <div class="profile_image">
-                  <img src={{ profileuser["image"] }} alt="GoogleLogo" height="200" width="200"/>
+              <div class="right_desc">
+                <div class="profile_subheading">
+                  DESCRIPTION
                 </div>
-                <div class="right_desc">
-                  <div class="profile_subheading">
-                    DESCRIPTION
-                  </div>
-                  <div class="profile_desc">
-                    {{ profileuser["desc"] }}
-                  </div>
-                  {% if myuserid|int == profileuser["id"]|int %}
-                    <!--- I am the owner of this page --->
-                    <div class="rightbt">
-                      <div class="editbt">
-                      <!--- Edit profile desc button here --->
-                        <form method="POST">
-                  	      New Description: <input type="text" name="updatedesc"><br>
-                  		    <input type="submit" value="UpdateDesc" name="bt">
-                        </form>
-                      </div>
+                <div class="profile_desc">
+                  {{ profileuser["desc"] }}
+                </div>
+                {% if myuserid|int == profileuser["id"]|int %}
+                  <!--- I am the owner of this page --->
+                  <div class="rightbt">
+                    <div class="editbt">
+                    <!--- Edit profile desc button here --->
+                      <form method="POST">
+                        New Description: <input type="text" name="updatedesc"><br>
+                        <input type="submit" value="UpdateDesc" name="bt">
+                      </form>
                     </div>
-                  {% endif %}
-                </div>
+                  </div>
+                {% endif %}
               </div>
             </div>
           </div>
         </div>
+      </div>
 
       <div class="profile_heading">
         <!--- Different text if am the 'owner' of this profilepage --->

@@ -341,4 +341,4 @@ def uploadRecipe():
 
             return redirect(url_for("recipe", recipeId = recipeId))
 
-    return render_template("uploadrecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, savedPreptime = savedPreptime, userid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("addRecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, savedPreptime = savedPreptime, userid = authentication.userid, userimage = authentication.imageurl)
