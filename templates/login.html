@@ -3,6 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/index.css">
   <link rel="stylesheet" type="text/css" href="static/css/home.css">
   <link rel="stylesheet" type="text/css" href="static/css/header.css">
 {% endblock %}
@@ -12,7 +13,7 @@
     <!--- Google OAuth Start --->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="538754422757-0hdcmi7st5bt29pbvv7csvlnv8r65fc4.apps.googleusercontent.com">    
+    <meta name="google-signin-client_id" content="538754422757-0hdcmi7st5bt29pbvv7csvlnv8r65fc4.apps.googleusercontent.com">
     <script>
       function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
@@ -50,7 +51,7 @@
     </script>
     <!--- Google OAuth End --->
 
-  <div>
+  <div class="index">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-container">
             <div class="recipething">RECIPETHING</div>
