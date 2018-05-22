@@ -84,7 +84,7 @@
   margin-left: 20px;
   display: inline;
   position: absolute;
-  right: 35%;
+  right: 25%;
 }
 
 .rightbuttons {
@@ -93,11 +93,11 @@
   margin-right: 7px;
   padding: 2px;
   position: relative;
-  left: 30%;
+  left: 40%;
 }
 
 .buttondivider {
   font-size: 30px;
   position: relative;
-  left: 30%;
+  left: 40%;
 }
