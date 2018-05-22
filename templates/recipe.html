@@ -3,20 +3,22 @@
 {% block title %}{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="static/css/header.css">
   <link rel="stylesheet" type="text/css" href="static/css/recipe.css">
   <link rel="stylesheet" type="text/css" href="static/css/recipeDesc.css">
   <link rel="stylesheet" type="text/css" href="static/css/swapIngredient.css">
 {% endblock %}
 
 {% block body %}
-  <div>
-    
+  <div class="index">
+
 
       {% include "includeMainHeader.html" %}
 
 
     <div class="main_container">
-      
+
       {% with recipe = recipeDict %}
       {% include "includeViewRecipeDesc.html" %}
       {% endwith %}
@@ -38,10 +40,10 @@
                 BigCake
               </td>
               <td class="ingredient_list_element">
-                
+
 
                 {% include "includeSwapIngredient.html" %}
-              
+
 
               </td>
             </tr>
@@ -56,10 +58,10 @@
                 Walmart
               </td>
               <td class="ingredient_list_element">
-              
+
 
                 {% include "includeSwapIngredient.html" %}
-              
+
 
               </td>
             </tr>
@@ -74,10 +76,10 @@
                 Kelis
               </td>
               <td class="ingredient_list_element">
-              
+
 
                 {% include "includeSwapIngredient.html" %}
-              
+
 
               </td>
             </tr>
@@ -97,12 +99,12 @@
       <div class="recipe_heading">
         COMMENTS
       </div>
-      
+
 
       {% include "includeRecipeComment.html" %}
       {% include "includeRecipeComment.html" %}
       {% include "includeRecipeCommentReply.html" %}
-    
+
 
     </div>
   </div>
