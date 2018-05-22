@@ -15,6 +15,15 @@ def getRecipeDictionaries(recipeIDList, userId, shopname):
     for recipeId in recipeIDList:
         # Find the recipe overview from the recipe_overview TABLE
         overviewEntry = database.find_recipe_id_db(recipeId)
+    
+        # Find the name of the user who published it
+        recipeowner = overviewEntry["userID"]
+        if recipeowner == -1:
+            recipeowner = "Edamam"
+        else:
+            userentry = database.find_user_by_id_db(int(recipeowner))
+            if userentry != None:
+                recipeowner = userentry["fullname"]
 
         # Find all relevent product hits for each ingredient for this recipe
         ingredientProducts = []
@@ -25,6 +34,8 @@ def getRecipeDictionaries(recipeIDList, userId, shopname):
 
         recipeDict = {
             "id" : recipeId,
+            "ownerid" : overviewEntry["userID"],
+            "ownername" : recipeowner,
             "name" : overviewEntry["recipeLabel"],
             "image": overviewEntry["recipeImageLink"],
             "ingredients" : recipeIngredients,                  # Each ingredient etc. "eggs"

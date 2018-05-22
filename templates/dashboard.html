@@ -17,13 +17,11 @@
     --->
 
 
-      <!-- for i in recipe -->
       {% for item in recipes %}
           {% with recipe=recipes[loop.index - 1] %}
           {% include "includeRecipe.html" %}
           {% endwith %}
       {% endfor %}
-      <!-- End for -->
 
 
     </div>

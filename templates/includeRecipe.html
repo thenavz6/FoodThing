@@ -1,3 +1,17 @@
+
+          <!--- Make sure this is html is included with a recipe --->
+          <!--- These include:
+            recipeuserid    access by   recipe["ownderid"]
+            recipeusername  access by   recipe["ownername"]
+            recipeid        access by   recipe["id"]
+            recipename      access by   recipe["name"]
+            recipeisfav     access by   recipe["isfav"]
+            recipeimage     access by   recipe["image"]
+            recipepreptime  access by   recipe["preptime"]
+            reciperating    access by   recipe["rating"]
+            recipeprice     access by   recipe["effectiveCost"]
+          --->
+
 <link rel="stylesheet" type="text/css" href="static/css/index.css">
 <link rel="stylesheet" type="text/css" href="static/css/recipe.css">
 
@@ -7,27 +21,21 @@
     <div class="overallrecipeinfo">
       <div class="recipeinfo1">
         <div class="recipetitle">
-          <!--- Need to pass in details of this recipe --->
-          <!--- These include:
-            recipeuserid
-            recipename
-            recipeisfav
-            recipeimage
-            recipepreptime
-            reciperating
-            recipeprice
-          --->
-          <a href={{ url_for('userprofile', userId=-1) }} class="navlink">
-            TWO DESSERTS, ONE CUP
+          <a href={{ url_for('recipe', recipeId=recipe["id"]) }} class="navlink">
+            {{ recipe["name"] }}
           </a>
         </div>
         <div class="recipefavourite">
-          <img src="static/images/open_star.png" alt="OpenStar" height="40" width="40"/>
+          {% if recipe["isfav"] == False %}
+            <img src="static/images/open_star.png" alt="OpenStar" height="40" width="40"/>
+          {% else %}
+            <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          {% endif %}
         </div>
       </div>
       <div class="recipeinfo2">
         <div class="recipetime">
-          15 MIN
+          {{ recipe["preptime"] }} mins
         </div>
       </div>
       <div class="recipeinfo1">
@@ -39,12 +47,12 @@
           <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
         </div>
         <div class="recipeprice">
-          $12.00
+          ${{ recipe["effectiveCost"] }}
         </div>
       </div>
       <div class="recipeinfo2">
         <div class="recipekeywords">
-          DESSERT, ICECREAM, CHOCOLATE, DRINK
+          Keywords not Collected At The Moment
         </div>
       </div>
     </div>
