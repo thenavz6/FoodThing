@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/profileDesc.css">
+{% endblock %}
+
+{% block body %}
+  <div>
+    
+
+  	{% include "includeMainHeader.html" %}
+
+
+      <div class="main_container">
+        
+
+      <div class="profile_container">
+        <div class="profile">
+          <div class="profile_info">
+            <div class="profile_name">
+              TOM BOB
+            </div>
+            <div class="profile_image_desc">
+              {/*Need a default image for new user profiles*/}
+              <div class="profile_image">
+                <img src="static/images/Google.png" alt="GoogleLogo" height="200" width="200"/>
+              </div>
+              <div class="right_desc">
+                <div class="profile_subheading">
+                  DESCRIPTION
+                </div>
+                <div class="profile_desc">
+                  I love absorbing nutrients by inserting edible items into my face.
+                </div>
+                {/*This button should only be available to the relevant user*/}
+                <div class="rightbt">
+                  <div class="editbt">
+                    {/*Need to add ability to edit profile description*/}
+                    EDIT
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+
+        <div class="profile_heading">
+          {/*Need to be either "Favourites" or "Your Favourites" depending on user*/}
+          YOUR FAVOURITES
+        </div>
+        {/*Need to check if user has favourited any recipes, otherwise blank?*/}
+
+
+        {% include "includeRecipe.html" %}
+        
+
+        <div class="profile_heading">
+          {/*Need to be either "Recipes" or "Your Recipes" depending on user*/}
+          YOUR RECIPES
+        </div>
+        
+
+        {% include "includeRecipe.html" %}
+
+
+      </div>
+  </div>
+
+{% endblock %}

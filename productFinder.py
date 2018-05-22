@@ -70,7 +70,10 @@ def findBestProducts(ingredient, shopname):
             for word in productDbEntry["label"].split():
                 if word.isalpha() and not word in textParser.commonWords and not word in textParser.brandNames:
                     wordsInName += 1
-            productHits[key] = (float(value)) / (float(wordsInIngredient) * float(wordsInName))
+            if float(wordsInName) != 0:
+                productHits[key] = (float(value)) / (float(wordsInIngredient) * float(wordsInName))
+            else:
+                productHits[key] = 0
 
     # Sort the product hits based on hitscore and cap the number of product results
     sortedProducts = sorted(productHits.items(), key=lambda x : x[1], reverse=True)

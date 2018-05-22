@@ -5,15 +5,15 @@
   position: fixed;
   top: 0;
   width: 99.5%;
-  border-radius: 5px;
+  border-radius: 1px;
 }
 
 .navbar-container {
-  border: 2px;
-  background: lime;
+  border: 1px;
+  background: #79ea79;
   color: white;
-  border-radius: 10px;
-  height: 45px;
+  border-radius: 1px;
+  height: 40px;
   display: inline;
   display: flex;
   justify-content: center;
@@ -64,7 +64,7 @@
 
 .searchbt:active {
   border-radius: 10px;
-  background: lime;
+  background: #79ea79;
   border-color: green;
 }
 
