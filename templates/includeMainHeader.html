@@ -7,13 +7,8 @@
 
     <form method="POST">
       <input type="text" name="searchtext" placeholder="Search here..." class="searchbox"/>
-      <input type="submit" value="Search" name="search_bt" class="searchbt"/>
+      <input type="submit" value="Search" name="headerbt" class="searchbt"/>
     </form>
-
-    <div class="recipething">
-      <a class="navlink" href={{ url_for('dashboard') }}>RECIPETHING</a>
-    </div>
-    <a href="/"><img src="static/images/notifications.png" alt="notifyimage" class="notifyimage"/></a>
     <div class="rightbuttons">
       <a class="navlink" href={{ url_for('uploadRecipe') }}>ADD RECIPE</a>
     </div>
@@ -26,5 +21,9 @@
     <div class="rightbuttons">
       <a class="navlink" href="/">LOGOUT</a>
     </div>
+    <div class="recipething">
+      <a class="navlink" href={{ url_for('dashboard') }}>RECIPETHING</a>
+    </div>
+
   </div>
 </nav>
