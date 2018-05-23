@@ -19,9 +19,9 @@
         </div>
         <div class="recipefavourite">
           {% if recipe["isfav"] == False %}
-            <img src="/static/images/open_star.png" alt="OpenStar" height="40" width="40"/>
+            <img src="/static/images/open_heart.png" alt="OpenStar" height="40" width="40"/>
           {% else %}
-            <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+            <img src="/static/images/closed_heart.png" alt="ClosedStar" height="40" width="40"/>
           {% endif %}
         </div>
       </div>
@@ -30,11 +30,9 @@
           By {{ recipe["ownername"] }}
         </div>
         <div class="recipefavourite">
+          {% for i in range(recipe["rating"]|int) %}
           <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          {% endfor %}
         </div>
       </div>
       <div class="recipe_image_desc">
@@ -44,7 +42,7 @@
         <div class="right_desc">
           <div class="recipeinfo1">
             <div class="recipe_subheading">
-              DESCRIPTION
+              <!--- Recipe Overview/Description Below --->
             </div>
             <div class="recipe_time">
               {{ recipe["preptime"] }} mins
