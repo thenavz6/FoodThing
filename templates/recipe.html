@@ -29,62 +29,37 @@
       </div>
       <div class="list">
         <table class="ingredient_list">
+
           <tbody>
-            <tr>
+            {% for ingredient in recipeDict["ingredients"] %}
+            <tr>          
               <td class="ingredient_list_element">
-                1 Cheesecake
+                {{ ingredient["ingredientDesc"] }}
               </td>
               <td class="ingredient_list_element">
-                $8.95
+                   <!--- Replace one of the 0's with the selected index --->
+                <b>{{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b>
               </td>
               <td class="ingredient_list_element">
-                BigCake
+                <input type="image" src={{recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["image"]}} width="100" height="100"><br>
+              </td>
+              <td class="ingredient_list_element">
+                ${{ '%0.2f' % recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["effectiveCost"] }}
+              </td>
+              <td class="ingredient_list_element">
+                {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["store"] }}
               </td>
               <td class="ingredient_list_element">
 
-
+              {% with buttonnumber = loop.index - 1 %}
                 {% include "includeSwapIngredient.html" %}
-
+              {% endwith %}
 
               </td>
             </tr>
-            <tr>
-              <td class="ingredient_list_element">
-                1L Milk
-              </td>
-              <td class="ingredient_list_element">
-                $1.50
-              </td>
-              <td class="ingredient_list_element">
-                Walmart
-              </td>
-              <td class="ingredient_list_element">
-
-
-                {% include "includeSwapIngredient.html" %}
-
-
-              </td>
-            </tr>
-            <tr>
-              <td class="ingredient_list_element">
-                1L Milkshake Mix
-              </td>
-              <td class="ingredient_list_element">
-                $1.55
-              </td>
-              <td class="ingredient_list_element">
-                Kelis
-              </td>
-              <td class="ingredient_list_element">
-
-
-                {% include "includeSwapIngredient.html" %}
-
-
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
+
         </table>
       </div>
       <div class="recipe_heading">
