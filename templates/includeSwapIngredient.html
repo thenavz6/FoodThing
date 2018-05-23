@@ -1,8 +1,8 @@
 <div class="swapbt">
-  <button onclick="popupFunc()">SWAP</button>
+  <button onclick="popupFunc(              ITEM_ID               )">SWAP</button>
 </div>
 <div class="popup_container">
-  <span class="popup_text" id="myPopup">
+  <span class="popup_text" id="                ITEM_ID             ">
     <div class="green_background">
       <div class="swap_heading">
         INGREDIENT SWAP {{ buttonnumber }}
@@ -74,8 +74,8 @@
 <div>
 
 <script>
-  function popupFunc() {
-    var p = document.getElementById('myPopup');
+  function popupFunc(div_id) {
+    var p = document.getElementById(div_id);
     p.classList.toggle("show");
   }
 </script>
