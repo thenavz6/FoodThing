@@ -220,10 +220,9 @@ def recipe(recipeId):
             return headerRequests(request.form)
         if recipeCardRequests(request.form) != None:
             return redirect(url_for("recipe", recipeId = recipeId))
-        if "bt" in request.form:
-            if request.form["bt"] == "comment":
-                database.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
-                return redirect(url_for("recipe", recipeId = recipeId))
+        if "commentbt" in request.form:
+            database.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
+            return redirect(url_for("recipe", recipeId = recipeId))
         if "favbt" in request.form:
             database.add_user_favourite_db(authentication.userid, request.form["favbt"])
             return redirect(url_for("recipe", recipeId = recipeId))

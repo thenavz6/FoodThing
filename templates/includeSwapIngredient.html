@@ -1,28 +1,14 @@
 <div class="swapbt">
-  <button onclick="popupFunc(             {{ buttonnumber }}               )">SWAP</button>
+  <button onclick="popupFunc({{ buttonnumber }})">SWAP</button>
 </div>
 <div class="popup_container">
-  <span class="popup_text" id="                {{ buttonnumber }}             ">
+  <span class="popup_text" id="{{ buttonnumber }}">
     <div class="green_background">
       <div class="swap_heading">
         INGREDIENT SWAP {{ buttonnumber }}
       </div>
       <hr/>
       <div class="indent">
-        <div class="swap_subheading">
-          STORE
-        </div>
-        <div class="store_options">
-          <div class="store_option">
-            Aldi
-          </div>
-          <div class="store_option">
-            Coles
-          </div>
-          <div class="store_option">
-            Woolworths
-          </div>
-        </div>
         <div class="swap_subheading">
           INGREDIENT
         </div>
@@ -34,38 +20,19 @@
         </div>
         <table class="ingredient_option_list">
           <tbody>
+           {% for product in products %}
             <tr>
               <td class="ingredient_option">
-                <img src="/static/images/Google.png" alt="GoogleLogo" height="150" width="150"/>
+                <form method="POST">
+                    <input type="image" src={{ product["image"] }} height="150" width="150" value={{ buttonnumber }}_{{loop.index-1}} name="productbt">>
+                </form>
+                {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}}
                 <div class="ingredient_price">
-                  $2.00
+                  ${{ product["effectiveCost"] }}
                 </div>
-              </td>
-              <td class="ingredient_option">
-                <img src="/static/images/Google.png" alt="GoogleLogo" height="150" width="150"/>
-                <div class="ingredient_price">
-                  $0.72
-                </div>
-              </td>
-              <td class="ingredient_option">
-                <img src="/static/images/Google.png" alt="GoogleLogo" height="150" width="150"/>
-                <div class="ingredient_price">
-                  $2.95
-                </div>
-              </td>
-              <td class="ingredient_option">
-                <img src="/static/images/Google.png" alt="GoogleLogo" height="150" width="150"/>
-                <div class="ingredient_price">
-                  $1.50
-                </div>
-              </td>
-              <td class="ingredient_option">
-                <img src="/static/images/Google.png" alt="GoogleLogo" height="150" width="150"/>
-                <div class="ingredient_price">
-                  $10.00
-                </div>
-              </td>
+              </td>       
             </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
