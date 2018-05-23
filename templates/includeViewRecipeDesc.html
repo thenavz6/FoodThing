@@ -18,11 +18,13 @@
           {{ recipe["name"] }}
         </div>
         <div class="recipefavourite">
+          <form method="POST">
           {% if recipe["isfav"] == False %}
-            <img src="/static/images/open_heart.png" alt="OpenStar" height="40" width="40"/>
+            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} name="favbt"/>
           {% else %}
-            <img src="/static/images/closed_heart.png" alt="ClosedStar" height="40" width="40"/>
+            <input type="image" src="/static/images/closed_heart.png" width="40" height="40" value={{recipe["id"]}} name="unfavbt"/> 
           {% endif %}
+          </form>
         </div>
       </div>
       <div class="recipeinfo1">

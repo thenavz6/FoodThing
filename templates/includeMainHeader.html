@@ -19,7 +19,15 @@
     </div>
     <div class="buttondivider">|</div>
     <div class="rightbuttons">
-      <a class="navlink" href="/">LOGOUT</a>
+      <a class="navlink" href="/" onclick="signOut();">LOGOUT</a>
+        <script>
+          function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+              console.log('User signed out.');
+            });
+          }
+        </script>
     </div>
     <div class="recipething">
       <a class="navlink" href="{{ url_for('dashboard') }}">RECIPETHING</a>

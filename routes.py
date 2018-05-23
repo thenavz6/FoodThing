@@ -14,7 +14,7 @@ import userDataCollector
 from helperFunctions import *
 
 # Some global settings
-OFFLINEMODE = True                              # Will not contact edamam for search queries. Only source locally.
+OFFLINEMODE = False                              # Will not contact edamam for search queries. Only source locally.
 
 @app.route("/",methods=["GET", "POST"])
 def main():
@@ -131,11 +131,12 @@ def advancedSearch(query,excluded,prepTime):
             recipeDataCollector.receiveRecipeData(query, 5, excluded, prepTime)
 
         # Look through our database to get all recipeIds for hit recipes. Caps at 9 results.
+        # TODO multi-worded queries don't work the best
         recipeId, databaseRecipes = [], []
         if excluded == None:
-            databaseRecipes = database.find_recipes_keyword_db(query)
+            databaseRecipes = database.find_recipes_keyword_db(query.split()[0])
         else:
-            databaseRecipes = database.find_recipes_overview_db(query, excluded, prepTime)
+            databaseRecipes = database.find_recipes_overview_db(query.split()[0], excluded, prepTime)
         for num in randomSortedNumbers(len(databaseRecipes)):
             if len(recipeId) >= 9:
                 break
@@ -193,6 +194,9 @@ def recipe(recipeId):
         for ingredient in recipeDict["ingredients"]:
             selectedProducts.append(0)
 
+        # Increase the recipe's clickCount/popularity in the recipe overview TABLE
+        database.increment_recipe_clickcount_db(recipeId)
+
     # Calculate the total effective price based on the selectedProducts
     totalEffectiveCost, i = 0, 0
     for ingredient in recipeDict["ingredients"]:
@@ -220,6 +224,12 @@ def recipe(recipeId):
             if request.form["bt"] == "comment":
                 database.add_recipe_comment_db(recipeId, authentication.userid, request.form["commentText"])
                 return redirect(url_for("recipe", recipeId = recipeId))
+        if "favbt" in request.form:
+            database.add_user_favourite_db(authentication.userid, request.form["favbt"])
+            return redirect(url_for("recipe", recipeId = recipeId))
+        if "unfavbt" in request.form:
+            database.delete_user_favourite_db(authentication.userid, request.form["unfavbt"])
+            return redirect(url_for("recipe", recipeId = recipeId))
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
         if "storebt" in request.form:

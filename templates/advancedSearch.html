@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Add Recipe{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/addRecipe.css">
+{% endblock %}
+
+{% block body %}
+  <div class="index">
+
+    {% include "includeMainHeader.html" %}
+  
+    <div class="main_container">
+      <div class="add_recipe_heading">
+        Advanced Search
+      <form method="POST">
+      </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

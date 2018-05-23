@@ -16,12 +16,13 @@
         <select name="sorttype" align="right">
             <option value="Cost" {% if sortType == "Cost" %} selected="selected" {% endif %} >Cost</option>
             <option value="Rating" {% if sortType == "Rating" %} selected="selected" {% endif %} >Rating</option>
+            <option value="Popularity" {% if sortType == "Popularity" %} selected="selected" {% endif %} >Popularity</option>
             <option value="Prep Time" {% if sortType == "Prep Time" %} selected="selected" {% endif %} >Prep Time</option>
         </select>
         <input align="right" type="submit" value="Sort" name="sortbt" align="right">
         <input align="right" type="submit" value="Advanced Search" name="advbt" align="right">
       </form> 
-
+      <br>
       {% for item in recipes %}
           {% with recipe=recipes[loop.index - 1] %}
           {% include "includeRecipe.html" %}

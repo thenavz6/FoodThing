@@ -42,6 +42,7 @@ def getRecipeDictionaries(recipeIDList, userId, shopname):
             "ingredientProducts" : ingredientProducts,          # Each product that hit the above ingredient, etc. "12pk eggs", "free range eggs"
             "instructions" : overviewEntry["recipeInstructions"],
             "rating" : overviewEntry["recipeRating"],
+            "popularity" : overviewEntry["recipeClickCount"],
             "preptime": "???" if (float(overviewEntry["prepTime"]) == 0) else str(overviewEntry["prepTime"]),
             "isfav" : database.is_user_favourited_db(userId, recipeId),
             "effectiveCost" : estcost["effectiveCost"],
@@ -67,6 +68,12 @@ def sortRecipeDictionaries(dictionaryList, sortType):
         for i in range(0, len(dictionaryList)):
             for j in range(0, len(dictionaryList) - 1):
                 if float(dictionaryList[j]["rating"]) < float(dictionaryList[j + 1]["rating"]):
+                    dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]  
+
+    if sortType == "Popularity":
+        for i in range(0, len(dictionaryList)):
+            for j in range(0, len(dictionaryList) - 1):
+                if float(dictionaryList[j]["popularity"]) < float(dictionaryList[j + 1]["popularity"]):
                     dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]  
 
     if sortType == "Prep Time":
