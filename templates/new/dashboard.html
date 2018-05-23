@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/dashboard.css">
+{% endblock %}
+
+{% block body %}
+  <div>
+
+    {% include "includeMainHeader.html" %}
+
+
+    <div class="main_container">
+      <div class="favourites_button">
+        <a class="navlink" href={{ url_for('favourites') }}>My Favourites</a>
+      </div>
+
+
+      <!-- for i in recipe -->
+      {% include "includeRecipe.html" %}
+      <!-- End for -->
+
+
+    </div>
+  </div>
+
+{% endblock %}

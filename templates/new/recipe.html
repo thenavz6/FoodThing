@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/recipe.css">
+  <link rel="stylesheet" type="text/css" href="static/css/recipeDesc.css">
+  <link rel="stylesheet" type="text/css" href="static/css/swapIngredient.css">
+{% endblock %}
+
+{% block body %}
+  <div>
+    
+
+      {% include "includeMainHeader.html" %}
+
+
+    <div class="main_container">
+      
+
+      {% include "includeViewRecipeDesc.html" %}
+      
+
+      <div class="recipe_heading">
+        INGREDIENTS
+      </div>
+      <div class="list">
+        <table class="ingredient_list">
+          <tbody>
+            <tr>
+              <td class="ingredient_list_element">
+                1 Cheesecake
+              </td>
+              <td class="ingredient_list_element">
+                $8.95
+              </td>
+              <td class="ingredient_list_element">
+                BigCake
+              </td>
+              <td class="ingredient_list_element">
+                
+
+                {% include "includeSwapIngredient.html" %}
+              
+
+              </td>
+            </tr>
+            <tr>
+              <td class="ingredient_list_element">
+                1L Milk
+              </td>
+              <td class="ingredient_list_element">
+                $1.50
+              </td>
+              <td class="ingredient_list_element">
+                Walmart
+              </td>
+              <td class="ingredient_list_element">
+              
+
+                {% include "includeSwapIngredient.html" %}
+              
+
+              </td>
+            </tr>
+            <tr>
+              <td class="ingredient_list_element">
+                1L Milkshake Mix
+              </td>
+              <td class="ingredient_list_element">
+                $1.55
+              </td>
+              <td class="ingredient_list_element">
+                Kelis
+              </td>
+              <td class="ingredient_list_element">
+              
+
+                {% include "includeSwapIngredient.html" %}
+              
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="recipe_heading">
+        INSTRUCTIONS
+      </div>
+      <div class="list">
+        <ol>
+          <li>Make the milkshake.</li>
+          <li>Shove a cheesecake on it.</li>
+          <li>Stir.</li>
+        </ol>
+      </div>
+      <div class="recipe_heading">
+        COMMENTS
+      </div>
+      
+
+      {% include "includeRecipeComment.html" %}
+      {% include "includeRecipeComment.html" %}
+      {% include "includeRecipeCommentReply.html" %}
+    
+
+    </div>
+  </div>
+{% endblock %}

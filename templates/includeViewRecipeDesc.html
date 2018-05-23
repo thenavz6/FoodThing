@@ -1,0 +1,68 @@
+          <!--- Make sure this is html is included with a recipe -->
+          <!--- These include:
+            recipeuserid    access by   recipe["ownderid"]
+            recipeusername  access by   recipe["ownername"]
+            recipeid        access by   recipe["id"]
+            recipename      access by   recipe["name"]
+            recipeisfav     access by   recipe["isfav"]
+            recipeimage     access by   recipe["image"]
+            recipepreptime  access by   recipe["preptime"]
+            reciperating    access by   recipe["rating"]
+            recipeprice     access by   recipe["effectiveCost"]
+          -->
+<div class="recipe_container">
+  <div class="recipe">
+    <div class="recipe_info">
+      <div class="recipeinfo1">
+        <div class="recipe_name">
+          {{ recipe["name"] }}
+        </div>
+        <div class="recipefavourite">
+          <form method="POST">
+          {% if recipe["isfav"] == False %}
+            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} name="favbt"/>
+          {% else %}
+            <input type="image" src="/static/images/closed_heart.png" width="40" height="40" value={{recipe["id"]}} name="unfavbt"/> 
+          {% endif %}
+          </form>
+        </div>
+      </div>
+      <div class="recipeinfo1">
+        <div class="recipe_author">
+          By {{ recipe["ownername"] }}
+        </div>
+        <div class="recipefavourite">
+          {% for i in range(recipe["rating"]|int) %}
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="recipe_image_desc">
+        <div class="recipe_image">
+          <img src={{ recipe["image"] }} alt="RecipeImage" height="200" width="200"/>
+        </div>
+        <div class="right_desc">
+          <div class="recipeinfo1">
+            <div class="recipe_subheading">
+              <!--- Recipe Overview/Description Below --->
+            </div>
+            <div class="recipe_time">
+              {{ recipe["preptime"] }} mins
+            </div>
+          </div>
+          <div class="recipe_desc">
+            No description stored at the moment
+          </div>
+          <div class="recipeinfo1">
+            <div class="recipe_calories">
+              No calories stored at the moment
+            </div>
+            <div class="recipeprice">
+              ${{ recipe["effectiveCost"] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

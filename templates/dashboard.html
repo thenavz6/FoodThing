@@ -1,57 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel='stylesheet' href='../static/navbar.css'>
-    <title>Dashboard</title>
+{% block title %}Dashboard{% endblock %}
 
-</head>
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+{% endblock %}
 
+{% block body %}
+  <div class="index">
+    {% include "includeMainHeader.html" %}
 
-<body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard">RecipeThing</a>
-		<form method="POST">
-  			Search Recipe: <input type="text" name="searchtext"><br>
-  			<input type="submit" value="Search" name="bt">
-		</form>
-    </div>
-    <a href="https://localhost:5000/user/{{userid}}">
-    <img align="right" src={{imageurl}} alt="You">
-    </a>
-    <form method="POST">
-  		<input align="right" type="submit" value="logout" name="bt">
-	</form>   
-  </div>
-</nav>
-
-
-<div class="container-fluid">
-  <div class="row-fluid" id="main">
-      {% for label in labelList %}
-      {% if loop.index0 % 3 == 0 %}
-      <div class="row">
-      {% endif %}
-          <div class="col-xs-4">
-              <form method="POST">
-              <input type="image" src={{imageList[loop.index - 1]}} width="400" height="400" value="recipe_{{loop.index - 1}}" name="bt">
-              </form>
-              <figcaption>{{label}}</figcaption>
-          </div>
-      {% if loop.index0 % 3 == 2 or loop.last %}
-      </div>
-      {% endif %}
+    <div class="main_container">
+      <!--- We need a sort dropdown and button --->
+      <form method="POST">
+        <select name="sorttype" align="right">
+            <option value="Cost" {% if sortType == "Cost" %} selected="selected" {% endif %} >Cost</option>
+            <option value="Rating" {% if sortType == "Rating" %} selected="selected" {% endif %} >Rating</option>
+            <option value="Popularity" {% if sortType == "Popularity" %} selected="selected" {% endif %} >Popularity</option>
+            <option value="Prep Time" {% if sortType == "Prep Time" %} selected="selected" {% endif %} >Prep Time</option>
+        </select>
+        <input align="right" type="submit" value="Sort" name="sortbt" align="right">
+        <input align="right" type="submit" value="Advanced Search" name="advbt" align="right">
+      </form> 
+      <br>
+      {% for item in recipes %}
+          {% with recipe=recipes[loop.index - 1] %}
+          {% include "includeRecipe.html" %}
+          {% endwith %}
       {% endfor %}
+
+
+    </div>
   </div>
-</div>
 
-
-</body>
-</html>
+{% endblock %}

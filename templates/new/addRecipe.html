@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Add Recipe{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/addRecipe.css">
+{% endblock %}
+
+{% block body %}
+  <div>
+
+    {% include "includeMainHeader.html" %}
+
+    <div class="main_container">
+      <div class="add_recipe_heading">
+        ADD RECIPE
+      </div>
+      <div class="add_recipe_info_container">
+        <div class="add_recipe_info">
+          <div class="add_recipe_columns">
+            <div class="add_recipe_subheading_column">
+              Recipe Name:
+            </div>
+            <div class="add_recipe_subheading_column">
+              Time Required:
+            </div>
+          </div>
+          <div class="add_recipe_columns">
+            <textarea name="recipe_name_text" class="add_recipe_box" placeholder="Enter the recipe name..."/>
+            <textarea name="time_required_text" class="add_recipe_box" placeholder="Enter the time required..."/>
+          </div>
+
+          <div class="add_recipe_subheading">
+            Description:
+          </div>
+          <textarea name="recipe_desc_text" class="add_recipe_box2" placeholder="Enter the recipe description..."/>
+
+          <div class="add_recipe_subheading">
+            Recipe Image:
+          </div>
+          <textarea name="recipe_image_text" class="add_recipe_box3" placeholder="Enter the image URL here..."/>
+
+          <div class="add_recipe_subheading">
+            Recipe Ingredients:
+          </div>
+          <textarea name="recipe_ingredients_text" class="add_recipe_box3" placeholder="Enter the recipe's ingredients here..."/>
+
+          <div class="add_recipe_subheading">
+            Recipe Instructions:
+          </div>
+          <textarea name="recipe_instructions_text" class="add_recipe_box3" placeholder="Enter the recipe's instructions here..."/>
+
+          <input type="submit" value="Add Recipe" name="add_recipe_bt" class="add_recipe_bt"/>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

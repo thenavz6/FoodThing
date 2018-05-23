@@ -1,6 +1,6 @@
 .navbar {
   overflow: hidden;
-  background-color: pink;
+  background-color: violet;
   padding: 5px;
   position: fixed;
   top: 0;
@@ -32,6 +32,7 @@
 }
 
 .searchbox {
+  font-family: 'Pangolin', sans-serif;
   background: white;
   color: gray;
   border-radius: 10px;
@@ -48,25 +49,29 @@
 
 .searchbt {
   display: inline;
+  font-family: 'Pangolin', sans-serif;
   font-size: 20px;
   width: 85px;
   height: 50px;
-  margin-right: 50px;
+  margin-right: 100px;
   border-radius: 10px;
   outline: none;
+  background: green;
+  border: green;
+  color: white;
+  cursor: pointer;
 }
 
-.searchbt:focus {
+.searchbt:active {
   border-radius: 10px;
-  border-color: gray;
-  background: silver;
+  background: lime;
+  border-color: green;
 }
 
 .notifyimage {
   width: 45px;
   height: 45px;
-  margin-left: 60px;
-  margin-right: 5px;
+  margin-left: 20px;
 }
 
 .rightbuttons {

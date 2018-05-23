@@ -1,0 +1,60 @@
+
+          <!-- Make sure this is html is included with a recipe -->
+          <!-- These include:
+            recipeuserid    access by   recipe["ownderid"]
+            recipeusername  access by   recipe["ownername"]
+            recipeid        access by   recipe["id"]
+            recipename      access by   recipe["name"]
+            recipeisfav     access by   recipe["isfav"]
+            recipeimage     access by   recipe["image"]
+            recipepreptime  access by   recipe["preptime"]
+            reciperating    access by   recipe["rating"]
+            recipeprice     access by   recipe["effectiveCost"]
+          -->
+
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/static/css/recipe.css">
+
+<div class="recipe_container">
+  <div class="recipe">
+    <img src="{{ recipe["image"] }}" alt="RecipeImage" height="200" width="200"/>
+    <div class="overallrecipeinfo">
+      <div class="recipeinfo1">
+        <div class="recipetitle">
+          <a href="{{ url_for('recipe', recipeId=recipe['id']) }}" class="navlink">
+            {{ recipe["name"] }}
+          </a>
+        </div>
+        <div class="recipefavourite">
+          <form method="POST">
+          {% if recipe["isfav"] == False %}
+            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} name="favbt"/>
+          {% else %}
+            <input type="image" src="/static/images/closed_heart.png" width="40" height="40" value={{recipe["id"]}} name="unfavbt"/> 
+          {% endif %}
+          </form>
+        </div>
+      </div>
+      <div class="recipeinfo2">
+        <div class="recipetime">
+          {{ recipe["preptime"] }} mins
+        </div>
+      </div>
+      <div class="recipeinfo1">
+        <div class="reciperating">
+          {% for i in range(recipe["rating"]|int) %}
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          {% endfor %}
+        </div>
+        <div class="recipeprice">
+          ${{ recipe["effectiveCost"] }}
+        </div>
+      </div>
+      <div class="recipeinfo2">
+        <div class="recipekeywords">
+          Keywords not Collected At The Moment
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
