@@ -1,5 +1,8 @@
-<Popup trigger={<div class="swapbt"><button>SWAP</button></div>} modal closeOnDocumentClick>
-  <span>
+<div class="swapbt">
+  <button onclick="popupFunc()">SWAP</button>
+</div>
+<div class="popup_container">
+  <span class="popup_text" id="myPopup">
     <div class="green_background">
       <div class="swap_heading">
         INGREDIENT SWAP
@@ -25,7 +28,7 @@
         </div>
         <div class="ingredient_search">
           <div class="ingredient_search_box">
-            <textarea name="comment" class="ingredient_box" placeholder="Enter the name of an ingredient to search..."/>
+            <textarea name="comment" class="ingredient_box" placeholder="Enter the name of an ingredient to search..."/></textarea>
           </div>
           <input type="submit" value="Submit" name="ingredient_bt" class="ingredientbt"/>
         </div>
@@ -68,4 +71,11 @@
       </div>
     </div>
   </span>
-</Popup>
+<div>
+
+<script>
+  function popupFunc() {
+    var p = document.getElementById('myPopup');
+    p.classList.toggle("show");
+  }
+</script>
