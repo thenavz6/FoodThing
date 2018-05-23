@@ -123,3 +123,26 @@ hr {
   font-size: 40px;
   color: violet;
 }
+
+.popup_container {
+  position: relative;
+}
+
+.popup_container .popup_text {
+  visibility: hidden;
+  display: none;
+  width: 500px;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  z-index: 1;
+  /* position: absolute;
+  bottom: 125%;
+  left: 50%; 
+  margin-left: -80px; */
+}
+
+.popup_container .show {
+    visibility: visible;
+    display: inline-block;
+}
