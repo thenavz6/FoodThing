@@ -3,7 +3,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" type="text/css" href="static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
 {% endblock %}
 
 {% block body %}
@@ -11,9 +11,9 @@
     {% include "includeMainHeader.html" %}
 
     <div class="main_container">
-    <!--- Backend does not have a specific favourites page. This has been changed to just have the
+    <!-- Backend does not have a specific favourites page. This has been changed to just have the
           favourites on the given user's profile page
-    --->
+    -->
 
 
       {% for item in recipes %}

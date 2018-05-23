@@ -1,6 +1,6 @@
 
-          <!--- Make sure this is html is included with a recipe --->
-          <!--- These include:
+          <!-- Make sure this is html is included with a recipe -->
+          <!-- These include:
             recipeuserid    access by   recipe["ownderid"]
             recipeusername  access by   recipe["ownername"]
             recipeid        access by   recipe["id"]
@@ -10,10 +10,10 @@
             recipepreptime  access by   recipe["preptime"]
             reciperating    access by   recipe["rating"]
             recipeprice     access by   recipe["effectiveCost"]
-          --->
+          -->
 
-<link rel="stylesheet" type="text/css" href="static/css/index.css">
-<link rel="stylesheet" type="text/css" href="static/css/recipe.css">
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/static/css/recipe.css">
 
 <div class="recipe_container">
   <div class="recipe">
@@ -21,15 +21,15 @@
     <div class="overallrecipeinfo">
       <div class="recipeinfo1">
         <div class="recipetitle">
-          <a href={{ url_for('recipe', recipeId=recipe["id"]) }} class="navlink">
+          <a href="{{ url_for('recipe', recipeId=recipe['id']) }}" class="navlink">
             {{ recipe["name"] }}
           </a>
         </div>
         <div class="recipefavourite">
           {% if recipe["isfav"] == False %}
-            <img src="static/images/open_star.png" alt="OpenStar" height="40" width="40"/>
+            <img src="/static/images/open_star.png" alt="OpenStar" height="40" width="40"/>
           {% else %}
-            <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+            <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
           {% endif %}
         </div>
       </div>
@@ -40,11 +40,11 @@
       </div>
       <div class="recipeinfo1">
         <div class="reciperating">
-          <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
         </div>
         <div class="recipeprice">
           ${{ recipe["effectiveCost"] }}

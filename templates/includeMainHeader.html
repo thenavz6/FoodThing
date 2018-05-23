@@ -1,28 +1,28 @@
-<link rel="stylesheet" type="text/css" href="static/css/index.css">
-<link rel="stylesheet" type="text/css" href="static/css/header.css">
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/static/css/header.css">
 
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="navbar-container">
-    <img src="static/images/search.png" alt="searchimage" class="searchimage"/>
+    <img src="/static/images/search.png" alt="searchimage" class="searchimage"/>
 
     <form method="POST">
       <input type="text" name="searchtext" placeholder="Search here..." class="searchbox"/>
       <input type="submit" value="Search" name="headerbt" class="searchbt"/>
     </form>
     <div class="rightbuttons">
-      <a class="navlink" href={{ url_for('uploadRecipe') }}>ADD RECIPE</a>
+      <a class="navlink" href="{{ url_for('uploadRecipe') }}">ADD RECIPE</a>
     </div>
     <div class="buttondivider">|</div>
     <div class="rightbuttons">
-      <!--- Pass in the user's userId--->
-      <a class="navlink" href={{ url_for('userprofile', userId=userid) }}>PROFILE</a>
+      <!-- Pass in the user's userId -->
+      <a href="{{ url_for('userprofile', userId=userid) }}" class="navlink">PROFILE</a>
     </div>
     <div class="buttondivider">|</div>
     <div class="rightbuttons">
       <a class="navlink" href="/">LOGOUT</a>
     </div>
     <div class="recipething">
-      <a class="navlink" href={{ url_for('dashboard') }}>RECIPETHING</a>
+      <a class="navlink" href="{{ url_for('dashboard') }}">RECIPETHING</a>
     </div>
 
   </div>

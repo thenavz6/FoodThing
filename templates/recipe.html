@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}View Recipe{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" type="text/css" href="static/css/index.css">
-  <link rel="stylesheet" type="text/css" href="static/css/header.css">
-  <link rel="stylesheet" type="text/css" href="static/css/recipe.css">
-  <link rel="stylesheet" type="text/css" href="static/css/recipeDesc.css">
-  <link rel="stylesheet" type="text/css" href="static/css/swapIngredient.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/recipe.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/recipeDesc.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/swapIngredient.css">
 {% endblock %}
 
 {% block body %}
@@ -20,10 +20,10 @@
     <div class="main_container">
 
       {% with recipe = recipeDict %}
-      {% include "includeViewRecipeDesc.html" %}
+      	{% include "includeViewRecipeDesc.html" %}
       {% endwith %}
-
-      <!--- TODO below here --->
+  
+      <!--- TODO below here -->
       <div class="recipe_heading">
         INGREDIENTS
       </div>

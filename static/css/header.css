@@ -26,7 +26,8 @@
   display: inline;
   position: absolute;
   text-align: center;
-  width: 100%;
+  width: 30%;
+  margin: 0 auto;
 }
 
 .searchimage {
