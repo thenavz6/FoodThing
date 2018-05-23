@@ -54,8 +54,13 @@
         <!--- Different text if am the 'owner' of this profilepage --->
         {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
       </div>
-      {/*Need to check if user has favourited any recipes, otherwise blank?*/}
 
+      <!--- Check if the user has any favourited recipes --->
+      {% if profileuser["profilefavorites"]|length == 0 %}
+      <div class="centered">
+        <p4>You don't have any Favorites yet!</p4>
+      </div>
+      {% endif %}
       <!--- For each favorite recipe of the user --->
       {% for item in profileuser["profilefavourites"] %}
           {% with recipe=item %}
@@ -68,6 +73,12 @@
         {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
       </div>
 
+      <!--- Check if the user has any uploaded recipes --->
+      {% if profileuser["profilerecipes"]|length == 0 %}
+        <div class="centered">
+            <p4>You don't have any Recipes yet!</p4>
+        </div>
+      {% endif %}
       <!--- For each uploaded recipe of the user --->
       {% for item in profileuser["profilerecipes"] %}
           {% with recipe=item %}

@@ -154,6 +154,12 @@ def advancedSearch(query,excluded,prepTime):
         if "sortbt" in request.form:
             sortType = request.form["sorttype"]
             recipes = recipeDataCollector.sortRecipeDictionaries(recipes, sortType)
+        if "favbt" in request.form:
+            database.add_user_favourite_db(authentication.userid, request.form["favbt"])
+            return redirect(url_for("userprofile", userId = authentication.userid))
+        if "unfavbt" in request.form:
+            database.delete_user_favourite_db(authentication.userid, request.form["unfavbt"])
+            return redirect(url_for("userprofile", userId = authentication.userid))
         if "bt" in request.form and request.form["bt"][:9] == "recipehit":
             return redirect(url_for("recipe", recipeId = request.form["bt"][10:]))
 
@@ -257,6 +263,12 @@ def userprofile(userId):
     if request.method == "POST":
         if headerRequests(request.form) != None:
             return headerRequests(request.form)
+        if "favbt" in request.form:
+            database.add_user_favourite_db(authentication.userid, request.form["favbt"])
+            return redirect(url_for("userprofile", userId = authentication.userid))
+        if "unfavbt" in request.form:
+            database.delete_user_favourite_db(authentication.userid, request.form["unfavbt"])
+            return redirect(url_for("userprofile", userId = authentication.userid))
         if "bt" in request.form:
             if request.form["bt"] == "Upload Recipe":
                 return redirect(url_for("uploadRecipe"))
@@ -267,6 +279,7 @@ def userprofile(userId):
     return render_template("userprofile.html", profileuser = profileuser, myuserid = authentication.userid, userimage = authentication.imageurl)
 
 
+# TODO Move things to functions and such and such (below)
 savedLabel = ''
 savedImageurl = ''
 savedPreptime = ''

@@ -26,11 +26,13 @@
           </a>
         </div>
         <div class="recipefavourite">
+          <form method="POST">
           {% if recipe["isfav"] == False %}
-            <img src="/static/images/open_star.png" alt="OpenStar" height="40" width="40"/>
+            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} name="favbt"/>
           {% else %}
-            <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+            <input type="image" src="/static/images/closed_heart.png" width="40" height="40" value={{recipe["id"]}} name="unfavbt"/> 
           {% endif %}
+          </form>
         </div>
       </div>
       <div class="recipeinfo2">
@@ -40,11 +42,9 @@
       </div>
       <div class="recipeinfo1">
         <div class="reciperating">
+          {% for i in range(recipe["rating"]|int) %}
           <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          {% endfor %}
         </div>
         <div class="recipeprice">
           ${{ recipe["effectiveCost"] }}
