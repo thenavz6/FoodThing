@@ -23,7 +23,20 @@
       	{% include "includeViewRecipeDesc.html" %}
       {% endwith %}
   
-      <!--- TODO below here -->
+       <div class="swap_subheading">
+          STORE
+        </div>
+        <div class="store_options">
+          <form method="POST">
+          <div class="store_option">
+            Coles
+          </div>
+          <div class="store_option">
+            Woolworths
+          </div>
+          </form>
+        </div>
+
       <div class="recipe_heading">
         INGREDIENTS
       </div>
@@ -52,7 +65,9 @@
               <td class="ingredient_list_element">
 
               {% with buttonnumber = loop.index - 1 %}
+              {% with products = recipeDict["ingredientProducts"][loop.index-1] %}
                 {% include "includeSwapIngredient.html" %}
+              {% endwith %}
               {% endwith %}
 
               </td>
@@ -67,20 +82,27 @@
       </div>
       <div class="list">
         <ol>
-          <li>Make the milkshake.</li>
-          <li>Shove a cheesecake on it.</li>
-          <li>Stir.</li>
+          {% if steps|length == 0 %}
+             No Steps For This Recipe!
+          {% endif %}
+          {% for step in steps %}
+            {{loop.index}}. {{ step }} <br>
+          {% endfor %}
         </ol>
       </div>
       <div class="recipe_heading">
         COMMENTS
       </div>
 
+      {% for comment in recipeComments %}
+        {% with user = usersWhoCommented[loop.index - 1] %}
+        {% with comment = comment %}
+            {% include "includeRecipeComment.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
 
-      {% include "includeRecipeComment.html" %}
-      {% include "includeRecipeComment.html" %}
       {% include "includeRecipeCommentReply.html" %}
-
 
     </div>
   </div>
