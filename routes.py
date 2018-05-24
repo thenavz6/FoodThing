@@ -272,13 +272,9 @@ def userprofile(userId):
 
 
 # TODO Move things to functions and such and such (below)
-savedLabel = ''
-savedImageurl = ''
-savedPreptime = ''
-numOfIngredients = 1
-savedIngredients = []
-numOfSteps = 1
-savedSteps = []
+savedLabel, savedImageurl, savedPreptime, savedDesc = '', '', '', ''
+numOfIngredients, numOfSteps = 1, 1
+savedIngredients, savedSteps = [], []
 # The page for uploading user recipes
 @app.route("/uploadRecipe", methods=["GET", "POST"])
 def uploadRecipe():
@@ -286,20 +282,14 @@ def uploadRecipe():
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    global numOfIngredients
-    global numOfSteps
-    global savedIngredients
-    global savedSteps
-    global savedLabel
-    global savedImageurl
-    global savedPreptime
+    global numOfIngredients, numOfSteps, savedIngredients, savedSteps
+    global savedLabel, savedImageurl, savedPreptime, savedDesc
 
     # Reset the number of ingredients and steps for this page
     if request.method == "GET":
-        numOfIngredients = 1
-        numOfSteps = 1
-        savedIngredients = []
-        savedSteps = []
+        savedLabel, savedImageurl, savedPreptime, savedDesc = '', '', '', ''
+        numOfIngredients, numOfSteps = 1, 1
+        savedIngredients, savedSteps = [], []
 
     if request.method == "POST":
         if headerRequests(request.form) != None:
@@ -309,24 +299,26 @@ def uploadRecipe():
             savedLabel = request.form["recipe_name"]
             savedImageurl = request.form["imageurl"]
             savedPreptime = request.form["recipe_preptime"]
-            tmp = savedIngredients[:]
-            tmp.append(request.form["ingredient_"+str(numOfIngredients-1)])
-            savedIngredients = tmp[:]
-            tmp = savedSteps[:]
-            tmp.append(request.form["step_"+str(numOfSteps-1)])
-            savedSteps = tmp[:]
+            savedDesc = request.form["recipe_desc"]
+            savedIngredients = []
+            for i in range(0, numOfIngredients):
+                savedIngredients.append(request.form["ingredient_"+str(i)])
+            savedSteps = []
+            for i in range(0, numOfSteps):
+                savedSteps.append(request.form["step_"+str(i)])
             numOfIngredients += 1
         # Adds a step text field to the form
         if "add_step_bt" in request.form:
             savedLabel = request.form["recipe_name"]
             savedImageurl = request.form["imageurl"]
             savedPreptime = request.form["recipe_preptime"]
-            tmp = savedIngredients[:]
-            tmp.append(request.form["ingredient_"+str(numOfIngredients-1)])
-            savedIngredients = tmp[:]
-            tmp = savedSteps[:]
-            tmp.append(request.form["step_"+str(numOfSteps-1)])
-            savedSteps = tmp[:]
+            savedDesc = request.form["recipe_desc"]
+            savedIngredients = []
+            for i in range(0, numOfIngredients):
+                savedIngredients.append(request.form["ingredient_"+str(i)])
+            savedSteps = []
+            for i in range(0, numOfSteps):
+                savedSteps.append(request.form["step_"+str(i)])
             numOfSteps += 1
         # Submit the recipe to our database using the form fields
         if "add_recipe_bt" in request.form:
@@ -356,4 +348,4 @@ def uploadRecipe():
 
             return redirect(url_for("recipe", recipeId = recipeId))
 
-    return render_template("addRecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, savedPreptime = savedPreptime, userid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("addRecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, savedPreptime = savedPreptime, savedDesc = savedDesc, userid = authentication.userid, userimage = authentication.imageurl)
