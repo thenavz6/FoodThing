@@ -24,17 +24,14 @@
       {% endwith %}
   
        <div class="swap_subheading">
-          STORE
-        </div>
-        <div class="store_options">
-          <form method="POST">
-          <div class="store_option">
-            Coles
-          </div>
-          <div class="store_option">
-            Woolworths
-          </div>
-          </form>
+        Selected Store:
+        <form method="POST">
+        <select name="selectstore">
+            <option value="any" {% if prefStore == "any" %} selected="selected" {% endif %} > Any </option>
+            <option value="coles" {% if prefStore == "coles" %} selected="selected" {% endif %} >Coles </option>
+            <option value="woolworths" {% if prefStore == "woolworths" %} selected="selected" {% endif %} > Woolworths </option>
+        </select>
+        <input align="right" type="submit" value="Select" name="storebt">
         </div>
 
       <div class="recipe_heading">
@@ -50,17 +47,27 @@
                 {{ ingredient["ingredientDesc"] }}
               </td>
               <td class="ingredient_list_element">
-                   <!--- Replace one of the 0's with the selected index --->
-                <b>{{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b>
+                   <!--- Check for all properties of the product if we even found a relevent product --->
+                   {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
+                    <b>{{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b>
+                   {% else %}
+                    <b>Couldn't find anything :( </b>
+                   {% endif %}
               </td>
               <td class="ingredient_list_element">
-                <input type="image" src={{recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["image"]}} width="100" height="100"><br>
+                {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
+                    <input type="image" src={{recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["image"]}} width="100" height="100"><br>
+                {% endif %}
               </td>
               <td class="ingredient_list_element">
-                ${{ '%0.2f' % recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["effectiveCost"] }}
+                {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 and recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["store"] != "all" %}
+                    {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["store"] }}
+                {% endif %}
               </td>
               <td class="ingredient_list_element">
-                {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["store"] }}
+                {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
+                    ${{ '%0.2f' % (recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["effectiveCost"] + 0.005)}}
+                {% endif %}
               </td>
               <td class="ingredient_list_element">
 
