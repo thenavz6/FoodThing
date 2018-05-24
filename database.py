@@ -12,6 +12,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT, description TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS user_ratings (userID TEXT, recipeID TEXT, rating INTEGER, FOREIGN KEY (userID) REFERENCES users(userID),FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
+    db.execute('CREATE TABLE IF NOT EXISTS user_shopping_lists (userID TEXT, recipeID TEXT, selectedProducts TEXT, selectedStore TEXT, effectiveCost TEXT, realCost TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeDescription TEXT, recipeImageLink TEXT, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER, recipeRatingFrequency INTEGER, recipeCumulativeRating INTEGER, recipeCalories INTEGER, recipeDietLabels TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
@@ -361,6 +362,51 @@ def get_product_overview_db(productId, shopname):
         hit = c.fetchone()
     db.close()
     return hit
+
+
+
+# Saves a users choice of products for a given recipe. 
+# selectedProducts is the selectedProduct[] list in recipe route
+def update_user_shopping_list(userId, recipeId, selectedProducts, selectedStore, effectiveCost, realCost):
+    tmp = ''
+    for productIndex in selectedProducts:
+        tmp += str(productIndex) + ','
+    selectedProducts = tmp[:-1]
+    entry = [userId, recipeId, selectedProducts, selectedStore, effectiveCost, realCost]
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    # If the user doesnt have a shopping list for this recipe
+    if get_user_shopping_list(userId, recipeId) == None:
+        c.execute('INSERT INTO user_shopping_lists VALUES (?,?,?,?,?,?)', entry)
+    else:
+        entry = [selectedProducts, selectedStore, effectiveCost, realCost, userId, recipeId]
+        c.execute('UPDATE user_shopping_lists SET selectedProducts=?, selectedStore=?, effectiveCost=?, realCost=? WHERE userId=? AND recipeId=?', entry)
+    db.commit()
+    db.close()
+
+
+# Get the entry from the user_shopping_list TABLE for a given userId and recipeId pair
+def get_user_shopping_list(userId, recipeId):
+    entry = [userId, recipeId]
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
+    c = db.cursor()
+    c.execute('SELECT * from user_shopping_lists WHERE userID=? AND recipeID=?', entry)
+    hit = c.fetchone()
+    db.close()
+    return hit
+
+
+# Gets all the shopping lists for a given user from the user_shopping_list TABLE
+def get_user_shopping_lists(userId):
+    entry = [userId]
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
+    c = db.cursor()
+    c.execute('SELECT * from user_shopping_lists WHERE userID=?', entry)
+    hits = c.fetchall()
+    db.close()
+    return hits    
 
 
 # General parsing out of possible injection / malicious characters

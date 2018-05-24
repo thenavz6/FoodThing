@@ -12,6 +12,7 @@ def getUserDictionary(userId):
     profiledesc = "How lonely"
     profilefavourites = []
     profilerecipes = []
+    shoppingLists = []
 
     try:
         userHit = database.find_user_by_id_db(int(userId))
@@ -21,6 +22,8 @@ def getUserDictionary(userId):
             profileimage = userHit["imageurl"]
             profiledesc = userHit["description"]
             profilefavourites = []
+    
+            shoppingLists = database.get_user_shopping_lists(userId)     
 
             findfavourites = database.find_user_favourites_db(userId)
             tmp = []
@@ -47,7 +50,8 @@ def getUserDictionary(userId):
         "image": profileimage,
         "desc" : profiledesc,
         "profilefavourites" : profilefavourites,
-        "profilerecipes" : profilerecipes
+        "profilerecipes" : profilerecipes,
+        "shoppingLists" : shoppingLists
     }
 
     return profileuser
