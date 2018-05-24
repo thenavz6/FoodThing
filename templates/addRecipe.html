@@ -11,7 +11,7 @@
   <div class="index">
 
     {% include "includeMainHeader.html" %}
-  
+
     <div class="main_container">
       <div class="add_recipe_heading">
         ADD RECIPE
@@ -42,12 +42,12 @@
           </div>
           <textarea name="imageurl" class="add_recipe_box3" placeholder="Enter the image URL here..."></textarea>
 
-          
+
           <div class="add_recipe_subheading">
             Recipe Ingredients:
           </div>
           {% for i in range(0, numOfIngredients) %}
-          <textarea name="ingredient_{{i}}" class="add_recipe_box3" placeholder="50 mL of milk etc." >{{ savedIngredients[i] }}</textarea/>
+          <textarea name="ingredient_{{i}}" class="add_recipe_box3" placeholder="Enter a required recipe ingredient here..." >{{ savedIngredients[i] }}</textarea/>
           {% endfor %}
           <input type="submit" value="Add Ingredient" name="add_ingred_bt" class="add_recipe_bt"/>
 
@@ -57,11 +57,13 @@
           {% for i in range(0, numOfSteps) %}
           <textarea name="step_{{i}}" class="add_recipe_box3" placeholder="Enter the recipe's instructions here...">{{ savedSteps[i] }}</textarea>
           {% endfor %}
-          <input type="submit" value="Add Step" name="add_step_bt" class="add_recipe_bt"/>
+          <input type="submit" value="Add Instruction" name="add_step_bt" class="add_recipe_bt"/>
           <br><br>
           <!-- This needs to be back-end implemented --->
-          <input type="submit" value="Add Recipe" name="add_recipe_bt" class="add_recipe_bt"/>
-          
+          <div class="right_align">
+            <input type="submit" value="ADD RECIPE" name="add_recipe_bt" class="add_recipe_bt2"/>
+          </div>
+
         </div>
       </form>
       </div>

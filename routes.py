@@ -14,7 +14,7 @@ import userDataCollector
 from helperFunctions import *
 
 # Some global settings
-OFFLINEMODE = False                              # Will not contact edamam for search queries. Only source locally.
+OFFLINEMODE = True                              # Will not contact edamam for search queries. Only source locally.
 
 @app.route("/",methods=["GET", "POST"])
 def main():
