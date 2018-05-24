@@ -11,7 +11,7 @@
   <div class="index">
 
     {% include "includeMainHeader.html" %}
-  
+
     <div class="main_container">
       <div class="add_recipe_heading">
         Advanced Search
@@ -29,24 +29,19 @@
 
     <form method="POST">
       <div style="text-align:center">
-      <input type="text" name="searchtext" placeholder="Search Terms..."/><br>
-      <input type="text" name="maxpreptime" placeholder="Maximum Prep Time"/><br>
-      <input type="text" name="maximumcost" placeholder="Maximum Cost"/><br>
+                Include Ingredients<br>
+          <input type="text" name="KeyWords" placeholder="eg: chicken, eggs..."/><br>
+                Exclude Ingredients<br>
+          <input type="text" name="Exclude" placeholder="eg: peanuts, yoghurt..."/><br>
+                Maximum Prep Time<br>
+          <input type="text" name="MaxPrepTime" placeholder="Maximum Prep Time"/><br>
+                Maximum Cost<br>
+          <input type="text" name="MaximumCost" placeholder="Maximum Cost"/><br>
       </div>
 
-
-      <div class="add_recipe_heading">
-        Exclude Ingredients
-      </div>
-      {% for i in range(numOfExcluded|int) %}
-        <div style="text-align:center">
-            <input type="text" name="exclude" placeholder="Ingredient To Exclude"/><br> 
-        </div>
-      {% endfor %}
       <div style="text-align:center">
-         <input class="searchbts" type="submit" value="Add" name="addbt" align="right">
-      </div>      
-
+         <input class="searchbts" type="submit" value="Search" name="srchbt" align="right">
+      </div>
     </form>
 
   </div>

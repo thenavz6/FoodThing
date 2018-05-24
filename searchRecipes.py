@@ -7,7 +7,7 @@ OFFLINEMODE = False
 
 # query is the query string that may be multi-worded "Scrambled Eggs"
 # excluded is a list of ingredients to exclude etc ["nuts", "salmon"]
-def getRecipes(query, excluded, preptime):
+def getRecipes(query, excluded, preptime, cost):
 
     global OFFLINEMODE
 
@@ -16,7 +16,7 @@ def getRecipes(query, excluded, preptime):
     if (OFFLINEMODE == False):
         recipeDataCollector.receiveRecipeData(query, 5, excluded, preptime)
 
-    # Store as the key the recipeId and the value the number of hits 
+    # Store as the key the recipeId and the value the number of hits
     recipeHits = {}
 
     query = query.split()
@@ -26,7 +26,7 @@ def getRecipes(query, excluded, preptime):
         if excluded == None:
             hitRecipeIds = database.find_recipes_keyword_db(keyword)
         else:
-            hitRecipeIds = database.find_recipes_overview_db(keyword, excluded, preptime)
+            hitRecipeIds = database.find_recipes_overview_db(keyword, excluded, preptime, cost)
 
         # If we found hits, then for each recipeId hit increment its count in the hit dictionary
         if hitRecipeIds != []:
@@ -41,5 +41,5 @@ def getRecipes(query, excluded, preptime):
 
     # After checking each keyword and building the hitDictionary, we need to order based on hitcount
     sortedRecipes = sorted(recipeHits.items(), key=lambda x : x[1], reverse=True)
-    
+
     return sortedRecipes
