@@ -12,7 +12,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT, description TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS user_ratings (userID TEXT, recipeID TEXT, rating INTEGER, FOREIGN KEY (userID) REFERENCES users(userID),FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER, recipeRatingFrequency INTEGER, recipeCumulativeRating INTEGER)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeDescription TEXT, recipeImageLink TEXT, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER, recipeRatingFrequency INTEGER, recipeCumulativeRating INTEGER, recipeCalories INTEGER, recipeDietLabels TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
@@ -187,14 +187,19 @@ def find_user_recipes_db(userId):
     return hits
 
 # Adds a new recipe overview entry and also recipe_keyword entries if we don't have it already
-def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedInstructions):
-    entry = [recipeId, userId, label, urllink, prepTime, parsedInstructions]
+# DietLabels is a list such as ["Balanced", "High-Protein"]
+def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedInstructions, recipeDesc, recipeCalories, recipeDietLabels):
+    tmp = ''
+    for item in recipeDietLabels:
+        tmp+= item + ","
+    recipeDietLabels = tmp[:-1]
+    entry = [recipeId, userId, label, recipeDesc, urllink, prepTime, parsedInstructions, recipeCalories, recipeDietLabels]
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
 
     try:
         # Starting clickCount is 0. Default ratingFrequency is 1 and cumalativeRating is 4
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,0,1,4)', entry)
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,?,0,1,4,?,?)', entry)
         label = list(set(label.split()))
         for word in label:
             add_recipe_keyword_db(c, recipeId, word)

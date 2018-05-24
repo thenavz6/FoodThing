@@ -360,7 +360,7 @@ def uploadRecipe():
                 if request.form["imageurl"].strip() == "":
                     recipeimage = "https://i.gifer.com/C2D6.gif"
 
-                database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], recipeimage, preptime, ingredientString)
+                database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], recipeimage, preptime, ingredientString, request.form["recipe_desc"])
 
                 return redirect(url_for("recipe", recipeId = recipeId))
 
