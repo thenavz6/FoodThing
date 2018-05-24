@@ -67,3 +67,18 @@ input.searchbts:active {
     background: lime;
     border-color: green;
 }
+
+.sortdd {
+    display: inline;
+    justify-content: center;
+    font-family: "Pangolin", sans-serif;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 5px;
+    height: 100%;
+    font-weight: bold;
+    outline: none;
+    cursor: pointer;
+}
