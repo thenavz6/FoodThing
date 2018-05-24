@@ -1,6 +1,6 @@
 .list {
-  margin-left: 15%;
-  margin-right: 15%;
+  Margin-left: 10%;
+  margin-right: 10%;
   font-size: 30px;
 }
 
@@ -39,22 +39,27 @@ button:active {
 
 .ingredient_list {
   table-layout: fixed;
-  width: 105%;
+  width: 100%;
   margin-bottom: 30px;
 }
 
-.ingredient_list_element:nth-child(1) {
-  width: 30%;
+.ingredient_list_element {
+  overflow: clip;
+  padding-bottom: 20px;
 }
+
+.ingredient_list_element:nth-child(1) {
+  
+}
+
 .ingredient_list_element:nth-child(even) {
     margin-left: 100px;
     text-align: right;
-    width: 15%;
 }
+
 .ingredient_list_element:nth-child(3) {
     margin-left: 100px;
     text-align: right;
-    width: 15%;
 }
 
 .recipe_reply {
@@ -84,4 +89,28 @@ button:active {
 .comment_content {
   display: inline-flex;
   flex: 1;
+}
+
+.ingredient_table_desc {
+  width: 25%;
+}
+
+.ingredient_table_product {
+  width: 25%;
+}
+
+.ingredient_table_image {
+  width: 15%;
+}
+
+.ingredient_table_shop {
+  width: 20%;
+}
+
+.ingredient_table_cost {
+  width: 10%;
+}
+
+.ingredient_table_button {
+  width: 5%;
 }
