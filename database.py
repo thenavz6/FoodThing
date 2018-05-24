@@ -12,7 +12,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT, description TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS user_ratings (userID TEXT, recipeID TEXT, rating INTEGER, FOREIGN KEY (userID) REFERENCES users(userID),FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER, recipeRatingFrequency INTEGER, recipeCumulativeRating INTEGER)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
@@ -140,17 +140,23 @@ def is_user_favourited_db(userId, recipeId):
 
 
 # Add a rating to the user_ratings TABLE for a given user and recipe pair
+# Also adjusts the rating fields in the recipe_overview TABLE
 def add_user_rating_db(userId, recipeId, rating):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     # If this user has not rated this product
-    if find_user_rating_db(userId, recipeId) == None:
+    previousRating = find_user_rating_db(userId, recipeId)
+    if previousRating == None:
         entry = [userId, recipeId, rating]
         c.execute('INSERT INTO user_ratings VALUES (?,?,?)', entry)
+        entry = [rating, recipeId]
+        c.execute('UPDATE recipe_overview SET recipeRatingFrequency=recipeRatingFrequency+1, recipeCumulativeRating=recipeCumulativeRating+? WHERE recipeID=?', entry) 
     # The user has already rated this product
     else:
         entry = [rating, userId, recipeId]
         c.execute('UPDATE user_ratings SET rating=? WHERE userId=? AND recipeId=?', entry)
+        entry = [int(rating) - int(previousRating["rating"]), recipeId]
+        c.execute('UPDATE recipe_overview SET recipeCumulativeRating=recipeCumulativeRating+? WHERE recipeId=?', entry)
     db.commit()
     db.close()
     
@@ -187,8 +193,8 @@ def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedIns
     c = db.cursor()
 
     try:
-        # Default star rating for a new recipe is 3. Starting clickCount is 0.
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,"3",?,?,0)', entry)
+        # Starting clickCount is 0. Default ratingFrequency is 1 and cumalativeRating is 4
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,0,1,4)', entry)
         label = list(set(label.split()))
         for word in label:
             add_recipe_keyword_db(c, recipeId, word)

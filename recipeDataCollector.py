@@ -45,7 +45,7 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
             "ingredients" : recipeIngredients,                  # Each ingredient etc. "eggs"
             "ingredientProducts" : ingredientProducts,          # Each product that hit the above ingredient, etc. "12pk eggs", "free range eggs"
             "instructions" : overviewEntry["recipeInstructions"],
-            "rating" : overviewEntry["recipeRating"],
+            "rating" : int(overviewEntry["recipeCumulativeRating"] / overviewEntry["recipeRatingFrequency"]),
             "popularity" : overviewEntry["recipeClickCount"],
             "preptime": "???" if (float(overviewEntry["prepTime"]) == 0) else str(overviewEntry["prepTime"]),
             "isfav" : database.is_user_favourited_db(userId, recipeId),
