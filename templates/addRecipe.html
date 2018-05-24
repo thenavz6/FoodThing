@@ -28,19 +28,19 @@
             </div>
           </div>
           <div class="add_recipe_columns">
-            <textarea name="recipe_name" class="add_recipe_box" placeholder="Enter the recipe name..."></textarea>
-            <textarea name="recipe_preptime" class="add_recipe_box" placeholder="Enter the time required..."></textarea>
+            <textarea name="recipe_name" class="add_recipe_box" placeholder="Enter the recipe name...">{{ savedLabel }}</textarea>
+            <textarea name="recipe_preptime" class="add_recipe_box" placeholder="Enter the time required...">{{ savedPreptime }}</textarea>
           </div>
 
           <div class="add_recipe_subheading">
             Description:
           </div>
-          <textarea name="recipe_desc_text" class="add_recipe_box2" placeholder="Enter the recipe description..."></textarea>
+          <textarea name="recipe_desc" class="add_recipe_box2" placeholder="Enter the recipe description...">{{ savedDesc }}</textarea>
 
           <div class="add_recipe_subheading">
             Recipe Image:
           </div>
-          <textarea name="imageurl" class="add_recipe_box3" placeholder="Enter the image URL here..."></textarea>
+          <textarea name="imageurl" class="add_recipe_box3" placeholder="Enter the image URL here...">{{ savedImageurl }}</textarea>
 
 
           <div class="add_recipe_subheading">
