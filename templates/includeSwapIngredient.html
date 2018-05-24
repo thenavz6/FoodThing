@@ -5,33 +5,31 @@
   <span class="popup_text" id="{{ buttonnumber }}">
     <div class="green_background">
       <div class="swap_heading">
-        {{ ingredient }}
+        Product Selection<br>{{ ingredient }}
       </div>
       <hr/>
       <div class="indent">
         <div class="swap_subheading">
-          INGREDIENT
+          Products
         </div>
-        <div class="ingredient_search">
-          <div class="ingredient_search_box">
-            <textarea name="comment" class="ingredient_box" placeholder="Enter the name of an ingredient to search..."/></textarea>
-          </div>
-          <input type="submit" value="Submit" name="ingredient_bt" class="ingredientbt"/>
-        </div>
+        <!--- Searching for a specific product and substituting with it is not a implemented feature --->
         <table class="ingredient_option_list">
           <tbody>
            {% for product in products %}
-            <tr>
-              <td class="ingredient_option">
-                <form method="POST">
+            <td class="ingredient_option">
+               <form method="POST">
                     <input type="image" src={{ product["image"] }} height="150" width="150" value={{ buttonnumber }}_{{loop.index-1}} name="productbt">
-                </form>
+               </form>    
+               <td>      
                 {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}}
-                <div class="ingredient_price">
-                  ${{ product["effectiveCost"] }}
-                </div>
-              </td>       
-            </tr>
+                    <div class="ingredient_price">
+                        ${{ '%0.2f' % (product["effectiveCost"] + 0.005) }}
+                    </div>
+               </td>
+            </td>
+            {% if (loop.index) % 4 == 0 %}     
+                </tr>
+            {% endif %}
             {% endfor %}
           </tbody>
         </table>

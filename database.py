@@ -10,6 +10,7 @@ PRODUCT_DB = 'products.db'
 def init_db():
     db = sqlite3.connect(DATABASE)
     db.execute('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, fullname TEXT, imageurl TEXT, token TEXT, description TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS user_ratings (userID TEXT, recipeID TEXT, rating INTEGER, FOREIGN KEY (userID) REFERENCES users(userID),FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeImageLink TEXT, recipeRating REAL, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
@@ -137,6 +138,35 @@ def is_user_favourited_db(userId, recipeId):
         return False
     return True
 
+
+# Add a rating to the user_ratings TABLE for a given user and recipe pair
+def add_user_rating_db(userId, recipeId, rating):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    # If this user has not rated this product
+    if find_user_rating_db(userId, recipeId) == None:
+        entry = [userId, recipeId, rating]
+        c.execute('INSERT INTO user_ratings VALUES (?,?,?)', entry)
+    # The user has already rated this product
+    else:
+        entry = [rating, userId, recipeId]
+        c.execute('UPDATE user_ratings SET rating=? WHERE userId=? AND recipeId=?', entry)
+    db.commit()
+    db.close()
+    
+
+# Finds the rating that a given user has given a given recipe by examining the user_ratings TABLE
+# Clearly returns None if the user has not rated the recipe
+def find_user_rating_db(userId, recipeId):
+    entry = [userId, recipeId]
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
+    c = db.cursor()
+    c.execute('SELECT * from user_ratings WHERE userID=? AND recipeID=?', entry)
+    hit = c.fetchone()
+    db.close()
+    return hit
+    
 
 # Returns all entries from recipe_overview TABLE where userdID is userId
 # Etc. gets all recipes uploaded by the given user

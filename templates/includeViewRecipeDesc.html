@@ -1,5 +1,5 @@
-          <!--- Make sure this is html is included with a recipe -->
-          <!--- These include:
+          <!-- Make sure this is html is included with a recipe -->
+          <!-- These include:
             recipeuserid    access by   recipe["ownderid"]
             recipeusername  access by   recipe["ownername"]
             recipeid        access by   recipe["id"]
@@ -10,62 +10,95 @@
             reciperating    access by   recipe["rating"]
             recipeprice     access by   recipe["effectiveCost"]
           -->
+
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/static/css/recipe.css">
+
+<script>
+    function onMouseOver(starNumber) {
+        var number = 0
+        while (number <= starNumber) {
+            document.getElementById("star".concat(number)).src='/static/images/yellow_star.png';
+            number = number + 1;
+        }
+        while (number <= 5) {
+            document.getElementById("star".concat(number)).src='/static/images/open_star.png';
+            number = number + 1;
+        }
+    };
+</script>
+<script>
+    function onMouseOut(rating, userRating) {
+        if (userRating > 0) {
+            var number = 0
+            while (number < userRating) {
+                document.getElementById("star".concat(number)).src='/static/images/yellow_star.png';
+                number = number + 1;
+            }
+            while (number < 5) {
+                document.getElementById("star".concat(number)).src='/static/images/open_star.png';
+                number = number + 1;                
+            }
+        }
+        else {
+            var number = 0
+            while (number < 5) {
+                if (number < rating) {
+                    document.getElementById("star".concat(number.toString())).src='/static/images/closed_star.png';
+                }
+                else {
+                    document.getElementById("star".concat(number.toString())).src='/static/images/open_star.png';
+                }
+                number = number + 1;
+            }
+        }
+    };
+</script>
+
+<body onLoad="javascript:onMouseOut({{recipe["rating"]}}, {{userRating}})">
 <div class="recipe_container">
   <div class="recipe">
-    <div class="recipe_info">
+    <img src="{{ recipe["image"] }}" alt="RecipeImage" height="200" width="200"/>
+    <div class="overallrecipeinfo">
       <div class="recipeinfo1">
-        <div class="recipe_name">
-          {{ recipe["name"] }}
+        <div class="recipetitle">
+          <a href="{{ url_for('recipe', recipeId=recipe['id']) }}" class="navlink">
+            {{ recipe["name"] }} 
+          </a>
         </div>
         <div class="recipefavourite">
           <form method="POST">
           {% if recipe["isfav"] == False %}
-            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} name="favbt"/>
+            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} onmouseover="this.src='/static/images/closed_heart.png';" onmouseout="this.src='/static/images/open_heart.png';" name="favbt"/>
           {% else %}
             <input type="image" src="/static/images/closed_heart.png" width="40" height="40" value={{recipe["id"]}} name="unfavbt"/> 
           {% endif %}
           </form>
         </div>
       </div>
-      <div class="recipeinfo1">
-        <div class="recipe_author">
-          By {{ recipe["ownername"] }}
-        </div>
-        <div class="recipefavourite">
-           {% for i in range(recipe["rating"]|int) %}
-            <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"onmouseover="this.src='/static/images/yellow_star.png';" onmouseout="this.src='/static/images/closed_star.png';" />
-          {% endfor %}
-          {% for i in range(5- recipe["rating"]|int) %}
-            <img src="/static/images/open_star.png" alt="ClosedStar" height="40" width="40"onmouseover="this.src='/static/images/yellow_star.png';" onmouseout="this.src='/static/images/open_star.png';" />
-          {% endfor %}
+      <div class="recipeinfo2">
+        <div class="recipetime">
+          {{ recipe["preptime"] }} mins
         </div>
       </div>
-      <div class="recipe_image_desc">
-        <div class="recipe_image">
-          <img src={{ recipe["image"] }} alt="RecipeImage" height="200" width="200"/>
+      <div class="recipeinfo1">
+        <div class="reciperating">         
+               {% for i in range(5) %}
+                <form method="POST">
+                    <input type="image" id="star{{loop.index - 1}}" src="/static/images/open_star.png" alt="ClosedStar" height="40" width="40" onmouseover="onMouseOver({{loop.index-1}});" onmouseout="onMouseOut({{recipe["rating"]}}, {{userRating}});" name="ratingbt" value={{loop.index}}>
+                 </form>
+              {% endfor %}         
         </div>
-        <div class="right_desc">
-          <div class="recipeinfo1">
-            <div class="recipe_subheading">
-              <!--- Recipe Overview/Description Below --->
-            </div>
-            <div class="recipe_time">
-              {{ recipe["preptime"] }} mins
-            </div>
-          </div>
-          <div class="recipe_desc">
-            No description stored at the moment
-          </div>
-          <div class="recipeinfo1">
-            <div class="recipe_calories">
-              No calories stored at the moment
-            </div>
-            <div class="recipeprice">
-              ${{ recipe["effectiveCost"] }}
-            </div>
-          </div>
+        <div class="recipeprice">
+          ${{ totalEffectiveCost }}
+        </div>
+      </div>
+      <div class="recipeinfo2">
+        <div class="recipekeywords">
+          Keywords not Collected At The Moment
         </div>
       </div>
     </div>
   </div>
 </div>
+</body>
