@@ -41,3 +41,44 @@ body {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+.centered {
+    display: flex;
+    justify-content: center;
+}
+
+input.searchbts {
+    display: inline;
+    justify-content: center;
+    font-family: "Pangolin", sans-serif;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 5px;
+    height: 100%;
+    font-weight: bold;
+    outline: none;
+    cursor: pointer;
+}
+
+input.searchbts:active {
+    border-radius: 10px;
+    background: lime;
+    border-color: green;
+}
+
+.sortdd {
+    display: inline;
+    justify-content: center;
+    font-family: "Pangolin", sans-serif;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 5px;
+    height: 100%;
+    font-weight: bold;
+    outline: none;
+    cursor: pointer;
+}

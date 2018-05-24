@@ -22,18 +22,20 @@
       {% with recipe = recipeDict %}
       	{% include "includeViewRecipeDesc.html" %}
       {% endwith %}
-  
-       <div class="swap_subheading">
-        Selected Store: 
-       </div>
+
+        <div class="recipe_heading">
+          <h1>SELECT A STORE</h1>
+        </div>
+        <div class="centered">
         <form method="POST">
-        <select name="selectstore">
+          <select class="sortdd" name="selectstore">
             <option value="any" {% if prefStore == "any" %} selected="selected" {% endif %} > Any </option>
             <option value="coles" {% if prefStore == "coles" %} selected="selected" {% endif %} >Coles </option>
             <option value="woolworths" {% if prefStore == "woolworths" %} selected="selected" {% endif %} > Woolworths </option>
-        </select>
-        <input align="right" type="submit" value="Select" name="storebt">
+          </select>
+          <input class="searchbts" align="right" type="submit" value="Select" name="storebt">
         </form>
+        </div>
 
       <div class="recipe_heading">
         <h1>INGREDIENTS</h1>
@@ -43,7 +45,7 @@
 
           <tbody>
             {% for ingredient in recipeDict["ingredients"] %}
-            <tr>          
+            <tr>
               <td class="ingredient_list_element">
                 {{ ingredient["ingredientDesc"] }}
               </td>
@@ -88,7 +90,7 @@
         </table>
       </div>
       <div class="recipe_heading">
-        INSTRUCTIONS
+        <h1>INSTRUCTIONS</h1>
       </div>
       <div class="list">
         <ol>
@@ -101,7 +103,7 @@
         </ol>
       </div>
       <div class="recipe_heading">
-        COMMENTS
+        <h1>COMMENTS</h1>
       </div>
 
       {% for comment in recipeComments %}

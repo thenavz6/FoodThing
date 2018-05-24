@@ -13,15 +13,17 @@
     <div class="main_container">
       <!--- We need a sort dropdown and button --->
       <form method="POST">
-        <select name="sorttype" align="right">
-            <option value="Cost" {% if sortType == "Cost" %} selected="selected" {% endif %} >Cost</option>
-            <option value="Rating" {% if sortType == "Rating" %} selected="selected" {% endif %} >Rating</option>
-            <option value="Popularity" {% if sortType == "Popularity" %} selected="selected" {% endif %} >Popularity</option>
-            <option value="Prep Time" {% if sortType == "Prep Time" %} selected="selected" {% endif %} >Prep Time</option>
-        </select>
-        <input align="right" type="submit" value="Sort" name="sortbt" align="right">
-        <input align="right" type="submit" value="Advanced Search" name="advbt" align="right">
-      </form> 
+        <div class="centered">
+          <select class="sortdd" name="sorttype" align="right">
+              <option value="Cost" {% if sortType == "Cost" %} selected="selected" {% endif %} >Cost</option>
+              <option value="Rating" {% if sortType == "Rating" %} selected="selected" {% endif %} >Rating</option>
+              <option value="Popularity" {% if sortType == "Popularity" %} selected="selected" {% endif %} >Popularity</option>
+              <option value="Prep Time" {% if sortType == "Prep Time" %} selected="selected" {% endif %} >Prep Time</option>
+          </select>
+          <input class="searchbts" type="submit" value="Sort" name="sortbt" align="right">
+          <input class="searchbts" type="submit" value="Advanced Search" name="advbt" align="right">
+        </div>
+      </form>
       <br>
       {% for item in recipes %}
           {% with recipe=recipes[loop.index - 1] %}
