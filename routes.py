@@ -190,7 +190,7 @@ def recipe(recipeId):
         return redirect(url_for("main"))
 
     global recipeDict, selectedProducts, prefStore
-    userShoppingList = database.get_user_shopping_list(authentication.userid, recipeId)   
+    userShoppingList = database.get_user_shopping_list(authentication.userid, recipeId)
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
@@ -200,7 +200,7 @@ def recipe(recipeId):
         recipeHit = database.find_recipe_id_db(recipeId)
 
     if request.method == "GET":
-      # If the user has saved this recipe as a Shopping List  
+      # If the user has saved this recipe as a Shopping List
         if userShoppingList != None:
             selectedProducts = []
             tmp = userShoppingList
