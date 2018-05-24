@@ -62,6 +62,13 @@ button:active {
     text-align: right;
 }
 
+.right_large_text {
+    font-size: 30px;
+    margin-right: 50px;
+    text-align: right;
+    font-weight: bold;   
+}
+
 .recipe_reply {
   display: flex;
   flex-direction: column;

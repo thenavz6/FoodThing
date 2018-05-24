@@ -179,6 +179,7 @@ def recipe(recipeId):
         return redirect(url_for("main"))
 
     global recipeDict, selectedProducts, prefStore
+    userShoppingList = database.get_user_shopping_list(authentication.userid, recipeId)   
 
     # First check if we have this recipe in our database already which will be true if it appeared in a search query
     # Makes future requests (like favouriting and commenting MUCH FASTER)
@@ -188,18 +189,30 @@ def recipe(recipeId):
         recipeHit = database.find_recipe_id_db(recipeId)
 
     if request.method == "GET":
+      # If the user has saved this recipe as a Shopping List  
+        if userShoppingList != None:
+            selectedProducts = []
+            tmp = userShoppingList
+            userShoppingList = tmp["selectedProducts"]
+            prefStore = tmp["selectedStore"]
+            userShoppingList = userShoppingList.split(",")
+            for product in userShoppingList:
+                selectedProducts.append(int(product))
+
         recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore)[0]
-        # By default we select the cheapest, most relevent products
-        selectedProducts = []
-        for ingredient in recipeDict["ingredients"]:
-            selectedProducts.append(0)
+
+        # By default if this isn't a shopping list we select the cheapest, most relevent products
+        if userShoppingList == None:
+            selectedProducts = []
+            for ingredient in recipeDict["ingredients"]:
+                selectedProducts.append(0)
 
         # Increase the recipe's clickCount/popularity in the recipe overview TABLE
         database.increment_recipe_clickcount_db(recipeId)
 
     # Calculate the total effective price based on the selectedProducts
     totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
-
+    totalRealCost = costCalculator.calcTotalRealCost(recipeDict, selectedProducts)
 
     # Retrieve all comments and the users who left those comments
     usersWhoCommented = []
@@ -247,8 +260,13 @@ def recipe(recipeId):
             selectedProducts[int(request.form["productbt"].split("_")[0])] = int(request.form["productbt"].split("_")[1])
             # Recalculate the total effective price based on the selectedProducts
             totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
+            totalRealCost = costCalculator.calcTotalRealCost(recipeDict, selectedProducts)
+        if "shoppingbt" in request.form:
+            print(selectedProducts)
+            database.update_user_shopping_list(authentication.userid, recipeId, selectedProducts, prefStore, totalEffectiveCost, 0)
+            return redirect(url_for("recipe", recipeId = recipeId))
 
-    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented, userRating = userRating)
+    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, totalRealCost = "%0.2f" % totalRealCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented, userRating = userRating, userShoppingList = userShoppingList)
 
 
 # The page for viewing any user's profile
@@ -277,10 +295,10 @@ def userprofile(userId):
                 database.set_desc_user_db(authentication.userid, request.form["updatedesc"])
                 return redirect(url_for("userprofile", userId = userId))
 
-    return render_template("userprofile.html", profileuser = profileuser, myuserid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileuser = profileuser, getRecipeDictionaries = recipeDataCollector.getRecipeDictionaries, userid = authentication.userid, userimage = authentication.imageurl)
 
 
-# TODO Move things to functions and such and such (below)
+# Global variables to preserve between post calls
 savedLabel, savedImageurl, savedPreptime, savedDesc = '', '', '', ''
 numOfIngredients, numOfSteps = 1, 1
 savedIngredients, savedSteps = [], []
@@ -360,7 +378,7 @@ def uploadRecipe():
                 if request.form["imageurl"].strip() == "":
                     recipeimage = "https://i.gifer.com/C2D6.gif"
 
-                database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], recipeimage, preptime, ingredientString, request.form["recipe_desc"])
+                database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], recipeimage, preptime, ingredientString, request.form["recipe_desc"], 0, [])
 
                 return redirect(url_for("recipe", recipeId = recipeId))
 

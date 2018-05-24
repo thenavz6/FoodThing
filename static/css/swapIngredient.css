@@ -122,8 +122,17 @@ hr {
   flex: 1;
   justify-content: center;
   font-weight: bolder;
-  font-size: 40px;
+  font-size: 30px;
   color: violet;
+}
+
+.ingredient_price2 {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  font-weight: bolder;
+  font-size: 30px;
+  color: purple;
 }
 
 .popup_container {

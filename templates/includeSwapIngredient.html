@@ -23,7 +23,10 @@
                <td>      
                 "{{ product["label"] }}" <b>{{product["store"]}}</b><br> {{product["quantity"]}} {{product["unit"]}}
                     <div class="ingredient_price">
-                        ${{ '%0.2f' % (product["effectiveCost"] + 0.005) }}
+                        Portion Cost ${{ '%0.2f' % (product["effectiveCost"] + 0.005) }}
+                    </div>
+                    <div class="ingredient_price2">
+                        Product Cost ${{ '%0.2f' % (product["realCost"] + 0.005) }}
                     </div>
                </td>
             </td>

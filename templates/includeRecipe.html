@@ -54,7 +54,11 @@
           {% endfor %}
         </div>
         <div class="recipeprice">
-          ${{ recipe["effectiveCost"] }}
+          {% if overloadPrice is not defined %}
+            ${{ recipe["effectiveCost"] }}
+          {% else %}
+            Your Cost ${{ '%0.2f' % overloadPrice|float }}
+          {% endif %}
         </div>
       </div>
       <div class="recipeinfo2">

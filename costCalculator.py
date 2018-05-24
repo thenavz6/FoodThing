@@ -27,7 +27,7 @@ def calcBestCost(ingredientProducts):
     return {"effectiveCost" : "%0.2f" % bestHitPortionCost, "totalCost" : "%0.2f" % bestHitCost}
     
 
-# Calculate the total cost of selected products which may or may not be the cheapest
+# Calculate the total EFFECTIVE cost of selected products which may or may not be the cheapest
 # selectedProducts in a list of incidicies describing which number product has been selected for a given ingredient
 def calcTotalCost(recipeDict, selectedProducts):
     totalEffectiveCost, i = 0, 0
@@ -38,3 +38,16 @@ def calcTotalCost(recipeDict, selectedProducts):
             pass
         i += 1
     return totalEffectiveCost
+
+
+def calcTotalRealCost(recipeDict, selectedProducts):
+    totalRealCost, i = 0, 0
+    for ingredient in recipeDict["ingredients"]:
+        try:
+            print(recipeDict["ingredientProducts"][i][selectedProducts[i]])
+            totalRealCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["realCost"] 
+        except IndexError:
+            pass
+        i += 1
+    return totalRealCost
+

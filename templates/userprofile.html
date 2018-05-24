@@ -32,7 +32,7 @@
                 <div class="profile_desc">
                   {{ profileuser["desc"] }}
                 </div>
-                {% if myuserid|int == profileuser["id"]|int %}
+                {% if userid|int == profileuser["id"]|int %}
                   <!--- I am the owner of this page --->
                   <div class="new_description_container">
                     <div class="rightbt">
@@ -53,7 +53,7 @@
 
       <div class="profile_heading">
         <!--- Different text if am the 'owner' of this profilepage --->
-        {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
+        {% if userid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
       </div>
 
       <!--- Check if the user has any favourited recipes --->
@@ -71,7 +71,7 @@
 
       <div class="profile_heading">
          <!--- Different text if am the 'owner' of this profilepage --->
-        {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
+        {% if userid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
       </div>
 
       <!--- Check if the user has any uploaded recipes --->
@@ -87,6 +87,25 @@
           {% endwith %}
       {% endfor %}
 
+      {% if userid|int == profileuser["id"]|int %} 
+      <div class="profile_heading">
+             <p4>YOUR SHOPPING LISTS </p4>
+      </div>
+          <!--- Check if the user has any saved shopping lists --->
+          {% if profileuser["shoppingLists"]|length == 0 %}
+            <div class="centered">
+                <p4>You don't have any Shopping Lists yet!</p4>
+            </div>
+          {% endif %}
+          <!--- For each shoppinglist recipe for the user --->
+          {% for item in profileuser["shoppingLists"] %}
+              {% with recipe=getRecipeDictionaries([item["recipeID"]], [0], userid|int, "any")[0] %}
+              {% with overloadPrice=item["effectiveCost"] %}
+                {% include "includeRecipe.html" %}
+              {% endwith %}
+              {% endwith %}
+          {% endfor %}
+      {% endif %} 
     </div>
   </div>
 
