@@ -99,14 +99,19 @@ def searchRecipe(query):
     return advancedSearch(query, None, None)
 
 
+numOfExcluded = 1
+excludedIngredients = []
 @app.route("/advancedSearchPage", methods=["GET", "POST"])
 def advancedSearchPage():
     # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
+    global numOfExcluded, excludedIngredients
+
     if request.method == "GET":
-        return render_template("advancedSearch.html")
+        numOfExcluded, excludedIngredients = 1, []
+
     if request.method == "POST":
         if headerRequests(request.form) != None:
             return headerRequests(request.form)
@@ -114,7 +119,11 @@ def advancedSearchPage():
             print(request.form["KeyWords"])
             print(request.form["excludedIngredients"])
             print(request.form["maxPrepTime"])
-            return redirect(url_for("advancedSearch", query = request.form["KeyWords"], excluded = request.form["excludedIngredients"], prepTime = request.form["maxPrepTime"]))
+            return redirect(url_for("advancedSearch", query = request.form["KeyWords"], excludedIngredients = excludedIngredients, prepTime = request.form["maxPrepTime"]))
+        if "addbt" in request.form:
+            numOfExcluded += 1
+
+    return render_template("advancedSearch.html", numOfExcluded = numOfExcluded)
 
 
 @app.route("/advancedSearch/<query>/<excluded>/<prepTime>", methods=["GET", "POST"])
