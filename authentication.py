@@ -1,6 +1,6 @@
 import itertools
 
-is_authenticated = True
+is_authenticated = False
 userid = -1
 email = ""
 username = ""

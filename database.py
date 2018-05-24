@@ -249,6 +249,7 @@ def find_recipes_keyword_db(word):
     db.close()
     return recipes
 
+
 #returns recipes from recipe_overview TABLE that have matching keywords, exclude matching exclusions and are less than needed preptime
 def find_recipes_overview_db(included, excluded, prepTime, cost):
 

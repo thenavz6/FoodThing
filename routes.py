@@ -53,7 +53,7 @@ def recipeCardRequests(requestform):
     return None
 
 
-# We need to verify this token with Google for security. So TODO that later.
+# We need to verify this token with Google for security.
 # After verification, we create a database account for the user and update their token.
 @app.route("/updateToken", methods=["GET", "POST"])
 def updateToken():
@@ -129,10 +129,6 @@ def advancedSearchPage():
             if request.form["MaximumCost"] == "":
                 cost = "empty"
             return redirect(url_for("advancedSearch", query = query, excluded = excluded, prepTime = prepTime, cost = cost))
-
-
-
-
 
     return render_template("advancedSearch.html", numOfExcluded = numOfExcluded,excludedIngredients = excludedIngredients)
 
@@ -267,6 +263,7 @@ def recipe(recipeId):
                 selectedProducts[i] = 0
             # Recalculate the total effective price based on the selectedProducts
             totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
+            totalRealCost = costCalculator.calcTotalRealCost(recipeDict, selectedProducts)
         if "productbt" in request.form:
             selectedProducts[int(request.form["productbt"].split("_")[0])] = int(request.form["productbt"].split("_")[1])
             # Recalculate the total effective price based on the selectedProducts
