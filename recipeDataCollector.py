@@ -10,8 +10,12 @@ import productFinder
 import costCalculator
 import random
 
-def getRecipeDictionaries(recipeIDList, userId, shopname):
+
+# RecipeIDList is a list of recipesIDs
+# searchScoreList is a list of equal size to the above, where each recipe is described by its searchScore etc. [5,3,1,1] 
+def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
     dictionaryList = []
+    index = 0
     for recipeId in recipeIDList:
         # Find the recipe overview from the recipe_overview TABLE
         overviewEntry = database.find_recipe_id_db(recipeId)
@@ -46,12 +50,13 @@ def getRecipeDictionaries(recipeIDList, userId, shopname):
             "preptime": "???" if (float(overviewEntry["prepTime"]) == 0) else str(overviewEntry["prepTime"]),
             "isfav" : database.is_user_favourited_db(userId, recipeId),
             "effectiveCost" : estcost["effectiveCost"],
-            "totalCost" : estcost["totalCost"]
+            "totalCost" : estcost["totalCost"],
+            "searchScore" : searchScoreList[index]
          }
         
+        index += 1
         dictionaryList.append(recipeDict)
 
-    sortRecipeDictionaries(dictionaryList, "Cost")
     return dictionaryList
 
 

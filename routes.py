@@ -7,14 +7,13 @@ import server
 from server import app
 import database
 import textParser
+import searchRecipes
 import productFinder
 import costCalculator
 import recipeDataCollector
 import userDataCollector
 from helperFunctions import *
 
-# Some global settings
-OFFLINEMODE = False                              # Will not contact edamam for search queries. Only source locally.
 
 @app.route("/",methods=["GET", "POST"])
 def main():
@@ -77,6 +76,7 @@ def updateToken():
 # Had to make this ugly global variable to retain the same recipeId list in between the GET and POST
 # Otherwise when the user clicked on a recipe, we were making the API requests again and this took the user to the wrong recipe.
 recipeId = []
+recipeHitScore = []
 recipes = []
 sortType = "Cost"
 @app.route("/dashboard",methods=["GET", "POST"])
@@ -123,26 +123,16 @@ def advancedSearch(query,excluded,prepTime):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    global recipeId, recipes, sortType
+    global recipeId, recipeHitScore, recipes, sortType
 
     if request.method == "GET":
-        if OFFLINEMODE == False:
-            # Everytime a search is done, we will ask edamam for 5 recipes that we also add locally
-            recipeDataCollector.receiveRecipeData(query, 5, excluded, prepTime)
-
-        # Look through our database to get all recipeIds for hit recipes. Caps at 9 results.
-        # TODO multi-worded queries don't work the best
-        recipeId, databaseRecipes = [], []
-        if excluded == None:
-            databaseRecipes = database.find_recipes_keyword_db(query.split()[0])
-        else:
-            databaseRecipes = database.find_recipes_overview_db(query.split()[0], excluded, prepTime)
-        for num in randomSortedNumbers(len(databaseRecipes)):
-            if len(recipeId) >= 9:
-                break
-            recipeId.append(databaseRecipes[num]["recipeID"])
-
-        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, authentication.userid, None)
+        sortedRecipes = searchRecipes.getRecipes(query, excluded, prepTime)
+        sortedRecipes = sortedRecipes[:9]
+        recipeId, recipeHitScore = [], []
+        for recipe in sortedRecipes:
+            recipeId.append(recipe[0])
+            recipeHitScore.append(recipe[1])
+        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, recipeHitScore, authentication.userid, None)
 
     # Possible post requests
     if request.method == "POST":
@@ -188,7 +178,7 @@ def recipe(recipeId):
         recipeHit = database.find_recipe_id_db(recipeId)
 
     if request.method == "GET":
-        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
+        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore)[0]
         # By default we select the cheapest, most relevent products
         selectedProducts = []
         for ingredient in recipeDict["ingredients"]:
@@ -198,13 +188,7 @@ def recipe(recipeId):
         database.increment_recipe_clickcount_db(recipeId)
 
     # Calculate the total effective price based on the selectedProducts
-    totalEffectiveCost, i = 0, 0
-    for ingredient in recipeDict["ingredients"]:
-        try:
-            totalEffectiveCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["effectiveCost"]
-        except IndexError:
-            pass
-        i += 1
+    totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
 
 
     # Retrieve all comments and the users who left those comments
@@ -233,28 +217,16 @@ def recipe(recipeId):
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
         if "storebt" in request.form:
             prefStore = request.form["selectstore"]
-            recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], authentication.userid, prefStore)[0]
+            recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore)[0]
             # Reset product preferences
             for i in range(0, len(selectedProducts)):
                 selectedProducts[i] = 0
             # Recalculate the total effective price based on the selectedProducts
-            totalEffectiveCost, i = 0, 0
-            for ingredient in recipeDict["ingredients"]:
-                try:
-                    totalEffectiveCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["effectiveCost"]
-                except IndexError:
-                    pass
-                i += 1
+            totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
         if "productbt" in request.form:
             selectedProducts[int(request.form["productbt"].split("_")[0])] = int(request.form["productbt"].split("_")[1])
             # Recalculate the total effective price based on the selectedProducts
-            totalEffectiveCost, i = 0, 0
-            for ingredient in recipeDict["ingredients"]:
-                try:
-                    totalEffectiveCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["effectiveCost"]
-                except IndexError:
-                    pass
-                i += 1
+            totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
 
     return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
 
