@@ -101,10 +101,20 @@
           {% for item in profileuser["shoppingLists"] %}
               {% with recipe=getRecipeDictionaries([item["recipeID"]], [0], userid|int, "any")[0] %}
               {% with overloadPrice=item["effectiveCost"] %}
+              {% with overloadPrice2=item["realCost"] %}
                 {% include "includeRecipe.html" %}
               {% endwith %}
               {% endwith %}
+              {% endwith %}
           {% endfor %}
+
+          <div class="recipetotalprice" align="right">
+            Total Portion Cost ${{ '%0.2f' % sumEffectiveCost }}
+          </div>
+          <div class="recipetotalprice2" align="right">
+            Total Product Cost ${{ '%0.2f' % sumRealCost }}
+          </div>
+
       {% endif %} 
     </div>
   </div>
