@@ -331,30 +331,37 @@ def uploadRecipe():
             numOfSteps += 1
         # Submit the recipe to our database using the form fields
         if "add_recipe_bt" in request.form:
-            # Hope this doesn't hit already existed id when appended with userid
-            rand = random.randint(1,10000)
-            recipeId = str(authentication.userid) + "recipe" + str(rand)
-            preptime = 0
-            try:
-                preptime = int(request.form["recipe_preptime"])
-            except ValueError:
-                pass
+            # Check if the form is sufficiently filled
+            if request.form["recipe_name"].strip() != '' and request.form["ingredient_0"].strip() != '' and request.form["step_0"].strip() != '':
+                # Hope this doesn't hit already existed id when appended with userid
+                rand = random.randint(1,10000)
+                recipeId = str(authentication.userid) + "recipe" + str(rand)
+                preptime = 0
+                try:
+                    preptime = int(request.form["recipe_preptime"])
+                except ValueError:
+                    pass
 
-            ingredientList = []
-            for i in range(numOfIngredients):
-                if request.form["ingredient_"+str(i)].strip() != "":
-                    ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
-            database.add_recipe_ingredients_db(recipeId, ingredientList)
+                ingredientList = []
+                for i in range(numOfIngredients):
+                    if request.form["ingredient_"+str(i)].strip() != "":
+                        ingredientList.append(textParser.seperateAlphaAndDigit(request.form["ingredient_"+str(i)]))
+                database.add_recipe_ingredients_db(recipeId, ingredientList)
 
-            ingredientString = ''
-            # parse out ";" characters from all steps. This is because we will use ; to seperate the steps for storage in db
-            for i in range(numOfSteps):
-                if request.form["step_"+str(i)].strip() != "":
-                    tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")
-                    ingredientString += (tmp + " ; ")
+                ingredientString = ''
+                # parse out ";" characters from all steps. This is because we will use ; to seperate the steps for storage in db
+                for i in range(numOfSteps):
+                    if request.form["step_"+str(i)].strip() != "":
+                        tmp = textParser.filterCharacter(str(request.form["step_"+str(i)]), ";")
+                        ingredientString += (tmp + " ; ")
 
-            database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], request.form["imageurl"], preptime, ingredientString)
+                # Default recipe image if none supplied
+                recipeimage = request.form["imageurl"]
+                if request.form["imageurl"].strip() == "":
+                    recipeimage = "https://i.gifer.com/C2D6.gif"
 
-            return redirect(url_for("recipe", recipeId = recipeId))
+                database.add_recipe_overview_db(recipeId, authentication.userid, request.form["recipe_name"], recipeimage, preptime, ingredientString)
+
+                return redirect(url_for("recipe", recipeId = recipeId))
 
     return render_template("addRecipe.html", numOfIngredients = numOfIngredients, numOfSteps = numOfSteps, savedIngredients = savedIngredients, savedSteps = savedSteps, savedLabel = savedLabel, savedImageurl = savedImageurl, savedPreptime = savedPreptime, savedDesc = savedDesc, userid = authentication.userid, userimage = authentication.imageurl)
