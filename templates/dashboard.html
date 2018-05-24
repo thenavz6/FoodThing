@@ -15,6 +15,7 @@
       <form method="POST">
         <div class="centered">
           <select class="sortdd" name="sorttype" align="right">
+              <option value="Relevance" {% if sortType == "Relevance" %} selected="selected" {% endif %} >Relevance</option>
               <option value="Cost" {% if sortType == "Cost" %} selected="selected" {% endif %} >Cost</option>
               <option value="Rating" {% if sortType == "Rating" %} selected="selected" {% endif %} >Rating</option>
               <option value="Popularity" {% if sortType == "Popularity" %} selected="selected" {% endif %} >Popularity</option>

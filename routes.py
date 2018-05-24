@@ -133,7 +133,8 @@ def advancedSearch(query,excluded,prepTime):
             recipeId.append(recipe[0])
             recipeHitScore.append(recipe[1])
         recipes = recipeDataCollector.getRecipeDictionaries(recipeId, recipeHitScore, authentication.userid, None)
-
+        sortType = "Relevance"
+    
     # Possible post requests
     if request.method == "POST":
         if headerRequests(request.form) != None:
@@ -197,6 +198,13 @@ def recipe(recipeId):
     for entry in database.get_recipe_comments_db(recipeId):
         recipeComments.append(entry["comment"])
         usersWhoCommented.append(database.find_user_by_id_db(int(entry["userID"])))
+    
+    # Get what the current user has rated this recipe
+    userRating = database.find_user_rating_db(authentication.userid, recipeId)
+    if userRating == None:
+        userRating = -1
+    else:
+        userRating = int(userRating["rating"])
 
     # Possible post requests
     if request.method == "POST":
@@ -213,6 +221,9 @@ def recipe(recipeId):
         if "unfavbt" in request.form:
             database.delete_user_favourite_db(authentication.userid, request.form["unfavbt"])
             return redirect(url_for("recipe", recipeId = recipeId))
+        if "ratingbt" in request.form:
+            database.add_user_rating_db(authentication.userid, recipeId, request.form["ratingbt"])
+            return redirect(url_for("recipe", recipeId = recipeId))
         if "user" in request.form:
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
         if "storebt" in request.form:
@@ -228,7 +239,7 @@ def recipe(recipeId):
             # Recalculate the total effective price based on the selectedProducts
             totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
 
-    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented)
+    return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented, userRating = userRating)
 
 
 # The page for viewing any user's profile

@@ -28,7 +28,7 @@
         <div class="recipefavourite">
           <form method="POST">
           {% if recipe["isfav"] == False %}
-            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} name="favbt"/>
+            <input type="image" src="/static/images/open_heart.png" width="40" height="40" value={{recipe["id"]}} onmouseover="this.src='/static/images/closed_heart.png';" onmouseout="this.src='/static/images/open_heart.png';" name="favbt"/>
           {% else %}
             <input type="image" src="/static/images/closed_heart.png" width="40" height="40" value={{recipe["id"]}} name="unfavbt"/> 
           {% endif %}

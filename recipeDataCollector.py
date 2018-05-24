@@ -63,6 +63,12 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
 # Sorts the above 'datatype' based on the sortType parameter
 def sortRecipeDictionaries(dictionaryList, sortType):
     # Bubblesort (inefficient but lists are relatively small)
+    if sortType == "Relevance":
+        for i in range(0, len(dictionaryList)):
+            for j in range(0, len(dictionaryList) - 1):
+                if float(dictionaryList[j]["searchScore"]) < float(dictionaryList[j + 1]["searchScore"]):
+                    dictionaryList[j], dictionaryList[j + 1] = dictionaryList[j + 1], dictionaryList[j]  
+
     if sortType == "Cost":
         for i in range(0, len(dictionaryList)):
             for j in range(0, len(dictionaryList) - 1):

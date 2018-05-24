@@ -24,15 +24,19 @@ def getUserDictionary(userId):
 
             findfavourites = database.find_user_favourites_db(userId)
             tmp = []
+            searchScore = []
             for favourite in findfavourites:
                 tmp.append(favourite["recipeID"])
-            profilefavourites = recipeDataCollector.getRecipeDictionaries(tmp, authentication.userid, None)
+                searchScore.append(0)
+            profilefavourites = recipeDataCollector.getRecipeDictionaries(tmp, searchScore, authentication.userid, None)
 
             findRecipes = database.find_user_recipes_db(userId) 
             tmp = []
+            searchScore = []
             for recipe in findRecipes:
                 tmp.append(recipe["recipeID"])
-            profilerecipes = recipeDataCollector.getRecipeDictionaries(tmp, authentication.userid, None)
+                searchScore.append(0)
+            profilerecipes = recipeDataCollector.getRecipeDictionaries(tmp, searchScore, authentication.userid, None)
                   
     except ValueError as e:
         pass

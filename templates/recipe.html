@@ -20,7 +20,9 @@
     <div class="main_container">
 
       {% with recipe = recipeDict %}
+      {% with totalEffectiveCost = totalEffectiveCost %}
       	{% include "includeViewRecipeDesc.html" %}
+      {% endwith %}
       {% endwith %}
 
         <div class="recipe_heading">
