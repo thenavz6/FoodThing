@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Add Recipe{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/addRecipe.css">
+{% endblock %}
+
+{% block body %}
+  <div class="index">
+
+    {% include "includeMainHeader.html" %}
+
+    <div class="main_container">
+      <div class="add_recipe_heading">
+        ADD RECIPE
+      <form method="POST">
+      </div>
+      <div class="add_recipe_info_container">
+        <div class="add_recipe_info">
+          <div class="add_recipe_columns">
+            <div class="add_recipe_subheading_column">
+              Recipe Name:
+            </div>
+            <div class="add_recipe_subheading_column">
+              Time Required:
+            </div>
+          </div>
+          <div class="add_recipe_columns">
+            <textarea name="recipe_name" class="add_recipe_box" placeholder="Enter the recipe name..."></textarea>
+            <textarea name="recipe_preptime" class="add_recipe_box" placeholder="Enter the time required..."></textarea>
+          </div>
+
+          <div class="add_recipe_subheading">
+            Description:
+          </div>
+          <textarea name="recipe_desc_text" class="add_recipe_box2" placeholder="Enter the recipe description..."></textarea>
+
+          <div class="add_recipe_subheading">
+            Recipe Image:
+          </div>
+          <textarea name="imageurl" class="add_recipe_box3" placeholder="Enter the image URL here..."></textarea>
+
+
+          <div class="add_recipe_subheading">
+            Recipe Ingredients:
+          </div>
+          {% for i in range(0, numOfIngredients) %}
+          <textarea name="ingredient_{{i}}" class="add_recipe_box3" placeholder="Enter a required recipe ingredient here..." >{{ savedIngredients[i] }}</textarea/>
+          {% endfor %}
+          <input type="submit" value="Add Ingredient" name="add_ingred_bt" class="add_recipe_bt"/>
+
+          <div class="add_recipe_subheading">
+            Recipe Instructions:
+          </div>
+          {% for i in range(0, numOfSteps) %}
+          <textarea name="step_{{i}}" class="add_recipe_box3" placeholder="Enter the recipe's instructions here...">{{ savedSteps[i] }}</textarea>
+          {% endfor %}
+          <input type="submit" value="Add Instruction" name="add_step_bt" class="add_recipe_bt"/>
+          <br><br>
+          <!-- This needs to be back-end implemented --->
+          <div class="right_align">
+            <input type="submit" value="ADD RECIPE" name="add_recipe_bt" class="add_recipe_bt2"/>
+          </div>
+
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,165 @@
+.green_background {
+  background: #DEFFDE;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 20px;
+}
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-color: green;
+}
+
+.indent {
+  padding-left: 2%;
+}
+
+.swap_heading {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 40px;
+  padding-top: 10px;
+}
+
+.swap_subheading {
+  display: flex;
+  width: 100%;
+  color: violet;
+  font-weight: bold;
+  font-size: 40px;
+  padding: 10px;
+}
+
+.store_options {
+  display: flex;
+  padding: 10px;
+}
+
+.store_option {
+  background: green;
+  color: white;
+  border-radius: 10px;
+  font-size: 30px;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.store_option:active {
+  background: lime;
+  border-color: green;
+}
+
+.ingredient_search {
+  display: flex;
+}
+
+.ingredient_box {
+  display: flex;
+  font-family: 'Pangolin', sans-serif;
+  background: white;
+  color: gray;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 12.5px;
+  margin-left: 10px;
+  outline: none;
+  height: 100%;
+  width: 100%;
+}
+
+.ingredient_box:focus {
+  border-radius: 10px;
+  border-color: gray;
+  background: silver;
+}
+
+.ingredientbt {
+  display: flex;
+  justify-content: center;
+  font-family: 'Pangolin', sans-serif;
+  font-size: 20px;
+  width: 85px;
+  height: 50px;
+  border-radius: 10px;
+  outline: none;
+  background: green;
+  border: green;
+  color: white;
+  cursor: pointer;
+}
+
+.ingredientbt:active {
+  border-radius: 10px;
+  background: lime;
+  border-color: green;
+}
+
+.ingredient_option_list {
+  display: flex;
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 5px;
+  width: 92%;
+  table-layout: fixed;
+  border: 2px solid violet;
+  border-radius: 10px;
+}
+
+.ingredient_option {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 12.5px;
+}
+
+.ingredient_price {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  font-weight: bolder;
+  font-size: 40px;
+  color: violet;
+}
+
+.popup_container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  left: 25%;
+}
+
+.popup_container .popup_text {
+  visibility: hidden;
+  display: none;
+  width: 100%;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  z-index: 1;
+  position: absolute;
+  left: 10%;
+}
+
+.popup_container .show {
+  visibility: visible;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  position: absolute;
+  left: 10%;
+}
+
+.popup_text.show {
+  visibility: visible;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  position: absolute;
+  left: 10%;
+}

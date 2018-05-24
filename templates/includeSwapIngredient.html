@@ -1,0 +1,46 @@
+<div class="swapbt">
+  <button onclick="popupFunc({{ buttonnumber }})">SWAP</button>
+</div>
+<div class="popup_container">
+  <span class="popup_text" id="{{ buttonnumber }}">
+    <div class="green_background">
+      <div class="swap_heading">
+        Product Selection<br>{{ ingredient }}
+      </div>
+      <hr/>
+      <div class="indent">
+        <div class="swap_subheading">
+          Products
+        </div>
+        <!--- Searching for a specific product and substituting with it is not a implemented feature --->
+        <table class="ingredient_option_list">
+          <tbody>
+           {% for product in products %}
+            <td class="ingredient_option">
+               <form method="POST">
+                    <input type="image" src={{ product["image"] }} height="150" width="150" value={{ buttonnumber }}_{{loop.index-1}} name="productbt">
+               </form>    
+               <td>      
+                {{ product["label"] }} {{product["quantity"]}} {{product["unit"]}}
+                    <div class="ingredient_price">
+                        ${{ '%0.2f' % (product["effectiveCost"] + 0.005) }}
+                    </div>
+               </td>
+            </td>
+            {% if (loop.index) % 4 == 0 %}     
+                </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </span>
+<div>
+
+<script>
+  function popupFunc(div_id) {
+    var p = document.getElementById(div_id);
+    p.classList.toggle("show");
+  }
+</script>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="static/css/home.css">
+  <link rel="stylesheet" type="text/css" href="static/css/header.css">
+{% endblock %}
+
+{% block body %}
+  <div>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-container">
+            <div class="recipething">RECIPETHING</div>
+        </div>
+    </nav>
+
+    <div class="main_container">
+      <div class="logo_container">
+          <img src="static/images/logo.png" alt="logo" class="logo"/>
+      </div>
+      <div class="centered">
+        <h1>Welcome to RecipeThing!</h1>
+        <h2>Please login using one of the following options:</h2>
+      </div>
+      <div class="button_block">
+        <div class="auth_img_button">
+          <a href={{ url_for('dashboard') }}><img src="static/images/Google.png" alt="GoogleLogo" class="auth_logo"/></a>
+        </div>
+        <div class="auth_img_button">
+          <a href={{ url_for('dashboard') }}><img src="static/images/Google.png" alt="FacebookLogo" class="auth_logo"/></a>
+        </div>
+        <div class="auth_button">
+          <a class="navlink" href={{ url_for('dashboard') }}>Continue as GUEST</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

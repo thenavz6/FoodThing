@@ -1,68 +1,92 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel='stylesheet' href='../static/navbar.css'>
-    <title>User Profile</title>
+{% block title %}Profile{% endblock %}
 
-</head>
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/profileDesc.css">
+{% endblock %}
 
+{% block body %}
+  <div class="index">
 
-<body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand nav-list" href="https://localhost:5000/dashboard">RecipeThing</a>
-		<form method="POST">
-  			Search Recipe: <input type="text" name="searchtext"><br>
-  			<input type="submit" value="Search" name="bt">
-		</form>
-    </div>
-    <a href="https://localhost:5000/user/{{myuserid}}">
-    <img align="right" src={{userimage}} alt="You">
-    </a>
-    <form method="POST">
-  		<input align="right" type="submit" value="logout" name="bt">
-	</form>
-  </div>
-</nav>
+  	{% include "includeMainHeader.html" %}
 
+    <div class="main_container">
+      <div class="profile_container">
+        <div class="profile">
+          <div class="profile_info">
+            <div class="profile_name">
+              {{ profileuser["name"] }}
+            </div>
+            <div class="profile_image_desc">
+              <!--- Need a default image for new user profiles --->
+              <!--- Backend passes one --->
+              <div class="profile_image">
+                <img src={{ profileuser["image"] }} alt="GoogleLogo" height="200" width="200"/>
+              </div>
+              <div class="right_desc">
+                <div class="profile_subheading">
+                  DESCRIPTION
+                </div>
+                <div class="profile_desc">
+                  {{ profileuser["desc"] }}
+                </div>
+                {% if myuserid|int == profileuser["id"]|int %}
+                  <!--- I am the owner of this page --->
+                  <div class="rightbt">
+                    <div class="editbt">
+                    <!--- Edit profile desc button here --->
+                      <form method="POST">
+                        New Description: <input type="text" name="updatedesc"><br>
+                        <input type="submit" value="UpdateDesc" name="bt">
+                      </form>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class="container-fluid">
-  <div class="row-fluid" id="main">
-      {{ profilename }} <br>
-      <img src={{ profileimage }} alt="You"><br><br>
-      {% if profileid|int == myuserid|int %}
-      <form method="POST">
-          <input type="submit" value="Upload Recipe" name="bt">
-      </form>
-      <br><br>
+      <div class="profile_heading">
+        <!--- Different text if am the 'owner' of this profilepage --->
+        {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} FAVOURITES
+      </div>
+
+      <!--- Check if the user has any favourited recipes --->
+      {% if profileuser["profilefavourites"]|length == 0 %}
+      <div class="centered">
+        <p4>You don't have any Favorites yet!</p4>
+      </div>
       {% endif %}
-
-      <h2> User Recipes: </h2>
-      {% for recipe in profilerecipes %}
-          {{ recipe["recipeLabel"] }}
-          <a href="https://localhost:5000/recipe/{{recipe["recipeID"]}}"><br>
-          <img width="100" height="100" align="left" src={{recipe["recipeImageLink"]}} alt="You"><br><br><br><br><br>
-          </a>
+      <!--- For each favorite recipe of the user --->
+      {% for item in profileuser["profilefavourites"] %}
+          {% with recipe=item %}
+          {% include "includeRecipe.html" %}
+          {% endwith %}
       {% endfor %}
-      <br><br>
 
-      <h2> Favourites </h2> 
-      {% for favourite in profilefavourites %}
-          {{ favourite["recipeLabel"] }}<br>
-          <a href="https://localhost:5000/recipe/{{favourite["recipeID"]}}"><br>
-          <img width="100" height="100" align="left" src={{favourite["recipeImageLink"]}} alt="You"><br><br><br><br><br>
-          </a>
+      <div class="profile_heading">
+         <!--- Different text if am the 'owner' of this profilepage --->
+        {% if myuserid|int == profileuser["id"]|int %} YOUR {% endif %} RECIPES
+      </div>
+
+      <!--- Check if the user has any uploaded recipes --->
+      {% if profileuser["profilerecipes"]|length == 0 %}
+        <div class="centered">
+            <p4>You don't have any Recipes yet!</p4>
+        </div>
+      {% endif %}
+      <!--- For each uploaded recipe of the user --->
+      {% for item in profileuser["profilerecipes"] %}
+          {% with recipe=item %}
+          {% include "includeRecipe.html" %}
+          {% endwith %}
       {% endfor %}
+
+    </div>
   </div>
-</div>
 
-
-</body>
-</html>
+{% endblock %}

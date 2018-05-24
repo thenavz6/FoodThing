@@ -1,0 +1,87 @@
+.list {
+  margin-left: 15%;
+  margin-right: 15%;
+  font-size: 30px;
+}
+
+ol {
+  margin-top: 0;
+}
+
+.ingredient_price {
+  display: inline-flex;
+}
+
+.ingredient_store {
+  text-align: right;
+}
+
+button {
+  display: inline;
+  justify-content: center;
+  font-family: "Pangolin", sans-serif;
+  background-color: green;
+  color: white;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 5px;
+  height: 100%;
+  font-weight: bold;
+  outline: none;
+  cursor: pointer;
+}
+
+button:active {
+  border-radius: 10px;
+  background: lime;
+  border-color: green;
+}
+
+.ingredient_list {
+  table-layout: fixed;
+  width: 105%;
+  margin-bottom: 30px;
+}
+
+.ingredient_list_element:nth-child(1) {
+  width: 30%;
+}
+.ingredient_list_element:nth-child(even) {
+    margin-left: 100px;
+    text-align: right;
+    width: 15%;
+}
+.ingredient_list_element:nth-child(3) {
+    margin-left: 100px;
+    text-align: right;
+    width: 15%;
+}
+
+.recipe_reply {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.commentbox {
+  font-family: 'Pangolin', sans-serif;
+  background: white;
+  color: gray;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 12.5px;
+  outline: none;
+  height: 100px;
+  width: 865px;
+}
+
+.commentbox:focus {
+  border-radius: 10px;
+  border-color: gray;
+  background: silver;
+}
+
+.comment_content {
+  display: inline-flex;
+  flex: 1;
+}
