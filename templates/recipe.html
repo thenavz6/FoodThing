@@ -54,7 +54,7 @@
               <td class="ingredient_list_element">
                    <!--- Check for all properties of the product if we even found a relevent product --->
                    {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
-                    <b>{{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b>
+                    <b>{{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b> x {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["realQuantity"] }} <b>${{ '%0.2f' % recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["realCost"] }}</b>
                    {% else %}
                     <b>Couldn't find anything :( </b>
                    {% endif %}
