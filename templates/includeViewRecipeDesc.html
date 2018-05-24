@@ -58,12 +58,12 @@
 <body onLoad="javascript:onMouseOut({{recipe["rating"]}}, {{userRating}})">
 <div class="recipe_container">
   <div class="recipe">
-    <img src="{{ recipe["image"] }}" alt="RecipeImage" height="200" width="200"/>
+    <img src="{{ recipe["image"] }}" alt="RecipeImage" height="250" width="250"/>
     <div class="overallrecipeinfo">
       <div class="recipeinfo1">
         <div class="recipetitle">
           <a href="{{ url_for('recipe', recipeId=recipe['id']) }}" class="navlink">
-            {{ recipe["name"] }} 
+            {{ recipe["name"] }}
           </a>
         </div>
         <div class="recipefavourite">
@@ -76,9 +76,18 @@
           </form>
         </div>
       </div>
+
+        <div class="recipedescription">
+            <h2>{{ recipe["description"] }}</h2>
+        </div>
+
       <div class="recipeinfo2">
         <div class="recipetime">
-          {{ recipe["preptime"] }} mins
+          {% if recipe["preptime"] != "???" %}
+            {{ '%0.0f' % recipe["preptime"]|float }} mins   
+          {% else %}
+            {{ recipe["preptime"] }} mins   
+          {% endif %}
         </div>
       </div>
       <div class="recipeinfo1">
@@ -95,7 +104,29 @@
       </div>
       <div class="recipeinfo2">
         <div class="recipekeywords">
-          Keywords not Collected At The Moment
+         {{ recipe["dietLabels"] }}
+        </div>
+      </div>
+      <div class="recipeinfo2">
+        <div class="recipekeywords">
+          {{ '%0.0f' % recipe["calories"] }} calories
+        </div>
+      </div>
+      <!--- A text rating that shows real rating since user can override UI display with their own vote --->
+      <div class="recipeinfo1">
+        <div class="recipetime">
+         Average Rating {{ recipe["rating"] }} / 5  
+        </div>
+      </div>
+      <div class="recipeinfo1">
+        <div class="recipeauthor">
+            {% if recipe["ownerid"] != -1 %}
+            <a href="../user/{{recipe["ownerid"]}}">
+            {% endif %}
+                By {{ recipe["ownername"] }}
+            {% if recipe["ownerid"] != -1 %}
+            </a>
+            {% endif %}
         </div>
       </div>
     </div>

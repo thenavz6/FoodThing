@@ -50,6 +50,7 @@
 }
 
 .editbt {
+  font-family: 'Pangolin', sans-serif;
   background-color: green;
   color: white;
   border-radius: 10px;
@@ -62,4 +63,38 @@
   font-weight: bold;
   font-size: 50px;
   margin-left: 11%;
+}
+
+.new_description_container {
+  display: flex;
+  flex: 1;
+  border: 2px solid violet;
+  border-radius: 10px;
+  background: white;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+input.new_description {
+  font-family: 'Pangolin', sans-serif;
+  background: white;
+  color: gray;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 5px;
+  width: 100%;
+  outline: none;
+}
+
+input.new_description:focus {
+  border-radius: 10px;
+  border-color: gray;
+  background: silver;
+}
+
+.right_desc {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }

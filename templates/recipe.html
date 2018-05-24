@@ -28,7 +28,6 @@
         <div class="recipe_heading">
           <h1>SELECT A STORE</h1>
         </div>
-        <div class="centered">
         <form method="POST">
           <select class="sortdd" name="selectstore">
             <option value="any" {% if prefStore == "any" %} selected="selected" {% endif %} > Any </option>
@@ -37,7 +36,6 @@
           </select>
           <input class="searchbts" align="right" type="submit" value="Select" name="storebt">
         </form>
-        </div>
 
       <div class="recipe_heading">
         <h1>INGREDIENTS</h1>
@@ -46,35 +44,43 @@
         <table class="ingredient_list">
 
           <tbody>
+            <!--- Headers to make it more user understandable --->
+            <tr>
+             <td class="ingredient_list_element ingredient_table_desc"><b>Name</b> </td>
+             <td class="ingredient_list_element ingredient_table_desc"><b>Product & Product Price</b></td>
+             <td class="ingredient_list_element ingredient_table_desc"></td>
+             <td class="ingredient_list_element ingredient_table_desc"><b>Store &</b></td>
+             <td class="ingredient_list_element ingredient_table_desc"><b>Portion Cost</b></td>
+            </tr>
             {% for ingredient in recipeDict["ingredients"] %}
             <tr>
-              <td class="ingredient_list_element">
+              <td class="ingredient_list_element ingredient_table_desc">
                 {{ ingredient["ingredientDesc"] }}
               </td>
-              <td class="ingredient_list_element">
+              <td class="ingredient_list_element ingredient_table_product">
                    <!--- Check for all properties of the product if we even found a relevent product --->
                    {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
-                    <b>{{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b>
+                    {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["label"] }}</b> x {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["realQuantity"] }} ${{ '%0.2f' % recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["realCost"] }}</b>
                    {% else %}
                     <b>Couldn't find anything :( </b>
                    {% endif %}
               </td>
-              <td class="ingredient_list_element">
+              <td class="ingredient_list_element ingredient_table_image">
                 {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
                     <input type="image" src={{recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["image"]}} width="100" height="100"><br>
                 {% endif %}
               </td>
-              <td class="ingredient_list_element">
+              <td class="ingredient_list_element ingredient_table_shop">
                 {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 and recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["store"] != "all" %}
                     {{ recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["store"] }}
                 {% endif %}
               </td>
-              <td class="ingredient_list_element">
+              <td class="ingredient_list_element ingredient_table_cost">
                 {% if recipeDict["ingredientProducts"][loop.index-1] | length > 0 %}
                     ${{ '%0.2f' % (recipeDict["ingredientProducts"][loop.index-1][selectedProducts[loop.index-1]]["effectiveCost"] + 0.005)}}
                 {% endif %}
               </td>
-              <td class="ingredient_list_element">
+              <td class="ingredient_list_element ingredient_table_button">
 
               {% with buttonnumber = loop.index - 1 %}
               {% with ingredient = ingredient["ingredientDesc"] %}
@@ -91,6 +97,22 @@
 
         </table>
       </div>
+
+      <div class="right_large_text">
+      Total Portion Cost ${{ totalEffectiveCost }}
+      </div>
+      <div class="right_large_text">
+      Total Product Cost ${{ totalRealCost }}
+      </div>
+
+      <form method="POST">
+        {% if userShoppingList is none %}
+            <input class="searchbts" align="right" type="submit" value="Add To Shopping List" name="shoppingbt">
+        {% else %}
+            <input class="searchbts" align="right" type="submit" value="Update Shopping List" name="shoppingbt">
+        {% endif %}
+      </form>
+
       <div class="recipe_heading">
         <h1>INSTRUCTIONS</h1>
       </div>

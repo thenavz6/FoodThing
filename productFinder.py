@@ -119,7 +119,7 @@ def convertToDetailList(sortedProducts, ingredient, shopname):
         realCost = float(productOverview["cost"]) * math.ceil(portionCost / float(productOverview["cost"]))
        
 
-        productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"], "store" : productOverview["store"]}
+        productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"], "store" : productOverview["store"], "realQuantity" : math.ceil(portionCost / float(productOverview["cost"]))}
         productList.append(productDict)
     return productList
 

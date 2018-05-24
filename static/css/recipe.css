@@ -45,6 +45,14 @@
 .recipetitle {
   display: flex;
   font-size: 40px;
+  font-weight: bolder;
+}
+
+.recipedescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-self: flex-start;
 }
 
 .recipefavourite {
@@ -53,6 +61,12 @@
   flex-direction: row;
   justify-content: flex-end;
   align-self: flex-start;
+}
+
+.recipeauthor {
+  font-weight: bold;
+  font-size: 20px;
+  color: violet;
 }
 
 .recipetime {
@@ -79,3 +93,5 @@
   flex: 1;
   justify-content: flex-end;
 }
+
+

@@ -3,7 +3,7 @@
 import database
 import recipeDataCollector
 
-OFFLINEMODE = True
+OFFLINEMODE = False
 
 # query is the query string that may be multi-worded "Scrambled Eggs"
 # excluded is a list of ingredients to exclude etc ["nuts", "salmon"]

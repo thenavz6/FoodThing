@@ -36,8 +36,12 @@
         </div>
       </div>
       <div class="recipeinfo2">
-        <div class="recipetime">
-          {{ recipe["preptime"] }} mins
+        <div class="recipetime">    
+          {% if recipe["preptime"] != "???" %}
+            {{ '%0.0f' % recipe["preptime"]|float }} mins   
+          {% else %}
+            {{ recipe["preptime"] }} mins   
+          {% endif %}
         </div>
       </div>
       <div class="recipeinfo1">
@@ -50,12 +54,21 @@
           {% endfor %}
         </div>
         <div class="recipeprice">
-          ${{ recipe["effectiveCost"] }}
+          {% if overloadPrice is not defined %}
+            ${{ recipe["effectiveCost"] }}
+          {% else %}
+            Your Cost ${{ '%0.2f' % overloadPrice|float }}
+          {% endif %}
         </div>
       </div>
       <div class="recipeinfo2">
         <div class="recipekeywords">
-          Keywords not Collected At The Moment
+          {{ recipe["dietLabels"] }}
+        </div>
+      </div>
+      <div class="recipeinfo2">
+        <div class="recipekeywords">
+          {{ '%0.0f' % recipe["calories"] }} calories
         </div>
       </div>
     </div>
