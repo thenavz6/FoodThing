@@ -32,8 +32,11 @@
           By {{ recipe["ownername"] }}
         </div>
         <div class="recipefavourite">
-          {% for i in range(recipe["rating"]|int) %}
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+           {% for i in range(recipe["rating"]|int) %}
+            <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"onmouseover="this.src='/static/images/yellow_star.png';" onmouseout="this.src='/static/images/closed_star.png';" />
+          {% endfor %}
+          {% for i in range(5- recipe["rating"]|int) %}
+            <img src="/static/images/open_star.png" alt="ClosedStar" height="40" width="40"onmouseover="this.src='/static/images/yellow_star.png';" onmouseout="this.src='/static/images/open_star.png';" />
           {% endfor %}
         </div>
       </div>

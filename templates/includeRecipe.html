@@ -43,7 +43,10 @@
       <div class="recipeinfo1">
         <div class="reciperating">
           {% for i in range(recipe["rating"]|int) %}
-          <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+            <img src="/static/images/closed_star.png" alt="ClosedStar" height="40" width="40"/>
+          {% endfor %}
+          {% for i in range(5- recipe["rating"]|int) %}
+            <img src="/static/images/open_star.png" alt="ClosedStar" height="40" width="40"/>
           {% endfor %}
         </div>
         <div class="recipeprice">

@@ -80,6 +80,7 @@ def findBestProducts(ingredient, shopname):
     sortedProducts = capNumberOfResults(sortedProducts, 10)
     detailList = convertToDetailList(sortedProducts, ingredient, shopname)
     detailList = sortBestHitsByPrice(detailList)
+    detailList = addNothingProduct(detailList)
     return detailList
 
 
@@ -121,6 +122,15 @@ def convertToDetailList(sortedProducts, ingredient, shopname):
         productDict = {"productID" : item[0], "hitScore" : item[1], "label" : productOverview["label"], "quantity" : productOverview["quantity"], "unit" : standardizedUnit1, "grams" : gramMeasure1, "unitCost" : productOverview["cost"], "realCost" : realCost, "effectiveCost" : portionCost, "image" : productOverview["imagelink"], "store" : productOverview["store"]}
         productList.append(productDict)
     return productList
+
+
+
+# Adds on 'Nothing' to an ingredients possible products. This means that the user does not want to buy an item
+# for this ingredient for some reason. Etc. they have their own already at home.
+def addNothingProduct(detailList):
+    productDict = {"productID" : 0, "hitScore" : 0.0, "label" : "Nothing", "quantity" : '', "unit" : "", "grams" : 1, "unitCost" : 0, "realCost" : 0, "effectiveCost" : 0, "image" : "http://nonprofitquarterly.org/wp-content/blogs.dir/56/files/2017/08/red-cross-x.jpg", "store" : "all"}
+    detailList.append(productDict)
+    return detailList
 
 
 # Sorts the equal highest hitscore products by price based on the detaillist provided in the argument
