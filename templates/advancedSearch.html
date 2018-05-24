@@ -16,23 +16,37 @@
       <div class="add_recipe_heading">
         Advanced Search
       </div>
-      <div class="recipe_heading">
-          <h6>SELECT A STORE</h6>
-      </div>
       <div class="centered">
         <form method="POST">
-          <select class="sortdd" name="selectstore">
-            <option value="any" {% if prefStore == "any" %} selected="selected" {% endif %} > Any </option>
-            <option value="coles" {% if prefStore == "coles" %} selected="selected" {% endif %} >Coles </option>
-            <option value="woolworths" {% if prefStore == "woolworths" %} selected="selected" {% endif %} > Woolworths </option>
+          <select class="sortdd" name="minrating">
+            <option value="minimum rating"> Minumum Rating </option>
+            {% for i in range(5) %}
+                <option value={{i+1}}> {{i+1}} </option>
+            {% endfor %}
           </select>
-          <input class="searchbts" align="right" type="submit" value="Select" name="storebt">
         </form>
       </div>
 
     <form method="POST">
-      <input type="text" name="searchtext" placeholder="Search here..." class="searchbox"/>
-      <input type="submit" value="Search" name="headerbt" class="searchbt"/>
+      <div style="text-align:center">
+      <input type="text" name="searchtext" placeholder="Search Terms..."/><br>
+      <input type="text" name="maxpreptime" placeholder="Maximum Prep Time"/><br>
+      <input type="text" name="maximumcost" placeholder="Maximum Cost"/><br>
+      </div>
+
+
+      <div class="add_recipe_heading">
+        Exclude Ingredients
+      </div>
+      {% for i in range(numOfExcluded|int) %}
+        <div style="text-align:center">
+            <input type="text" name="exclude" placeholder="Ingredient To Exclude"/><br> 
+        </div>
+      {% endfor %}
+      <div style="text-align:center">
+         <input class="searchbts" type="submit" value="Add" name="addbt" align="right">
+      </div>      
+
     </form>
 
   </div>
