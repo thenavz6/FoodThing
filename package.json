@@ -1,0 +1,22 @@
+{
+  "name": "foodthing",
+  "version": "1.0.0",
+  "description": "The server MUST BE RUN with python3.  Running with just python will lead to incorrect behaviour.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thenavz6/FoodThing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thenavz6/FoodThing/issues"
+  },
+  "homepage": "https://github.com/thenavz6/FoodThing#readme",
+  "devDependencies": {
+    "bower": "^1.8.4"
+  }
+}

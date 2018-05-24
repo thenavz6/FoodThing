@@ -96,7 +96,7 @@ def searchRecipe(query):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    return advancedSearch(query, None, None)
+    return advancedSearch(query, None, None, None)
 
 
 numOfExcluded = 1
@@ -115,19 +115,30 @@ def advancedSearchPage():
     if request.method == "POST":
         if headerRequests(request.form) != None:
             return headerRequests(request.form)
-        if "bt" in request.form and request.form["bt"] == "AdvancedSearch":
-            print(request.form["KeyWords"])
-            print(request.form["excludedIngredients"])
-            print(request.form["maxPrepTime"])
-            return redirect(url_for("advancedSearch", query = request.form["KeyWords"], excludedIngredients = excludedIngredients, prepTime = request.form["maxPrepTime"]))
-        if "addbt" in request.form:
-            numOfExcluded += 1
+        if request.form["srchbt"] == "Search":
+            query = request.form["KeyWords"]
+            excluded = request.form["Exclude"]
+            prepTime = request.form["MaxPrepTime"]
+            cost = request.form["MaximumCost"]
+            if request.form["KeyWords"] == "":
+                query = "empty"
+            if request.form["Exclude"] == "":
+                excluded = "empty"
+            if request.form["MaxPrepTime"] == "":
+                prepTime = "empty"
+            if request.form["MaximumCost"] == "":
+                cost = "empty"
+            return redirect(url_for("advancedSearch", query = query, excluded = excluded, prepTime = prepTime, cost = cost))
 
-    return render_template("advancedSearch.html", numOfExcluded = numOfExcluded)
 
 
-@app.route("/advancedSearch/<query>/<excluded>/<prepTime>", methods=["GET", "POST"])
-def advancedSearch(query,excluded,prepTime):
+
+
+    return render_template("advancedSearch.html", numOfExcluded = numOfExcluded,excludedIngredients = excludedIngredients)
+
+
+@app.route("/advancedSearch/<query>/<excluded>/<prepTime>/<cost>", methods=["GET", "POST"])
+def advancedSearch(query,excluded,prepTime,cost):
     # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
@@ -135,7 +146,7 @@ def advancedSearch(query,excluded,prepTime):
     global recipeId, recipeHitScore, recipes, sortType
 
     if request.method == "GET":
-        sortedRecipes = searchRecipes.getRecipes(query, excluded, prepTime)
+        sortedRecipes = searchRecipes.getRecipes(query, excluded, prepTime, cost)
         sortedRecipes = sortedRecipes[:9]
         recipeId, recipeHitScore = [], []
         for recipe in sortedRecipes:
@@ -143,7 +154,7 @@ def advancedSearch(query,excluded,prepTime):
             recipeHitScore.append(recipe[1])
         recipes = recipeDataCollector.getRecipeDictionaries(recipeId, recipeHitScore, authentication.userid, None)
         sortType = "Relevance"
-    
+
     # Possible post requests
     if request.method == "POST":
         if headerRequests(request.form) != None:
@@ -207,7 +218,7 @@ def recipe(recipeId):
     for entry in database.get_recipe_comments_db(recipeId):
         recipeComments.append(entry["comment"])
         usersWhoCommented.append(database.find_user_by_id_db(int(entry["userID"])))
-    
+
     # Get what the current user has rated this recipe
     userRating = database.find_user_rating_db(authentication.userid, recipeId)
     if userRating == None:

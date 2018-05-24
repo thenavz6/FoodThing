@@ -1,0 +1,17 @@
+{
+  "name": "foodThing",
+  "homepage": "https://github.com/thenavz6/FoodThing",
+  "authors": [
+    "Navaneeth Balaji <n.balaji@student.unsw.edu.au>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

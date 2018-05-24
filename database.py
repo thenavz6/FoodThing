@@ -1,5 +1,8 @@
+import sys
 import sqlite3
 import ingredientManager
+import recipeDataCollector
+import authentication
 from sqlite3 import Error
 
 
@@ -153,7 +156,7 @@ def add_user_rating_db(userId, recipeId, rating):
         c.execute('UPDATE user_ratings SET rating=? WHERE userId=? AND recipeId=?', entry)
     db.commit()
     db.close()
-    
+
 
 # Finds the rating that a given user has given a given recipe by examining the user_ratings TABLE
 # Clearly returns None if the user has not rated the recipe
@@ -166,7 +169,7 @@ def find_user_rating_db(userId, recipeId):
     hit = c.fetchone()
     db.close()
     return hit
-    
+
 
 # Returns all entries from recipe_overview TABLE where userdID is userId
 # Etc. gets all recipes uploaded by the given user
@@ -235,30 +238,108 @@ def find_recipes_keyword_db(word):
     return recipes
 
 #returns recipes from recipe_overview TABLE that have matching keywords, exclude matching exclusions and are less than needed preptime
-def find_recipes_overview_db(included, excluded, prepTime):
-    arguments = []
-    arguments.append(included.lower())
-    arguments.append(excluded.lower())
-    excllist = [excluded.lower()]
-    preptimelist = [prepTime]
+def find_recipes_overview_db(included, excluded, prepTime, cost):
+
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-    c.execute('SELECT * from recipe_keywords WHERE keyword=? AND NOT keyword=?', arguments)
-    hits = c.fetchall()
+
+    includesKeyWord = []
+    excludesKeyWord = []
+    keyWordFilter = []
+    keyWordFilterids = []
+    allRecipeids = []
     recipes = []
+    ecluded = []
     final = []
-    for hit in hits:
-        recipes.append(hit[0])
-    for id in recipes:
-        args = []
-        args.append(id)
+    realFinal = []
+    hitScores = []
+    realrealFinal = []
+    ingredientsid = []
+
+
+    c.execute('SELECT * from recipe_keywords')
+    allRecipes = c.fetchall()
+    for hits in allRecipes:
+        allRecipeids.append(hits[0])
+
+    if(included == "empty"):
+        arguments = []
+        arguments.append(excluded.lower())
+        c.execute('SELECT * from recipe_keywords WHERE keyword=?', arguments)
+        keyWordFilter = c.fetchall()
+        for hits in keyWordFilter:
+            keyWordFilterids.append(hits[0])
+        recipes = [x for x in allRecipeids if x not in keyWordFilterids]
+    else:
+
+        if(excluded == "empty"):
+            arguments = []
+            arguments.append(included.lower())
+            c.execute('SELECT * from recipe_keywords WHERE keyword=?', arguments)
+            keyWordFilter = c.fetchall()
+            for hits in keyWordFilter:
+                keyWordFilterids.append(hits[0])
+            recipes = keyWordFilterids;
+        else:
+            arguments = []
+            arguments.append(included.lower())
+            c.execute('SELECT * from recipe_keywords WHERE keyword=?',arguments)
+            keyWordFilter = c.fetchall()
+            for hits in keyWordFilter:
+                includesKeyWord.append(hits[0])
+            for hits in keyWordFilter:
+                ingredientsid = find_recipe_ingredients_db(hits[0])
+
+            for hits in ingredientsid:
+                if excluded.lower() in hits["item"]:
+                    excludesKeyWord.append(hits["recipeID"])
+
+            arguments = []
+            arguments.append(excluded.lower())
+            c.execute('SELECT * from recipe_keywords WHERE keyword=?',arguments)
+            keyWordFilter = c.fetchall()
+            for hits in keyWordFilter:
+                excludesKeyWord.append(hits[0])
+
+            recipes = [x for x in includesKeyWord if x not in excludesKeyWord]
+
+    hits = c.fetchall()
+
+    args = []
+    if prepTime == "empty":
+        args.append(10000)
+    else:
         args.append(prepTime)
-        c.execute('SELECT * FROM recipe_overview WHERE recipeID=? AND prepTime<=?',args)
-        hits = c.fetchall()
-        for hit in hits:
-            final.append(find_recipe_id_db(hit[0]))
-    db.close()
-    return final
+
+    for id in recipes:
+        args.append(id)
+
+    questionmarks = "?" * (len(args) - 1)
+    formatted_query = 'SELECT * FROM recipe_overview WHERE prepTime<=? AND recipeID IN ({})'.format(','.join(questionmarks))
+    c.execute(formatted_query,args)
+    hits = c.fetchall()
+
+    for hit in hits:
+        final.append(hit[0])
+        hitScores.append(hit[1])
+
+    if(cost == "empty"):
+        for id in final:
+            realFinal.append(find_recipe_id_db(id))
+        return realFinal
+    else:
+        recipeDicts = recipeDataCollector.getRecipeDictionaries(final,hitScores,authentication.userid,None)
+
+        for recipe in recipeDicts:
+            if(float(recipe["effectiveCost"]) < float(cost)):
+                print(recipe["effectiveCost"])
+                realFinal.append(recipe["id"])
+
+        for id in realFinal:
+            realrealFinal.append(find_recipe_id_db(id))
+
+        db.close()
+        return realrealFinal
 
 
 # Return entries from recipe_overview TABLE that have a matching recipeId
@@ -329,7 +410,7 @@ def find_products_keyword_db(word):
     db.row_factory = dict_factory
     c = db.cursor()
     c.execute('SELECT * from product_keywords WHERE keyword=?', entry)
-    hits = c.fetchall() 
+    hits = c.fetchall()
     db.close()
     return hits
 
@@ -370,4 +451,3 @@ def dict_factory(cursor, row):
 
 
 init_db()
-
