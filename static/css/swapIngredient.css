@@ -1,6 +1,8 @@
 .green_background {
   background: #DEFFDE;
   padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   border-radius: 20px;
 }
 
@@ -11,7 +13,7 @@ hr {
 }
 
 .indent {
-  padding-left: 5%;
+  padding-left: 2%;
 }
 
 .swap_heading {
@@ -125,24 +127,30 @@ hr {
 }
 
 .popup_container {
-  position: relative;
 }
 
 .popup_container .popup_text {
   visibility: hidden;
   display: none;
-  width: 500px;
+  width: 700px;
   text-align: center;
   border-radius: 6px;
   padding: 8px 0;
   z-index: 1;
-  /* position: absolute;
-  bottom: 125%;
-  left: 50%; 
-  margin-left: -80px; */
 }
 
 .popup_container .show {
     visibility: visible;
-    display: inline-block;
+    display: flex;
+    flex: 1;
+    width: 100%;
+    margin-left: -500px;
+}
+
+.popup_text.show {
+    visibility: visible;
+    display: flex;
+    flex: 1;
+    width: 100%;
+    margin-left: -500px;
 }
