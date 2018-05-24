@@ -10,18 +10,18 @@
 # Put in lower case only.
 commonWords = [
 '&', '100%', '99%', 'after', 'all', 'and', 'approved', 'as', 'at', 'australia', 'australian', 'baby', 'baked', 'bars', 'be', 'beaten', 'before', 'blocks', 'bottle', 
-'bought', 'bowl', 'brand', 'branded', 'brown', 'cage', 'caged', 'cans', 'carb', 'certified', 'choice', 'chopped', 'chunks', 'classic', 'clean', 'cleaned', 'clear', 'coaresly', 
-'coarsely','cold', 'combo', 'container', 'cook', 'cooked', 'cooking', 'cool', 'cooled', 'crumbs', 'cube', 'cubes', 'cut', 'cuts', 'dairy', 'deluxe', 'diced', 'double', 'drained', 'dried',
-'eastern','eat','eco', 'essence', 'extra', 'farm', 'fat', 'fine', 'finely', 'finest', 'flavoured', 'flip', 'food', 'for', 'free', 'fresh', 'from', 'frozen', 'full', 
-'garden', 'gi', 'gluten', 'go', 'gourmet', 'grated', 'grazing', 'green', 'heritage', 'hot', 'hulled', 'i', 'imported', 'instant', 'into', 'jar', 'jumbo', 'kid', 
-'kids','kit', 'la', 'large', 'le', 'lean', 'lg', 'light', 'lightly', 'like', 'lite', 'living', 'loose', 'macro', 'market', 'medium', 'melted', 'microwavable', 'mild', 
-'minced', 'mini', 'mix', 'mixed', 'more', 'natural', 'naturally', 'nonstick', 'normal', 'northern', 'odd', 'of', 'off', 'on', 'only', 'or', 'organic', 'pack', 'packed', 
-'pan', 'pans', 'part', 'peeled', 'petit','pieces', 'pkt', 'plain', 'plus', 'prefer', 'premium', 'prepacked', 'proactiv', 'produce', 'pure', 'purpose', 'quick', 'range', 
-'raw', 'ready', 'red', 'reduced', 'removed', 'roast', 'roasted', 'room', 'salted', 'semi', 'shave', 'shaved', 'shred', 'shreds', 'sifted', 'single', 'size', 'sized', 'skim', 
-'sliced', 'slices', 'slow', 'small', 'sml', 'so','some', 'southern', 'spraying', 'spring', 'squeezed', 'stem', 'sticks', 'store', 'style', 'such', 'table', 'taste', 
-'tasted', 'tasty', 'temperature', 'tempt','tempting', 'texting', 'that', 'thawed', 'the', 'then', 'thin', 'thinly', 'this', 'to', 'torn', 'traditional', 'trim', 'trimmed', 
-'triple', 'ultimate', 'unsalted', 'value','very', 'vintage', 'warm', 'washed', 'western', 'when', 'where', 'white', 'whites', 'whole', 'wood', 'x', 'x-large', 'you', 'yum', 
-'yummy']
+'bought', 'bowl', 'brand', 'branded', 'brown', 'cage', 'caged', 'cans', 'carb', 'certified', 'choice', 'chopped', 'chunks', 'classic', 'clean', 'cleaned', 'clear', 
+'coaresly', 'coarsely','cold', 'combo', 'container', 'cook', 'cooked', 'cooking', 'cool', 'cooled', 'crispy', 'crumbs', 'cube', 'cubes', 'cut', 'cuts', 'dairy', 'deluxe', 
+'diced', 'double', 'drained', 'dried','eastern','eat','eco', 'essence', 'extra', 'farm', 'fat', 'fine', 'finely', 'finest', 'flavoured', 'flip', 'food', 'for', 'free', 
+'fresh', 'from', 'frozen', 'full', 'garden', 'gi', 'gluten', 'go', 'gourmet', 'grated', 'grazing', 'green', 'heritage', 'hot', 'hulled', 'i', 'imported', 'instant', 'into', 
+'jar', 'jumbo', 'kid', 'kids','kit', 'la', 'large', 'le', 'lean', 'lg', 'light', 'lightly', 'like', 'lite', 'living', 'loose', 'macro', 'market', 'medium', 'melted', 
+'microwavable', 'mild', 'minced', 'mini', 'mix', 'mixed', 'more', 'natural', 'naturally', 'nonstick', 'normal', 'northern', 'odd', 'of', 'off', 'on', 'only', 'or', 
+'organic', 'pack', 'packed', 'pan', 'pans', 'part', 'peeled', 'petit','pieces', 'pkt', 'plain', 'plus', 'prefer', 'premium', 'prepacked', 'proactiv', 'produce', 'pure', 
+'purpose', 'quick', 'range', 'raw', 'ready', 'red', 'reduced', 'removed', 'roast', 'roasted', 'room', 'salted', 'semi', 'shave', 'shaved', 'shred', 'shreds', 'sifted', 
+'single', 'size', 'sized', 'skim', 'sliced', 'slices', 'slow', 'small', 'sml', 'so','some', 'southern', 'spraying', 'spring', 'squeezed', 'stem', 'sticks', 'store', 'style', 
+'such', 'table', 'taste', 'tasted', 'tasty', 'temperature', 'tempt','tempting', 'texting', 'that', 'thawed', 'the', 'then', 'thin', 'thinly', 'this', 'to', 'torn', 
+'traditional', 'trim', 'trimmed', 'triple', 'ultimate', 'unsalted', 'value','very', 'vintage', 'warm', 'washed', 'western', 'when', 'where', 'white', 'whites', 'whole', 
+'wood', 'x', 'x-large', 'you', 'yum', 'yummy']
 
 
 # If we can know what words in an ingredient or product describe a brand then 

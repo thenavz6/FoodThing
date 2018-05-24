@@ -24,7 +24,8 @@
       {% endwith %}
   
        <div class="swap_subheading">
-        Selected Store:
+        Selected Store: 
+       </div>
         <form method="POST">
         <select name="selectstore">
             <option value="any" {% if prefStore == "any" %} selected="selected" {% endif %} > Any </option>
@@ -32,10 +33,10 @@
             <option value="woolworths" {% if prefStore == "woolworths" %} selected="selected" {% endif %} > Woolworths </option>
         </select>
         <input align="right" type="submit" value="Select" name="storebt">
-        </div>
+        </form>
 
       <div class="recipe_heading">
-        INGREDIENTS
+        <h1>INGREDIENTS</h1>
       </div>
       <div class="list">
         <table class="ingredient_list">
@@ -72,8 +73,10 @@
               <td class="ingredient_list_element">
 
               {% with buttonnumber = loop.index - 1 %}
+              {% with ingredient = ingredient["ingredientDesc"] %}
               {% with products = recipeDict["ingredientProducts"][loop.index-1] %}
                 {% include "includeSwapIngredient.html" %}
+              {% endwith %}
               {% endwith %}
               {% endwith %}
 
