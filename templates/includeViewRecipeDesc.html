@@ -98,6 +98,23 @@
           Keywords not Collected At The Moment
         </div>
       </div>
+      <!--- A text rating that shows real rating since user can override UI display with their own vote --->
+      <div class="recipeinfo1">
+        <div class="recipetime">
+         Average Rating {{ recipe["rating"] }} / 5  
+        </div>
+      </div>
+      <div class="recipeinfo1">
+        <div class="recipetime">
+            {% if recipe["ownerid"] != -1 %}
+            <a href="../user/{{recipe["ownerid"]}}">
+            {% endif %}
+                By {{ recipe["ownername"] }}
+            {% if recipe["ownerid"] != -1 %}
+            </a>
+            {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </div>
