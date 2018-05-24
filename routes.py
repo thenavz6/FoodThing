@@ -271,7 +271,7 @@ def recipe(recipeId):
             totalRealCost = costCalculator.calcTotalRealCost(recipeDict, selectedProducts)
         if "shoppingbt" in request.form:
             print(selectedProducts)
-            database.update_user_shopping_list(authentication.userid, recipeId, selectedProducts, prefStore, totalEffectiveCost, 0)
+            database.update_user_shopping_list(authentication.userid, recipeId, selectedProducts, prefStore, totalEffectiveCost, totalRealCost)
             return redirect(url_for("recipe", recipeId = recipeId))
 
     return render_template("recipe.html", recipeDict = recipeDict, prefStore = prefStore, selectedProducts = selectedProducts, totalEffectiveCost = "%0.2f" % totalEffectiveCost, totalRealCost = "%0.2f" % totalRealCost, steps = recipeDict["instructions"].split(";")[:-1], userid = authentication.userid, imageurl = authentication.imageurl, recipeComments = recipeComments, usersWhoCommented = usersWhoCommented, userRating = userRating, userShoppingList = userShoppingList)
@@ -284,7 +284,13 @@ def userprofile(userId):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
+    sumEffectiveCost = 0
+    sumRealCost = 0
     profileuser = userDataCollector.getUserDictionary(userId)
+    for item in profileuser["shoppingLists"]:
+        sumEffectiveCost += float(item["effectiveCost"])
+        sumRealCost += float(item["realCost"])
+    
 
     # Possible post requests
     if request.method == "POST":
@@ -303,7 +309,7 @@ def userprofile(userId):
                 database.set_desc_user_db(authentication.userid, request.form["updatedesc"])
                 return redirect(url_for("userprofile", userId = userId))
 
-    return render_template("userprofile.html", profileuser = profileuser, getRecipeDictionaries = recipeDataCollector.getRecipeDictionaries, userid = authentication.userid, userimage = authentication.imageurl)
+    return render_template("userprofile.html", profileuser = profileuser, getRecipeDictionaries = recipeDataCollector.getRecipeDictionaries, userid = authentication.userid, userimage = authentication.imageurl, sumEffectiveCost = sumEffectiveCost, sumRealCost = sumRealCost)
 
 
 # Global variables to preserve between post calls

@@ -36,6 +36,8 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
             ingredientProducts.append(productFinder.findBestProducts(ingredient, shopname))
         estcost = costCalculator.calcBestCost(ingredientProducts)
 
+        floatRating = float(overviewEntry["recipeCumulativeRating"] / overviewEntry["recipeRatingFrequency"])
+
         recipeDict = {
             "id" : recipeId,
             "ownerid" : overviewEntry["userID"],
@@ -46,7 +48,7 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
             "ingredients" : recipeIngredients,                  # Each ingredient etc. "eggs"
             "ingredientProducts" : ingredientProducts,          # Each product that hit the above ingredient, etc. "12pk eggs", "free range eggs"
             "instructions" : overviewEntry["recipeInstructions"],
-            "rating" : int(overviewEntry["recipeCumulativeRating"] / overviewEntry["recipeRatingFrequency"]),
+            "rating" : round(floatRating * 2) / 2,
             "popularity" : overviewEntry["recipeClickCount"],
             "preptime": "???" if (float(overviewEntry["prepTime"]) == 0) else str(overviewEntry["prepTime"]),
             "calories" : overviewEntry["recipeCalories"],

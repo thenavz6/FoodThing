@@ -79,8 +79,35 @@
   flex: 1;
   justify-content: flex-end;
   font-weight: bolder;
-  font-size: 40px;
+  font-size: 35px;
   color: violet;
+}
+
+.recipeprice2 {
+  display: flex;
+  justify-content: flex-end;
+  font-weight: bolder;
+  font-size: 35px;
+  color: violet;
+}
+
+.recipetotalprice {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  font-weight: bolder;
+  font-size: 35px;
+  color: green;
+  margin-right: 5%;
+}
+
+.recipetotalprice2 {
+  display: flex;
+  justify-content: flex-end;
+  font-weight: bolder;
+  font-size: 35px;
+  color: green;
+  margin-right: 5%;
 }
 
 .reciperating {

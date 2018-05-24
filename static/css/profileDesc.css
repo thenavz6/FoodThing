@@ -93,6 +93,7 @@ input.new_description:focus {
   background: silver;
 }
 
+
 .right_desc {
   display: flex;
   flex: 1;

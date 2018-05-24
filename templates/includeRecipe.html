@@ -57,7 +57,11 @@
           {% if overloadPrice is not defined %}
             ${{ recipe["effectiveCost"] }}
           {% else %}
-            Your Cost ${{ '%0.2f' % overloadPrice|float }}
+            Your Portion Cost ${{ '%0.2f' % overloadPrice|float }}
+          {% endif %}
+          <br>
+          {% if overloadPrice2 is defined %}
+            Your Product Cost ${{ '%0.2f' % overloadPrice2|float }}
           {% endif %}
         </div>
       </div>
