@@ -235,6 +235,18 @@ def add_recipe_keyword_db(cursor, recipeId, word):
     cursor.execute('INSERT INTO recipe_keywords VALUES (?,?)', entry)
 
 
+# Get back n number of random recipe_overview TABLE entries
+def get_random_recipes_db(num):
+    entry = [num]
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = dict_factory
+    c = db.cursor()
+    c.execute('SELECT * FROM recipe_overview WHERE recipeID IN (SELECT recipeID FROM recipe_overview ORDER BY RANDOM() LIMIT ?)', entry)
+    hits = c.fetchall()
+    db.close()
+    return hits
+    
+
 # Return entres from recipe_keywords TABLE that have a matching keyword in the recipe_keywords table
 def find_recipes_keyword_db(word):
     entry = [word.lower()]
@@ -320,7 +332,7 @@ def find_recipes_overview_db(included, excluded, prepTime, cost):
 
     args = []
     if prepTime == "empty":
-        args.append(10000)
+        args.append(100000)
     else:
         args.append(prepTime)
 

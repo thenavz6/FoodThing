@@ -86,7 +86,7 @@ def dashboard():
         return redirect(url_for("main"))
 
     # If the 'random' search term is in the recipe name it is ideal since then dashboard items can be stored and picked from our database.
-    return searchRecipe(getRandomSearch())
+    return searchRecipe("random")
 
 
 # Does essentially the same as the above. Except based on search query text - so the above should populate with random recipes.
