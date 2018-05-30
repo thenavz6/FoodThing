@@ -23,7 +23,9 @@ def getRecipes(query, excluded, preptime, cost):
     for keyword in query:
         # Run different database query for normal search or advanced search
         hitRecipeIds = []
-        if excluded == None:
+        if keyword == "random":
+            hitRecipeIds = database.get_random_recipes_db(9)
+        elif excluded == None:
             hitRecipeIds = database.find_recipes_keyword_db(keyword)
         else:
             hitRecipeIds = database.find_recipes_overview_db(keyword, excluded, preptime, cost)
