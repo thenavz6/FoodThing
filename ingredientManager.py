@@ -76,6 +76,7 @@ def convertIngredient(ingredientString):
                 amount = word
             else:
                 break
+
     else:
         for word in ingredientString.split():
             if not word.isalpha():
@@ -84,6 +85,8 @@ def convertIngredient(ingredientString):
     if amount == '':
         amount = '1'
 
+
+    print(amount)
 
     # Try and determine the actual product name or product keywords from the ingredientString
     item = ''
