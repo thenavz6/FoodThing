@@ -22,11 +22,6 @@
   display: flex;
 }
 
-.recipeimage {
-  width: 150px;
-  height: 150px;
-}
-
 .overallrecipeinfo {
   display: flex;
   flex-direction: column;
