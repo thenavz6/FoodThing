@@ -1,20 +1,17 @@
 # This contains functions that are related to the search and advancedSearch routes
 
+import server
 import database
 import textParser
 import recipeDataCollector
-
-OFFLINEMODE = False
 
 # query is the query string that may be multi-worded "Scrambled Eggs"
 # excluded is a list of ingredients to exclude etc ["nuts", "salmon"]
 def getRecipes(query, excluded, preptime, cost):
 
-    global OFFLINEMODE
-
     # Everytime a search is done, we will ask edamam for 5 recipes that we also add locally
     # Edamam handles multi worded queries for us
-    if (OFFLINEMODE == False):
+    if server.offlinemode == False:
         recipeDataCollector.receiveRecipeData(query, 5, excluded, preptime)
 
     # Store as the key the recipeId and the value the number of hits

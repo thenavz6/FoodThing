@@ -148,7 +148,7 @@ def advancedSearch(query,excluded,prepTime,cost):
         for recipe in sortedRecipes:
             recipeId.append(recipe[0])
             recipeHitScore.append(recipe[1])
-        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, recipeHitScore, authentication.userid, None)
+        recipes = recipeDataCollector.getRecipeDictionaries(recipeId, recipeHitScore, authentication.userid, None, False)
         sortType = "Relevance"
 
     # Possible post requests
@@ -206,7 +206,7 @@ def recipe(recipeId):
             for product in userShoppingList:
                 selectedProducts.append(int(product))
 
-        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore)[0]
+        recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore, True)[0]
 
         # By default if this isn't a shopping list we select the cheapest, most relevent products
         if userShoppingList == None:
@@ -257,7 +257,7 @@ def recipe(recipeId):
             return redirect(url_for("userprofile", userId = int(request.form["user"])))
         if "storebt" in request.form:
             prefStore = request.form["selectstore"]
-            recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore)[0]
+            recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, prefStore, True)[0]
             # Reset product preferences
             for i in range(0, len(selectedProducts)):
                 selectedProducts[i] = 0

@@ -13,7 +13,8 @@ import random
 
 # RecipeIDList is a list of recipesIDs
 # searchScoreList is a list of equal size to the above, where each recipe is described by its searchScore etc. [5,3,1,1] 
-def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
+# getProducts is a boolean that will find optimal products. It should only be set true when details of specific products are needed.
+def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname, getProducts):
     dictionaryList = []
     index = 0
     for recipeId in recipeIDList:
@@ -29,12 +30,11 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
             if userentry != None:
                 recipeowner = userentry["fullname"]
 
-        # Find all relevent product hits for each ingredient for this recipe
         ingredientProducts = []
         recipeIngredients = database.find_recipe_ingredients_db(recipeId)
         for ingredient in recipeIngredients:
-            ingredientProducts.append(productFinder.findBestProducts(ingredient, shopname))
-        estcost = costCalculator.calcBestCost(ingredientProducts)
+            if getProducts == True:
+                ingredientProducts.append(productFinder.findBestProducts(ingredient, shopname))
 
         floatRating = float(overviewEntry["recipeCumulativeRating"] / overviewEntry["recipeRatingFrequency"])
 
@@ -54,8 +54,8 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname):
             "calories" : overviewEntry["recipeCalories"],
             "dietLabels" : overviewEntry["recipeDietLabels"],
             "isfav" : database.is_user_favourited_db(userId, recipeId),
-            "effectiveCost" : estcost["effectiveCost"],
-            "totalCost" : estcost["totalCost"],
+            "effectiveCost" : overviewEntry["recipeEffectiveCost"],
+            "totalCost" : overviewEntry["recipeRealCost"],
             "searchScore" : searchScoreList[index]
          }
         
@@ -109,6 +109,7 @@ def sortRecipeDictionaries(dictionaryList, sortType):
 # The below function will ask edamam for num amount of recipe's and then store the data recieved 
 # into our local database. Returns whether edamam was successfully contacted.
 def receiveRecipeData(queryString, num, exclusionQuery, prepTime):
+    print("CALLING EDAMAM")
     rand = random.randint(1,50)
     requestString = "https://api.edamam.com/search?q="+str(queryString)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+num)
@@ -130,6 +131,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+num)
             for ingredient in item.get('recipe').get('ingredients'):
                 recipeIngredients.append(ingredient.get('text'))
             database.add_recipe_ingredients_db(item.get('recipe').get('uri').split("_",1)[1], recipeIngredients)
+            database.update_recipe_overview_db(item.get('recipe').get('uri').split("_",1)[1])
 
     return True
 
@@ -137,6 +139,7 @@ b90e6fb2878260b8f991bd4f9a8663ca&from="+str(rand)+"&to="+str(rand+num)
 # Will ask edamam for the details for a recipe with the givenId and then save locally. Returns
 # sucess of contacting edamam
 def recieveSingleRecipe(recipeId):
+    print("CALLING EDAMAM")
     response = requests.get("https://api.edamam.com/search?r=\
 http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_"+str(recipeId)+"&app_id=c565299e&app_key=\
 b90e6fb2878260b8f991bd4f9a8663ca")
@@ -149,6 +152,7 @@ b90e6fb2878260b8f991bd4f9a8663ca")
         recipeIngredients.append(ingredient.get('text'))
     database.add_recipe_overview_db(recipeId, -1, recipe.get('label'), recipe.get('image'), recipe.get('totalTime'), "", "", item.get('recipe').get('calories'), item.get('recipe').get('dietLabels'))
     database.add_recipe_ingredients_db(recipeId, recipeIngredients)
+    database.update_recipe_overview_db(recipeId)
 
     return True
     

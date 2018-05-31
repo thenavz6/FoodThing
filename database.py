@@ -3,6 +3,7 @@ import sqlite3
 import textParser
 import ingredientManager
 import recipeDataCollector
+import costCalculator
 import authentication
 from sqlite3 import Error
 
@@ -17,7 +18,7 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS user_ratings (userID TEXT, recipeID TEXT, rating INTEGER, FOREIGN KEY (userID) REFERENCES users(userID),FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS user_favourites (userID TEXT, recipeID TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS user_shopping_lists (userID TEXT, recipeID TEXT, selectedProducts TEXT, selectedStore TEXT, effectiveCost TEXT, realCost TEXT, FOREIGN KEY (userID) REFERENCES users(userID), FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
-    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeDescription TEXT, recipeImageLink TEXT, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER, recipeRatingFrequency INTEGER, recipeCumulativeRating INTEGER, recipeCalories INTEGER, recipeDietLabels TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS recipe_overview (recipeID TEXT PRIMARY KEY NOT NULL, userID INTEGER, recipeLabel TEXT, recipeDescription TEXT, recipeImageLink TEXT, prepTime REAL, recipeInstructions TEXT, recipeClickCount INTEGER, recipeRatingFrequency INTEGER, recipeCumulativeRating INTEGER, recipeCalories INTEGER, recipeDietLabels TEXT, recipeEffectiveCost TEXT, recipeRealCost TEXT)')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_keywords (recipeID TEXT, keyword TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_ingredients (recipeID TEXT, ingredientDesc TEXT, quantity TEXT, measure TEXT, item TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID))')
     db.execute('CREATE TABLE IF NOT EXISTS recipe_comments (recipeID TEXT, userID INTEGER, comment TEXT, FOREIGN KEY (recipeID) REFERENCES recipe_overview(recipeID), FOREIGN KEY (userID) REFERENCES users(userID))')
@@ -191,8 +192,11 @@ def find_user_recipes_db(userId):
     db.close()
     return hits
 
+
 # Adds a new recipe overview entry and also recipe_keyword entries if we don't have it already
 # DietLabels is a list such as ["Balanced", "High-Protein"]
+# When a recipe is added for the first time (etc. recieved from edamam or submitted by user, it has it's costs calculated and store so as to not recalculate)
+# When a specific recipe page is opened in the future, we recalculate costs due to possibly changed products and edit these values in the recipe_overview TABLE
 def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedInstructions, recipeDesc, recipeCalories, recipeDietLabels):
     tmp = ''
     for item in recipeDietLabels:
@@ -201,10 +205,9 @@ def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedIns
     entry = [recipeId, userId, label, recipeDesc, urllink, prepTime, parsedInstructions, recipeCalories, recipeDietLabels]
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
-
     try:
-        # Starting clickCount is 0. Default ratingFrequency is 1 and cumalativeRating is 4
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,?,0,1,4,?,?)', entry)
+        # Starting clickCount is 0. Default ratingFrequency is 1 and cumalativeRating is 4, default best costs 0 until update called
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,?,0,1,4,?,?,0,0)', entry)
         label = list(set(label.split()))
         for word in label:
             add_recipe_keyword_db(c, recipeId, word)
@@ -219,6 +222,31 @@ def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedIns
     db.close()
     return 1
 
+
+# Should be called whenever a specific recipe page is opened. This will recalculate the costs associated with the recipe due to possible changed products
+# Return 0 if the recipe with recipeId doesn't exist in the db
+def update_recipe_overview_db(recipeId):
+    recipeHit = find_recipe_id_db(recipeId)
+    if recipeHit == []:
+        return 0
+
+    recipeDict = recipeDataCollector.getRecipeDictionaries([recipeId], [0], authentication.userid, "any", True)[0]
+    selectedProducts = []
+    for ingredient in recipeDict["ingredients"]:
+        selectedProducts.append(0)
+
+    # Calculate the total effective price based on the selectedProducts
+    totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
+    totalRealCost = costCalculator.calcTotalRealCost(recipeDict, selectedProducts)
+
+    entry = ['%0.2f' % totalEffectiveCost, '%0.2f' % totalRealCost, recipeId]
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    c.execute('UPDATE recipe_overview SET recipeEffectiveCost=?, recipeRealCost=? WHERE recipeID=?', entry)
+    db.commit()
+    db.close()
+
+    return 1
 
 # Increase the recipeClickCount for a recipe in the recipe_overview TABLE
 def increment_recipe_clickcount_db(recipeId):
@@ -313,7 +341,7 @@ def find_recipes_overview_db(included, excluded, prepTime, cost):
     for recipe in finalRecipes:
         print("CHECK")
         print(recipe["recipeID"])
-        if recipeDataCollector.getRecipeDictionaries([recipe["recipeID"]], [0], authentication.userid, "any")[0]["effectiveCost"] < cost:
+        if recipeDataCollector.getRecipeDictionaries([recipe["recipeID"]], [0], authentication.userid, "any", False)[0]["effectiveCost"] < cost:
             finalfinalRecipes.append(recipe)
 
     return finalfinalRecipes
