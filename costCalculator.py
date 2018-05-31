@@ -44,7 +44,6 @@ def calcTotalRealCost(recipeDict, selectedProducts):
     totalRealCost, i = 0, 0
     for ingredient in recipeDict["ingredients"]:
         try:
-            print(recipeDict["ingredientProducts"][i][selectedProducts[i]])
             totalRealCost += recipeDict["ingredientProducts"][i][selectedProducts[i]]["realCost"] 
         except IndexError:
             pass

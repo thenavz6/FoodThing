@@ -19,7 +19,7 @@ commonWords = [
 'organic', 'pack', 'packed', 'pan', 'pans', 'part', 'peeled', 'petit','pieces', 'pkt', 'plain', 'plus', 'prefer', 'premium', 'prepacked', 'proactiv', 'produce', 'pure', 
 'purpose', 'quick', 'range', 'raw', 'ready', 'red', 'reduced', 'removed', 'roast', 'roasted', 'room', 'salted', 'semi', 'shave', 'shaved', 'shred', 'shreds', 'sifted', 
 'single', 'size', 'sized', 'skim', 'sliced', 'slices', 'slow', 'small', 'sml', 'so','some', 'southern', 'spraying', 'spring', 'squeezed', 'stem', 'sticks', 'store', 'style', 
-'such', 'table', 'taste', 'tasted', 'tasty', 'temperature', 'tempt','tempting', 'texting', 'that', 'thawed', 'the', 'then', 'thin', 'thinly', 'this', 'to', 'torn', 
+'such', 'table', 'taste', 'tasted', 'tasty', 'temperature', 'tempt','tempting', 'texting', 'that', 'thawed', 'the', 'then', 'thinly', 'this', 'to', 'torn', 
 'traditional', 'trim', 'trimmed', 'triple', 'ultimate', 'unsalted', 'value','very', 'vintage', 'warm', 'washed', 'western', 'when', 'where', 'white', 'whites', 'whole', 
 'wood', 'x', 'x-large', 'you', 'yum', 'yummy']
 
@@ -53,7 +53,7 @@ brandNames = [
 'pura', 'pure', 'purebred', 'pureharvest', 'queen', 'queens', 'red', 'remo', 'river', 'riverina', 'rock', 'rockit', 'rokeby', 'roma', 'roo', 'rspca', 'sakata', 'salamanca', 
 'san', 'sanitarium', 'sara', 'sargents', 'saunders', 'saxa', 'schobs', "schwob's", 'sealord', 'select', 'servers', 'share', 'simmone', 'singetons', 'sister', 'smart', 
 'smith', 'smokehouse', 'somderdale', 'sons', 'south', 'spc', 'spiral', 'steggles', 'streets', 'style', 'sunbeam', 'sunny', 'sunrice', 'sunsweet', 'super', 'superior', 
-'table', 'tailor', 'talleys', 'tamar', 'tasmanian', 'tassal', 'tegel', 'tempo', 'tetley', 'thinkfood', 'thins', 'thomy', 'tibaldisignature', 'tip', "toby's", 'tobys', 
+'table', 'tailor', 'talleys', 'tamar', 'tasmanian', 'tassal', 'tegel', 'tempo', 'tetley', 'thinkfood', 'thomy', 'tibaldisignature', 'tip', "toby's", 'tobys', 
 'tonight', 'top', 'toscano', 'traditional', 'trident', 'tuckers', 'twenty', 'twinings', 'twisted', 'uncle', 'unicorn', 'union', 'vaalia', 'valley', 'village', 'vitasoy', 
 'vittoria', 'waite', 'wares', 'watchers', 'wattle', 'way', 'weight', 'well', 'west', 'wester', 'wicked', 'willow', 'wings', 'wokka', 'wonder', 'woolworths', 'yarra', 
 'yoplait', "yumi's", 'yummis', 'zanetti', 'zoosh', 'zumbo', 'zuppa']

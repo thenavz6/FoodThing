@@ -116,19 +116,19 @@ def advancedSearchPage():
         if headerRequests(request.form) != None:
             return headerRequests(request.form)
         if request.form["srchbt"] == "Search":
-            query = request.form["KeyWords"]
+            included = request.form["KeyWords"]
             excluded = request.form["Exclude"]
             prepTime = request.form["MaxPrepTime"]
             cost = request.form["MaximumCost"]
-            if request.form["KeyWords"] == "":
+            if request.form["KeyWords"].strip() == "":
                 query = "empty"
-            if request.form["Exclude"] == "":
+            if request.form["Exclude"].strip() == "":
                 excluded = "empty"
-            if request.form["MaxPrepTime"] == "":
-                prepTime = "empty"
-            if request.form["MaximumCost"] == "":
+            if request.form["MaxPrepTime"].strip() == "":
+                prepTime = "100000"
+            if request.form["MaximumCost"].strip() == "":
                 cost = "empty"
-            return redirect(url_for("advancedSearch", query = query, excluded = excluded, prepTime = prepTime, cost = cost))
+            return redirect(url_for("advancedSearch", query = included, excluded = excluded, prepTime = prepTime, cost = cost))
 
     return render_template("advancedSearch.html", numOfExcluded = numOfExcluded,excludedIngredients = excludedIngredients)
 

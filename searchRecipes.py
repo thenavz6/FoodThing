@@ -1,6 +1,7 @@
 # This contains functions that are related to the search and advancedSearch routes
 
 import database
+import textParser
 import recipeDataCollector
 
 OFFLINEMODE = False
@@ -19,6 +20,7 @@ def getRecipes(query, excluded, preptime, cost):
     # Store as the key the recipeId and the value the number of hits
     recipeHits = {}
 
+    query = textParser.filterInput(query)
     query = query.split()
     for keyword in query:
         # Run different database query for normal search or advanced search
@@ -27,6 +29,7 @@ def getRecipes(query, excluded, preptime, cost):
             hitRecipeIds = database.get_random_recipes_db(9)
         elif excluded == None:
             hitRecipeIds = database.find_recipes_keyword_db(keyword)
+        # Advanced search has either a proper entry in excluded or "empty"
         else:
             hitRecipeIds = database.find_recipes_overview_db(keyword, excluded, preptime, cost)
 
