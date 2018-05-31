@@ -5,6 +5,7 @@ import ingredientManager
 import recipeDataCollector
 import costCalculator
 import authentication
+from random import randint
 from sqlite3 import Error
 
 
@@ -202,12 +203,15 @@ def add_recipe_overview_db(recipeId, userId, label, urllink, prepTime, parsedIns
     for item in recipeDietLabels:
         tmp+= item + ","
     recipeDietLabels = tmp[:-1]
-    entry = [recipeId, userId, label, recipeDesc, urllink, prepTime, parsedInstructions, recipeCalories, recipeDietLabels]
+    rating = 4
+    if (userId == -1):
+        rating = randint(0,4) + 1
+    entry = [recipeId, userId, label, recipeDesc, urllink, prepTime, parsedInstructions, rating, recipeCalories, recipeDietLabels]
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
     try:
         # Starting clickCount is 0. Default ratingFrequency is 1 and cumalativeRating is 4, default best costs 0 until update called
-        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,?,0,1,4,?,?,0,0)', entry)
+        c.execute('INSERT INTO recipe_overview VALUES (?,?,?,?,?,?,?,0,1,?,?,?,0,0)', entry)
         label = list(set(label.split()))
         for word in label:
             add_recipe_keyword_db(c, recipeId, word)
