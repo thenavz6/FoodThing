@@ -293,7 +293,7 @@ def find_recipes_keyword_db(word):
 
 # Returns recipes from recipe_overview TABLE that have matching keywords, exclude matching exclusions and are less than needed preptime
 # Does not consider keywords in the recipe Label. User find_recipes_keyword_db for that
-def find_recipes_overview_db(included, excluded, prepTime, cost):
+def find_recipes_overview_db(included, excluded, prepTime, cost, rating):
 
     db = sqlite3.connect(DATABASE)
     db.row_factory = dict_factory 
@@ -328,21 +328,19 @@ def find_recipes_overview_db(included, excluded, prepTime, cost):
     # Remove all the are too timely
     finalRecipes = []
     for recipeID in resultRecipeIDs:
-        c.execute('SELECT * from recipe_overview WHERE recipeID=? AND prepTime<=?', [recipeID, prepTime])
+        c.execute('SELECT * from recipe_overview WHERE recipeID=? AND prepTime<=? AND recipeCumulativeRating/recipeRatingFrequency>=?', [recipeID, prepTime, float(rating)])
         result = c.fetchone()
         if result != None:
             finalRecipes.append(result)
 
-    # Save demo time
-    finalRecipes = finalRecipes[:9]
-
-    # Try to get 9 recipes that are cheap enough
+    # Get recipes that are cheap enough
     finalfinalRecipes = []
     for recipe in finalRecipes:
-        print("CHECK")
-        print(recipe["recipeID"])
-        if recipeDataCollector.getRecipeDictionaries([recipe["recipeID"]], [0], authentication.userid, "any", False)[0]["effectiveCost"] < cost:
-            finalfinalRecipes.append(recipe)
+        try:
+            if float(recipeDataCollector.getRecipeDictionaries([recipe["recipeID"]], [0], authentication.userid, "any", False)[0]["effectiveCost"]) < float(cost):
+                finalfinalRecipes.append(recipe)
+        except ValueError:
+            pass
 
     return finalfinalRecipes
 

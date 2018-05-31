@@ -17,7 +17,7 @@
 
 <div class="recipe_container">
   <div class="recipe">
-    <img src="{{ recipe["image"] }}" alt="RecipeImage" height="200" width="200"/>
+    <img src="{{ recipe["image"] }}" alt="RecipeImage" id="{{recipe['id']}}" height="225" width="225"/>
     <div class="overallrecipeinfo">
       <div class="recipeinfo1">
         <div class="recipetitle">
@@ -77,6 +77,14 @@
           {% endif %}
         </div>
       </div>
+       {% if isAdvanced is not none %}
+        <div class="recipeinfo">
+          This uses: 
+          {% for ingredient in recipe["advancedHits"] %}
+             <b>{{ ingredient|title }}{% if loop.index < recipe["advancedHits"]|length %}, {%endif%}</b>
+          {% endfor %}
+        </div>
+        {% endif %}
     </div>
   </div>
 </div>

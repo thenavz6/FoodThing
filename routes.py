@@ -43,7 +43,6 @@ def headerRequests(requestform):
 
 # The possible requests that can be made from a 'Recipe Card' (just favouriting atm, add star rating later)
 def recipeCardRequests(requestform):
-    print(requestform)
     if "Favourite" in requestform:
         database.add_user_favourite_db(authentication.userid, requestform["Favourite"])
         return True
@@ -96,7 +95,7 @@ def searchRecipe(query):
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
 
-    return advancedSearch(query, None, None, None)
+    return advancedSearch(query, None, None, None, None)
 
 
 numOfExcluded = 1
@@ -115,11 +114,15 @@ def advancedSearchPage():
     if request.method == "POST":
         if headerRequests(request.form) != None:
             return headerRequests(request.form)
-        if request.form["srchbt"] == "Search":
+        if request.form["srchbt"] == "Search" and request.form["KeyWords"].strip() != '':
+            print(request.form)
             included = request.form["KeyWords"]
             excluded = request.form["Exclude"]
             prepTime = request.form["MaxPrepTime"]
             cost = request.form["MaximumCost"]
+            rating = request.form["minrating"]
+            if rating == "minimum rating":
+                rating = 0
             if request.form["KeyWords"].strip() == "":
                 query = "empty"
             if request.form["Exclude"].strip() == "":
@@ -127,14 +130,14 @@ def advancedSearchPage():
             if request.form["MaxPrepTime"].strip() == "":
                 prepTime = "100000"
             if request.form["MaximumCost"].strip() == "":
-                cost = "empty"
-            return redirect(url_for("advancedSearch", query = included, excluded = excluded, prepTime = prepTime, cost = cost))
+                cost = "1000000"
+            return redirect(url_for("advancedSearch", query = included, excluded = excluded, prepTime = prepTime, cost = cost, rating = rating))
 
     return render_template("advancedSearch.html", numOfExcluded = numOfExcluded,excludedIngredients = excludedIngredients)
 
 
-@app.route("/advancedSearch/<query>/<excluded>/<prepTime>/<cost>", methods=["GET", "POST"])
-def advancedSearch(query,excluded,prepTime,cost):
+@app.route("/advancedSearch/<query>/<excluded>/<prepTime>/<cost>/<rating>", methods=["GET", "POST"])
+def advancedSearch(query,excluded,prepTime,cost,rating):
     # Ensure the user is logged in
     if authentication.is_authenticated == False:
         return redirect(url_for("main"))
@@ -142,7 +145,7 @@ def advancedSearch(query,excluded,prepTime,cost):
     global recipeId, recipeHitScore, recipes, sortType
 
     if request.method == "GET":
-        sortedRecipes = searchRecipes.getRecipes(query, excluded, prepTime, cost)
+        sortedRecipes = searchRecipes.getRecipes(query, excluded, prepTime, cost, rating)
         sortedRecipes = sortedRecipes[:9]
         recipeId, recipeHitScore = [], []
         for recipe in sortedRecipes:
@@ -150,6 +153,14 @@ def advancedSearch(query,excluded,prepTime,cost):
             recipeHitScore.append(recipe[1])
         recipes = recipeDataCollector.getRecipeDictionaries(recipeId, recipeHitScore, authentication.userid, None, False)
         sortType = "Relevance"
+
+    # Check if the recipe contains specific ingredients asked for in advanced query
+    for recipe in recipes:
+        for word in query.split(","):
+            for ingredient in recipe["ingredients"]:
+                if word.strip() in ingredient["item"]:
+                    recipe["advancedHits"].append(word.strip())
+        recipe["advancedHits"] = list(set(recipe["advancedHits"]))
 
     # Possible post requests
     if request.method == "POST":
@@ -171,7 +182,7 @@ def advancedSearch(query,excluded,prepTime,cost):
         if "bt" in request.form and request.form["bt"][:9] == "recipehit":
             return redirect(url_for("recipe", recipeId = request.form["bt"][10:]))
 
-    return render_template("dashboard.html", recipes = recipes, sortType = sortType, userid = authentication.userid, imageurl = authentication.imageurl)
+    return render_template("dashboard.html", recipes = recipes, sortType = sortType, userid = authentication.userid, imageurl = authentication.imageurl, isAdvanced = prepTime)
 
 
 # The 'specific' recipe page that details instructions and ingredients.
@@ -270,7 +281,6 @@ def recipe(recipeId):
             totalEffectiveCost = costCalculator.calcTotalCost(recipeDict, selectedProducts)
             totalRealCost = costCalculator.calcTotalRealCost(recipeDict, selectedProducts)
         if "shoppingbt" in request.form:
-            print(selectedProducts)
             database.update_user_shopping_list(authentication.userid, recipeId, selectedProducts, prefStore, totalEffectiveCost, totalRealCost)
             return redirect(url_for("recipe", recipeId = recipeId))
 
@@ -309,7 +319,7 @@ def userprofile(userId):
                 database.set_desc_user_db(authentication.userid, request.form["updatedesc"])
                 return redirect(url_for("userprofile", userId = userId))
 
-    return render_template("userprofile.html", profileuser = profileuser, getRecipeDictionaries = recipeDataCollector.getRecipeDictionaries, userid = authentication.userid, userimage = authentication.imageurl, sumEffectiveCost = sumEffectiveCost, sumRealCost = sumRealCost)
+    return render_template("userprofile.html", profileuser = profileuser, getRecipeDictionaries = recipeDataCollector.getRecipeDictionaries, userid = authentication.userid, userimage = authentication.imageurl, sumEffectiveCost = sumEffectiveCost, sumRealCost = sumRealCost, isAdvanced = None)
 
 
 # Global variables to preserve between post calls
