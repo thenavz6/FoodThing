@@ -86,8 +86,6 @@ def convertIngredient(ingredientString):
         amount = '1'
 
 
-    print(amount)
-
     # Try and determine the actual product name or product keywords from the ingredientString
     item = ''
     if measure != 'unit':
