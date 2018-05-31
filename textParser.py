@@ -64,7 +64,7 @@ def filterInput(string):
     for c in string:
         if c == u"⁄":
             filtered += "/"
-        elif c in ["'", ",", '"', "-", "."]:
+        elif c in ["'", ",", '"', "-"]:
             filtered += " "
         else:
             filtered += c
