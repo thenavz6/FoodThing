@@ -99,7 +99,7 @@
           {% endif %}
           <!--- For each shoppinglist recipe for the user --->
           {% for item in profileuser["shoppingLists"] %}
-              {% with recipe=getRecipeDictionaries([item["recipeID"]], [0], userid|int, "any")[0] %}
+              {% with recipe=getRecipeDictionaries([item["recipeID"]], [0], userid|int, "any", False)[0] %}
               {% with overloadPrice=item["effectiveCost"] %}
               {% with overloadPrice2=item["realCost"] %}
                 {% include "includeRecipe.html" %}
