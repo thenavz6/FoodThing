@@ -2,13 +2,14 @@
   background: #DEFFDE;
   padding-bottom: 20px;
   padding-left: 20px;
-  padding-right: 20px;
+  padding-right: 80px;
   border-radius: 20px;
 }
 
 hr {
   margin-top: 10px;
   margin-bottom: 10px;
+  width: 104%;
   border-color: green;
 }
 
@@ -105,7 +106,7 @@ hr {
   margin-top: 20px;
   margin-left: 10px;
   padding: 5px;
-  width: 92%;
+  width: 100%;
   table-layout: fixed;
   border: 2px solid violet;
   border-radius: 10px;
