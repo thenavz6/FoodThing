@@ -39,6 +39,8 @@ def findBestProducts(ingredient, shopname):
         if word.isalpha() and not word.lower() in textParser.commonWords and not word.lower() in textParser.brandNames:
             wordsInIngredient += 1   
 
+    dCount = 0
+
     # For each keyword etc. 'sour cream buttermilk' we want to search the product database
     for word in ingredient["item"].split():
         # Remove possible plural from end of ingredient keyword. DB products have the same applied, so matches still hit.
@@ -51,6 +53,8 @@ def findBestProducts(ingredient, shopname):
         products = database.find_products_keyword_db(word)
         # Get the product from from it's overview table
         for product in products:
+
+            dCount += 1
 
             productDbEntry = database.get_product_overview_db(product["productID"], shopname)
             # If this product is not available at the desiredstore
@@ -74,6 +78,8 @@ def findBestProducts(ingredient, shopname):
                 productHits[key] = (float(value)) / (float(wordsInIngredient) * float(wordsInName))
             else:
                 productHits[key] = 0
+
+    print(dCount)
 
     # Sort the product hits based on hitscore and cap the number of product results
     sortedProducts = sorted(productHits.items(), key=lambda x : x[1], reverse=True)
@@ -128,7 +134,7 @@ def convertToDetailList(sortedProducts, ingredient, shopname):
 # Adds on 'Nothing' to an ingredients possible products. This means that the user does not want to buy an item
 # for this ingredient for some reason. Etc. they have their own already at home.
 def addNothingProduct(detailList):
-    productDict = {"productID" : 0, "hitScore" : 0.0, "label" : "Nothing", "quantity" : '', "unit" : "", "grams" : 1, "unitCost" : 0, "realCost" : 0, "effectiveCost" : 0, "image" : "http://nonprofitquarterly.org/wp-content/blogs.dir/56/files/2017/08/red-cross-x.jpg", "store" : "all"}
+    productDict = {"productID" : 0, "hitScore" : 0.0, "label" : "Nothing", "quantity" : '', "unit" : "", "grams" : 1, "unitCost" : 0, "realCost" : 0.00, "effectiveCost" : 0, "image" : "http://nonprofitquarterly.org/wp-content/blogs.dir/56/files/2017/08/red-cross-x.jpg", "store" : "all"}
     detailList.append(productDict)
     return detailList
 
