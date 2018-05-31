@@ -133,7 +133,7 @@ def advancedSearchPage():
                 cost = "1000000"
             return redirect(url_for("advancedSearch", query = included, excluded = excluded, prepTime = prepTime, cost = cost, rating = rating))
 
-    return render_template("advancedSearch.html", numOfExcluded = numOfExcluded,excludedIngredients = excludedIngredients)
+    return render_template("advancedSearch.html", numOfExcluded = numOfExcluded,excludedIngredients = excludedIngredients, userid = authentication.userid)
 
 
 @app.route("/advancedSearch/<query>/<excluded>/<prepTime>/<cost>/<rating>", methods=["GET", "POST"])
