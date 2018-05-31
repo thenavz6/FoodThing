@@ -109,7 +109,9 @@
       </div>
       <div class="recipeinfo2">
         <div class="recipekeywords">
-          {{ '%0.0f' % recipe["calories"] }} calories
+          {% if recipe["calories"]|int != 0 %}
+            {{ '%0.0f' % recipe["calories"] }} calories
+          {% endif %}
         </div>
       </div>
       <!--- A text rating that shows real rating since user can override UI display with their own vote --->

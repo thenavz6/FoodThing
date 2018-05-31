@@ -7,7 +7,7 @@ import recipeDataCollector
 
 # query is the query string that may be multi-worded "Scrambled Eggs"
 # excluded is a list of ingredients to exclude etc ["nuts", "salmon"]
-def getRecipes(query, excluded, preptime, cost):
+def getRecipes(query, excluded, preptime, cost, rating):
 
     # Everytime a search is done, we will ask edamam for 5 recipes that we also add locally
     # Edamam handles multi worded queries for us
@@ -28,7 +28,7 @@ def getRecipes(query, excluded, preptime, cost):
             hitRecipeIds = database.find_recipes_keyword_db(keyword)
         # Advanced search has either a proper entry in excluded or "empty"
         else:
-            hitRecipeIds = database.find_recipes_overview_db(keyword, excluded, preptime, cost)
+            hitRecipeIds = database.find_recipes_overview_db(keyword, excluded, preptime, cost, rating)
 
         # If we found hits, then for each recipeId hit increment its count in the hit dictionary
         if hitRecipeIds != []:

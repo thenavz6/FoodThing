@@ -56,7 +56,8 @@ def getRecipeDictionaries(recipeIDList, searchScoreList, userId, shopname, getPr
             "isfav" : database.is_user_favourited_db(userId, recipeId),
             "effectiveCost" : overviewEntry["recipeEffectiveCost"],
             "totalCost" : overviewEntry["recipeRealCost"],
-            "searchScore" : searchScoreList[index]
+            "searchScore" : searchScoreList[index],
+            "advancedHits" : []                                 # Used externally by advanced search to update the dict to store ingredients that this recipe has that user asked
          }
         
         index += 1

@@ -11,24 +11,22 @@
   <div class="index">
 
     {% include "includeMainHeader.html" %}
-
     <div class="main_container">
+      <form method="POST">
       <div class="add_recipe_heading" style="margin-bottom:10px">
         Advanced Search
       </div>
       <div style="text-align:center; margin-bottom:20px">
         <div class="advanced_search_heading">Minimum Rating</div>
-        <form method="POST">
+        
           <select class="sortdd" name="minrating">
             <option value="minimum rating"> Choose from 1 to 5 </option>
             {% for i in range(5) %}
                 <option value={{i+1}}> {{i+1}} </option>
             {% endfor %}
           </select>
-        </form>
       </div>
 
-      <form method="POST">
         <div style="text-align:center; margin-bottom:20px">
                 <div class="advanced_search_heading">Include Ingredients</div>
             <input type="text" name="KeyWords" placeholder="e.g. chicken, eggs, ..." class="advanced_search_box"/><br/>
